@@ -1,5 +1,7 @@
 # ⚡ RxEaseAI - AI-Powered Prescription Ingestion
 
+## Transform Handwritten Prescriptions Into Smart AI-Powered Digital Healthcare
+
 RxEaseAI is a next-generation web experience that turns handwritten prescriptions into structured clinical intelligence. It showcases a fast ingestion pipeline, safety checks, and real-time analytics for pharmacies and hospital networks.
 
 ## At a Glance
@@ -11,6 +13,23 @@ RxEaseAI is a next-generation web experience that turns handwritten prescription
 - React 19, Vite 8, Tailwind CSS v4, Framer Motion
 
 ---
+
+*   **🔍 YOLO Vision Region Detector:** Automatically detects and isolates bounding boxes for text regions, lines, and tokens, drastically reducing handwriting recognition noise.
+*   **🩺 Specialized Medical OCR:** Translates challenging doctor handwriting into legible, clean digital transcripts.
+*   **💊 Clinical Dosage Audit Engine:** Automatically cross-references extracted drug names and dosages to flag possible drug-to-drug interactions, high-risk quantities, and age-limit warnings.
+*   **💾 EHR & FHIR Ingestion:** Formats results in a clean, HL7-compliant JSON schema ready for Epic, Cerner, or local database integration.
+*   **🌗 Adaptive Theme System:** Clean light/dark mode persistence utilizing Tailwind CSS v4 class-based overrides and immediate FOUC-preventative scripting.
+*   **🟢 High-Fidelity Laser Scanning:** Animated HUD/OCR interface mimicking live server scanning processes.
+
+
+---
+
+*   **🔍 YOLO Vision Region Detector:** Automatically detects and isolates bounding boxes for text regions, lines, and tokens, drastically reducing handwriting recognition noise.
+*   **🩺 Specialized Medical OCR:** Translates challenging doctor handwriting into legible, clean digital transcripts.
+*   **💊 Clinical Dosage Audit Engine:** Automatically cross-references extracted drug names and dosages to flag possible drug-to-drug interactions, high-risk quantities, and age-limit warnings.
+*   **💾 EHR & FHIR Ingestion:** Formats results in a clean, HL7-compliant JSON schema ready for Epic, Cerner, or local database integration.
+*   **🌗 Adaptive Theme System:** Clean light/dark mode persistence utilizing Tailwind CSS v4 class-based overrides and immediate FOUC-preventative scripting.
+*   **🟢 High-Fidelity Laser Scanning:** Animated HUD/OCR interface mimicking live server scanning processes.
 
 ## ✨ Features & Capabilities
 
