@@ -1,13 +1,13 @@
 import React, { useEffect } from 'react';
 import Lenis from 'lenis';
-import Navbar from '../components/navbar/Navbar';
-import Hero from '../components/hero/Hero';
-import Features from '../components/features/Features';
-import Workflow from '../components/workflow/Workflow';
-import Dashboard from '../components/dashboard/Dashboard';
-import Analytics from '../components/analytics/Analytics';
-import Faq from '../components/faq/Faq';
-import Footer from '../components/footer/Footer';
+import Navbar from '../components/layout/Navbar';
+import Footer from '../components/layout/Footer';
+import Hero from '../components/sections/Hero';
+import Features from '../components/sections/Features';
+import Workflow from '../components/sections/Workflow';
+import Dashboard from '../components/sections/Dashboard';
+import Analytics from '../components/sections/Analytics';
+import Faq from '../components/sections/Faq';
 
 export default function LandingPage() {
   // Initialize Lenis smooth scroll

@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
 import { TrendingUp, BarChart2, ShieldCheck, Sparkles } from 'lucide-react';
+import SectionHeader from '../ui/SectionHeader';
+import Card from '../ui/Card';
+import Button from '../ui/Button';
 
 export default function Analytics() {
   const [activeTab, setActiveTab] = useState('efficiency');
@@ -37,18 +39,12 @@ export default function Analytics() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-16">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-50/80 dark:bg-indigo-500/10 border border-indigo-200 dark:border-indigo-500/20 text-indigo-650 dark:text-indigo-400 text-xs font-semibold mb-4 uppercase tracking-wider">
-            <TrendingUp className="w-3.5 h-3.5" />
-            Performance Insights
-          </div>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 dark:text-white mb-6">
-            Real-Time Analytics & Audit Logs
-          </h2>
-          <p className="text-slate-600 dark:text-slate-400 text-lg font-light leading-relaxed">
-            Monitor processing speeds, transcription metrics, and clinical safety KPIs dynamically.
-          </p>
-        </div>
+        <SectionHeader
+          badgeText="Performance Insights"
+          badgeIcon={TrendingUp}
+          title="Real-Time Analytics & Audit Logs"
+          subtitle="Monitor processing speeds, transcription metrics, and clinical safety KPIs dynamically."
+        />
 
         {/* Tab Controls */}
         <div className="flex justify-center mb-12">
@@ -74,12 +70,12 @@ export default function Analytics() {
           {stats[activeTab].map((stat, index) => {
             const Icon = stat.icon;
             return (
-              <motion.div
+              <Card
                 key={stat.label}
-                initial={{ opacity: 0, y: 15 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4, delay: index * 0.1 }}
-                className="glassmorphism rounded-2xl p-6 border border-slate-200 dark:border-slate-800/80 text-left flex flex-col justify-between"
+                variant="glass"
+                animate={true}
+                className="p-6 text-left flex flex-col justify-between"
+                style={{ transitionDelay: `${index * 50}ms` }}
               >
                 <div className="flex items-center justify-between mb-4">
                   <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
@@ -91,24 +87,24 @@ export default function Analytics() {
                 </div>
 
                 <div className="mt-2">
-                  <div className="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+                  <div className="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight font-sans">
                     {stat.value}
                   </div>
-                  <div className="text-xs text-indigo-600 dark:text-indigo-450 font-medium mt-1">
+                  <div className="text-xs text-indigo-605 dark:text-indigo-400 font-medium mt-1">
                     {stat.change}
                   </div>
                 </div>
-              </motion.div>
+              </Card>
             );
           })}
         </div>
 
         {/* Bottom Graphic Panel */}
-        <div className="mt-12 glassmorphism rounded-3xl p-6 border border-slate-200 dark:border-slate-800/80">
+        <Card variant="glass" className="mt-12 p-6 rounded-3xl">
           <div className="flex flex-col md:flex-row items-center justify-between gap-6">
             <div className="text-left space-y-2">
               <h3 className="text-lg font-bold text-slate-900 dark:text-white">Daily Queue Latency (Seconds)</h3>
-              <p className="text-xs text-slate-600 dark:text-slate-400 max-w-md">
+              <p className="text-xs text-slate-655 dark:text-slate-400 max-w-md">
                 Tracking AI server roundtrip processing time including document image segmentation and clinical database checks.
               </p>
             </div>
@@ -138,12 +134,12 @@ export default function Analytics() {
                 {/* Highlight Point */}
                 <circle cx="160" cy="30" r="4.5" fill="#a855f7" />
               </svg>
-              <div className="absolute top-1 left-[165px] bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 px-2 py-0.5 rounded text-[9px] font-mono text-slate-700 dark:text-purple-400 transition-colors duration-300">
+              <div className="absolute top-1 left-[165px] bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 px-2 py-0.5 rounded text-[9px] font-mono text-slate-705 dark:text-purple-400 transition-colors duration-300">
                 1.8s (Peak Load)
               </div>
             </div>
           </div>
-        </div>
+        </Card>
 
       </div>
     </section>

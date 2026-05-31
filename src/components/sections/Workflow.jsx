@@ -1,5 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import SectionHeader from '../ui/SectionHeader';
+import MaterialIcon from '../ui/MaterialIcon';
 
 export default function Workflow() {
   const steps = [
@@ -46,14 +48,10 @@ export default function Workflow() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-20">
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-slate-900 dark:text-white mb-6">
-            Intelligent Workflow
-          </h2>
-          <p className="text-slate-650 dark:text-slate-400 text-lg font-light max-w-2xl mx-auto leading-relaxed">
-            Seamlessly transforming raw handwriting into structured clinical intelligence.
-          </p>
-        </div>
+        <SectionHeader
+          title="Intelligent Workflow"
+          subtitle="Seamlessly transforming raw handwriting into structured clinical intelligence."
+        />
 
         {/* Timeline Container */}
         <div className="relative max-w-3xl mx-auto mt-16">
@@ -92,7 +90,7 @@ export default function Workflow() {
                       <h3 className="text-lg md:text-xl font-bold text-slate-900 dark:text-white">
                         {step.title}
                       </h3>
-                      <p className="text-sm text-slate-600 dark:text-slate-400 mt-2 leading-relaxed">
+                      <p className="text-sm text-slate-655 dark:text-slate-400 mt-2 leading-relaxed">
                         {step.description}
                       </p>
                     </motion.div>
@@ -106,9 +104,7 @@ export default function Workflow() {
                     transition={{ type: 'spring', stiffness: 200, damping: 15, delay: index * 0.15 }}
                     className="w-16 h-16 rounded-full bg-white dark:bg-slate-900 border-4 border-slate-200 dark:border-slate-800 shadow-lg flex items-center justify-center z-10 order-1 md:order-2 shrink-0 transition-colors duration-300"
                   >
-                    <span className={`material-symbols-outlined ${step.color} text-2xl`}>
-                      {step.icon}
-                    </span>
+                    <MaterialIcon name={step.icon} color={step.color} size="2xl" />
                   </motion.div>
 
                   {/* Right Column (Desktop only: Step 2 & 4 show content here; Mobile: Shows content for all steps) */}
@@ -125,7 +121,7 @@ export default function Workflow() {
                       <h3 className="text-lg md:text-xl font-bold text-slate-900 dark:text-white">
                         {step.title}
                       </h3>
-                      <p className="text-sm text-slate-600 dark:text-slate-400 mt-2 leading-relaxed">
+                      <p className="text-sm text-slate-650 dark:text-slate-400 mt-2 leading-relaxed">
                         {step.description}
                       </p>
                     </motion.div>

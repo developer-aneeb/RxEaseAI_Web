@@ -1,6 +1,7 @@
 import React from 'react';
-import { motion } from 'framer-motion';
 import { Sparkles, Cpu, Link, ShieldCheck, Database, Layers, HeartPulse } from 'lucide-react';
+import SectionHeader from '../ui/SectionHeader';
+import Card from '../ui/Card';
 
 export default function Features() {
   const featuresList = [
@@ -50,36 +51,26 @@ export default function Features() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
         {/* Section Title */}
-        <div className="text-center max-w-3xl mx-auto mb-20">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-650 dark:text-indigo-400 text-xs font-semibold mb-4 uppercase tracking-wider">
-            <Sparkles className="w-3.5 h-3.5" />
-            Cutting Edge Features
-          </div>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 dark:text-white mb-6">
-            Engineered for Precision & Speed
-          </h2>
-          <p className="text-slate-650 dark:text-slate-400 text-lg font-light leading-relaxed">
-            Discover a comprehensive suite of AI tools designed to streamline clinical ingestion workflows.
-          </p>
-        </div>
+        <SectionHeader
+          badgeText="Cutting Edge Features"
+          badgeIcon={Sparkles}
+          title="Engineered for Precision & Speed"
+          subtitle="Discover a comprehensive suite of AI tools designed to streamline clinical ingestion workflows."
+        />
 
         {/* Features Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {featuresList.map((feat, idx) => {
             const Icon = feat.icon;
             return (
-              <motion.div
+              <Card
                 key={feat.title}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: '-50px' }}
-                transition={{ duration: 0.5, delay: idx * 0.1 }}
-                whileHover={{ y: -6, scale: 1.01 }}
-                className="group relative glassmorphism rounded-2xl p-6 border border-slate-200 dark:border-slate-800/80 hover:border-indigo-500/30 dark:hover:border-indigo-500/30 transition-all duration-300 text-left cursor-default flex flex-col justify-between"
+                variant="glass"
+                animate={true}
+                hoverEffect={true}
+                className="p-6 text-left flex flex-col justify-between"
+                style={{ transitionDelay: `${idx * 50}ms` }}
               >
-                {/* Glowing border outline on hover */}
-                <div className="absolute inset-0 rounded-2xl bg-gradient-to-tr from-indigo-500/0 via-indigo-500/0 to-indigo-500/0 group-hover:from-indigo-500/5 group-hover:to-purple-500/10 transition-all duration-300 pointer-events-none" />
-
                 <div>
                   {/* Icon Wrapper */}
                   <div className={`w-12 h-12 rounded-xl bg-gradient-to-tr ${feat.color} flex items-center justify-center text-white mb-6 shadow-md shadow-indigo-600/10`}>
@@ -87,7 +78,7 @@ export default function Features() {
                   </div>
 
                   {/* Title */}
-                  <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-3 group-hover:text-indigo-650 dark:group-hover:text-indigo-300 transition-colors">
+                  <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-3 group-hover:text-indigo-605 dark:group-hover:text-indigo-300 transition-colors">
                     {feat.title}
                   </h3>
 
@@ -102,7 +93,7 @@ export default function Features() {
                   <span>Learn more</span>
                   <span className="group-hover:translate-x-0.5 transition-transform">&rarr;</span>
                 </div>
-              </motion.div>
+              </Card>
             );
           })}
         </div>

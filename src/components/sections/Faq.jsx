@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronDown, HelpCircle } from 'lucide-react';
+import SectionHeader from '../ui/SectionHeader';
+import Card from '../ui/Card';
 
 export default function Faq() {
   const [activeIndex, setActiveIndex] = useState(null);
@@ -36,31 +38,26 @@ export default function Faq() {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-16">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-50/80 dark:bg-indigo-500/10 border border-indigo-200 dark:border-indigo-500/20 text-indigo-650 dark:text-indigo-400 text-xs font-semibold mb-4 uppercase tracking-wider">
-            <HelpCircle className="w-3.5 h-3.5" />
-            Support
-          </div>
-          <h2 className="text-3xl sm:text-4xl font-bold text-slate-900 dark:text-white mb-6">
-            Frequently Asked Questions
-          </h2>
-          <p className="text-slate-650 dark:text-slate-400 text-lg font-light">
-            Everything you need to know about setting up and operating RxEaseAI.
-          </p>
-        </div>
+        <SectionHeader
+          badgeText="Support"
+          badgeIcon={HelpCircle}
+          title="Frequently Asked Questions"
+          subtitle="Everything you need to know about setting up and operating RxEaseAI."
+        />
 
         {/* FAQ List */}
         <div className="space-y-4 text-left">
           {faqs.map((faq, index) => {
             const isOpen = activeIndex === index;
             return (
-              <div
+              <Card
                 key={index}
-                className="glassmorphism rounded-2xl border border-slate-200 dark:border-slate-800/80 overflow-hidden transition-all duration-300"
+                variant="glass"
+                className="overflow-hidden"
               >
                 <button
                   onClick={() => setActiveIndex(isOpen ? null : index)}
-                  className="w-full px-6 py-5 flex items-center justify-between gap-4 text-left focus:outline-none"
+                  className="w-full px-6 py-5 flex items-center justify-between gap-4 text-left focus:outline-none cursor-pointer"
                 >
                   <span className="text-sm font-bold text-slate-900 dark:text-white pr-4">
                     {faq.q}
@@ -88,7 +85,7 @@ export default function Faq() {
                     </motion.div>
                   )}
                 </AnimatePresence>
-              </div>
+              </Card>
             );
           })}
         </div>

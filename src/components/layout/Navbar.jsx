@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, Activity, ChevronRight, Sun, Moon } from 'lucide-react';
 import useTheme from '../../hooks/useTheme';
+import Button from '../ui/Button';
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -64,41 +65,48 @@ export default function Navbar() {
           <div className="hidden md:flex items-center gap-4">
             
             {/* Theme Toggle Button */}
-            <button
+            <Button
+              variant="outline"
+              size="sm"
               onClick={toggleTheme}
-              className="p-2.5 rounded-xl border border-slate-200 dark:border-slate-800/80 hover:bg-slate-100 dark:hover:bg-slate-900 text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white transition-all"
+              animate={true}
               aria-label="Toggle Theme"
+              className="p-2.5!"
             >
               {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
-            </button>
+            </Button>
 
-            <button className="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-white transition-colors">
+            <Button variant="ghost" size="sm">
               Sign In
-            </button>
-            <button className="relative group overflow-hidden px-5 py-2.5 rounded-xl bg-indigo-600 text-sm font-medium text-white transition-all hover:bg-indigo-500 shadow-md shadow-indigo-600/10">
-              <span className="relative z-10 flex items-center gap-1">
-                Get Started <ChevronRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
-              </span>
-            </button>
+            </Button>
+            
+            <Button variant="accent" size="sm" icon={ChevronRight}>
+              Get Started
+            </Button>
           </div>
 
           {/* Mobile menu and theme buttons */}
           <div className="flex md:hidden items-center gap-2">
             {/* Mobile Theme Toggle */}
-            <button
+            <Button
+              variant="outline"
+              size="sm"
               onClick={toggleTheme}
-              className="p-2 rounded-lg border border-slate-200 dark:border-slate-800/80 hover:bg-slate-100 dark:hover:bg-slate-900 text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white transition-all"
+              animate={true}
               aria-label="Toggle Theme"
+              className="p-2!"
             >
               {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
-            </button>
+            </Button>
 
-            <button
+            <Button
+              variant="ghost"
+              size="sm"
               onClick={() => setIsOpen(!isOpen)}
-              className="p-2 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-900 transition-colors"
+              className="p-2!"
             >
               {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-            </button>
+            </Button>
           </div>
 
         </div>
@@ -126,12 +134,12 @@ export default function Navbar() {
                 </a>
               ))}
               <div className="pt-4 pb-2 border-t border-slate-200 dark:border-slate-800/80 px-3 flex flex-col gap-3">
-                <button className="w-full text-center py-2.5 text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-white transition-colors">
+                <Button variant="ghost" className="w-full text-center py-2.5">
                   Sign In
-                </button>
-                <button className="w-full text-center py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-sm font-medium text-white transition-all">
+                </Button>
+                <Button variant="accent" className="w-full text-center py-2.5">
                   Get Started
-                </button>
+                </Button>
               </div>
             </div>
           </motion.div>

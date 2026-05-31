@@ -1,28 +1,13 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight, Sparkles, CheckCircle2, ShieldCheck, Zap } from 'lucide-react';
+import { staggerContainer, fadeInUp, scaleIn } from '../../animations/variants';
+import Button from '../ui/Button';
+import Badge from '../ui/Badge';
+import Card from '../ui/Card';
+import MaterialIcon from '../ui/MaterialIcon';
 
 export default function Hero() {
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.15,
-        delayChildren: 0.1,
-      },
-    },
-  };
-
-  const itemVariants = {
-    hidden: { y: 30, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: { type: 'spring', stiffness: 100, damping: 15 },
-    },
-  };
-
   return (
     <section className="relative min-h-screen flex items-center justify-center pt-28 pb-16 overflow-hidden bg-slate-50 dark:bg-slate-950 transition-colors duration-300">
 
@@ -39,25 +24,24 @@ export default function Hero() {
           {/* Hero Left Content */}
           <motion.div
             className="lg:col-span-7 text-left flex flex-col gap-6"
-            variants={containerVariants}
+            variants={staggerContainer(0.15, 0.1)}
             initial="hidden"
             animate="visible"
           >
             {/* Tagline */}
-            <motion.div
-              variants={itemVariants}
-              className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full glassmorphism-light w-fit"
-            >
-              <Sparkles className="w-4 h-4 text-indigo-500 dark:text-indigo-400" />
-              <span className="text-xs font-semibold text-indigo-600 dark:text-indigo-300 uppercase tracking-wider">
-                RxEaseAI- AI-powered Prescription Interpretation
-
-              </span>
+            <motion.div variants={fadeInUp(20)}>
+              <Badge 
+                variant="primary" 
+                icon={Sparkles} 
+                className="text-xs px-3 py-1.5 bg-indigo-500/10 font-sans tracking-wide"
+              >
+                RxEaseAI - AI-powered Prescription Interpretation
+              </Badge>
             </motion.div>
 
             {/* Title */}
             <motion.h1
-              variants={itemVariants}
+              variants={fadeInUp(25)}
               className="text-4xl sm:text-5xl md:text-[56px] lg:text-[60px] font-extrabold tracking-tight text-slate-900 dark:text-white leading-[1.1]!"
             >
               Transform Handwritten Prescriptions Into{' '}
@@ -68,35 +52,37 @@ export default function Hero() {
 
             {/* Description */}
             <motion.p
-              variants={itemVariants}
-              className="text-base sm:text-lg text-slate-600 dark:text-slate-300 max-w-2xl font-light leading-relaxed"
+              variants={fadeInUp(25)}
+              className="text-base sm:text-lg text-slate-650 dark:text-slate-300 max-w-2xl font-light leading-relaxed"
             >
               Experience unparalleled accuracy with our AI-driven platform. Instantly convert complex medical handwriting into structured, actionable data while ensuring complete clinical compliance.
             </motion.p>
 
             {/* CTAs */}
             <motion.div
-              variants={itemVariants}
+              variants={fadeInUp(20)}
               className="flex flex-wrap gap-4 pt-2"
             >
-              <a
+              <Button
                 href="#workflow"
-                className="group px-6 py-3.5 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-medium text-sm flex items-center gap-2 shadow-lg shadow-indigo-600/25 transition-all hover:scale-102 duration-200"
+                variant="primary"
+                size="lg"
+                icon={ArrowRight}
               >
                 Try Interactive Demo
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-              </a>
-              <a
+              </Button>
+              <Button
                 href="#features"
-                className="px-6 py-3.5 rounded-xl glassmorphism hover:bg-slate-100 dark:hover:bg-slate-900/80 text-slate-700 dark:text-slate-200 hover:text-slate-900 dark:hover:text-white font-medium text-sm transition-all duration-200"
+                variant="secondary"
+                size="lg"
               >
                 Explore Features
-              </a>
+              </Button>
             </motion.div>
 
             {/* Trust Badges */}
             <motion.div
-              variants={itemVariants}
+              variants={fadeInUp(15)}
               className="grid grid-cols-3 gap-4 pt-6 border-t border-slate-200 dark:border-slate-800/60 max-w-xl"
             >
               <div className="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400 font-medium">
@@ -117,9 +103,9 @@ export default function Hero() {
           {/* Hero Right Visuals with Laser Scan and Hover Reveal */}
           <motion.div
             className="lg:col-span-5 relative"
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8, ease: 'easeOut', delay: 0.3 }}
+            variants={scaleIn(0.95, 0.8, 0.3)}
+            initial="hidden"
+            animate="visible"
           >
             {/* Visual Container */}
             <div className="group relative rounded-3xl overflow-hidden border border-slate-200 dark:border-slate-800 shadow-2xl bg-white dark:bg-slate-900 transition-all duration-300">
@@ -141,26 +127,34 @@ export default function Hero() {
               <div className="absolute inset-0 z-20 flex flex-col justify-center items-end pr-6 gap-4 opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-slate-950/20 backdrop-filter backdrop-blur-xs pointer-events-none">
 
                 {/* Card 1 */}
-                <div className="glassmorphism p-3.5 rounded-xl pop-card shadow-lg flex items-center gap-3 w-[260px] max-w-full text-left" style={{ animationDelay: '0.4s' }}>
+                <Card
+                  variant="glass"
+                  className="p-3.5 pop-card shadow-lg flex items-center gap-3 w-[260px] max-w-full text-left"
+                  style={{ animationDelay: '0.4s' }}
+                >
                   <div className="w-8 h-8 rounded-full bg-[#1DBF73]/20 flex items-center justify-center shrink-0">
-                    <span className="material-symbols-outlined text-[#1DBF73] text-sm">medication</span>
+                    <MaterialIcon name="medication" color="text-[#1DBF73]" size="sm" />
                   </div>
                   <div>
                     <p className="text-[10px] text-slate-500 dark:text-slate-400 font-semibold font-mono tracking-wider uppercase">Detected Medication</p>
-                    <p className="text-xs text-slate-800 dark:text-slate-200 font-bold mt-0.5">Amoxicillin 500mg</p>
+                    <p className="text-xs text-slate-850 dark:text-slate-200 font-bold mt-0.5">Amoxicillin 500mg</p>
                   </div>
-                </div>
+                </Card>
 
                 {/* Card 2 */}
-                <div className="glassmorphism p-3.5 rounded-xl pop-card shadow-lg flex items-center gap-3 w-[260px] max-w-full text-left" style={{ animationDelay: '1s' }}>
+                <Card
+                  variant="glass"
+                  className="p-3.5 pop-card shadow-lg flex items-center gap-3 w-[260px] max-w-full text-left"
+                  style={{ animationDelay: '1s' }}
+                >
                   <div className="w-8 h-8 rounded-full bg-[#0F6FFF]/20 flex items-center justify-center shrink-0">
-                    <span className="material-symbols-outlined text-[#0F6FFF] text-sm">schedule</span>
+                    <MaterialIcon name="schedule" color="text-[#0F6FFF]" size="sm" />
                   </div>
                   <div>
                     <p className="text-[10px] text-slate-500 dark:text-slate-400 font-semibold font-mono tracking-wider uppercase">Dosage Instructions</p>
-                    <p className="text-xs text-slate-800 dark:text-slate-200 font-bold mt-0.5">1 pill, 3x daily, 7 days</p>
+                    <p className="text-xs text-slate-855 dark:text-slate-200 font-bold mt-0.5">1 pill, 3x daily, 7 days</p>
                   </div>
-                </div>
+                </Card>
 
               </div>
 
