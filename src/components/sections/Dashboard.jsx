@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { 
   BarChart3, FileText, CheckCircle2, AlertCircle, 
   Clock, Search, Plus, Filter, ArrowUpRight, Check

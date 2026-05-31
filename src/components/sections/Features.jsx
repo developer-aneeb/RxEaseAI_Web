@@ -1,4 +1,3 @@
-import React from 'react';
 import { Sparkles, Cpu, Link, ShieldCheck, Database, Layers, HeartPulse } from 'lucide-react';
 import SectionHeader from '../ui/SectionHeader';
 import Card from '../ui/Card';
