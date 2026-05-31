@@ -1,30 +1,51 @@
-# ⚡ RxEaseAI - AI-Powered Prescription Ingestion
+# RxEaseAI - AI-Powered Prescription Ingestion
 
-## Transform Handwritten Prescriptions Into Smart AI-Powered Digital Healthcare
+![React](https://img.shields.io/badge/React-Frontend-61DAFB?logo=react&logoColor=white) ![Vite](https://img.shields.io/badge/Vite-Build-646CFF?logo=vite&logoColor=white) ![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS-Styling-38BDF8?logo=tailwindcss&logoColor=white) ![Framer Motion](https://img.shields.io/badge/Framer%20Motion-Animations-black?logo=framer&logoColor=white) ![ESLint](https://img.shields.io/badge/ESLint-Linting-4B32C3?logo=eslint&logoColor=white) ![Lucide](https://img.shields.io/badge/Lucide-Icons-111827)
 
-RxEaseAI is a next-generation web experience that turns handwritten prescriptions into structured clinical intelligence. It showcases a fast ingestion pipeline, safety checks, and real-time analytics for pharmacies and hospital networks.
-
-## At a Glance
-
-- Under 4m ingestion target with 99.2% OCR accuracy (validated dataset)
-- YOLO-based text segmentation + medical OCR pipeline
-- Dosage safety checks and audit-ready insights
-- FHIR/HL7-ready structured output
-- React 19, Vite 8, Tailwind CSS v4, Framer Motion
-
-
-## ✨ Features & Capabilities
-
-- **🔍 YOLO Vision Region Detector:** Automatically detects and isolates text regions, lines, and tokens to reduce handwriting noise.
-- **🩺 Specialized Medical OCR:** Translates challenging doctor handwriting into legible clinical transcripts.
-- **💊 Clinical Dosage Audit Engine:** Flags drug interactions, high-risk quantities, and age-limit warnings.
-- **💾 EHR and FHIR Ingestion:** Produces HL7-aligned JSON for Epic, Cerner, or local database workflows.
-- **🌗 Adaptive Theme System:** Clean light/dark mode with FOUC-resistant startup logic.
-- **🟢 High-Fidelity Laser Scanning:** HUD-style OCR animations that mimic live server scanning.
+Transform handwritten prescriptions into structured clinical intelligence. RxEaseAI is a frontend experience that showcases fast ingestion, safety checks, and real-time analytics for pharmacy workflows.
 
 ---
 
-## How It Works
+## Live Demo
+
+- Add your live link here
+
+---
+
+## One-line summary
+
+- RxEaseAI is a modern UI that simulates OCR ingestion, dosage safety checks, and operational analytics for pharmacies and hospital networks.
+
+---
+
+## Key facts (quick)
+
+- Target: sub-2s ingestion and 99.2% OCR accuracy (validated dataset)
+- YOLO-based segmentation with medical OCR concepts
+- FHIR/HL7-ready structured output
+- React 19, Vite 8, Tailwind CSS v4, Framer Motion
+
+---
+
+## Scope and purpose (repo-specific)
+
+- This repository contains the frontend UI and interactions only.
+- Backend services, model hosting, datasets, and compliance systems are not included here.
+
+---
+
+## Features and capabilities
+
+- **YOLO Vision Region Detector:** Isolates text regions, lines, and tokens to reduce handwriting noise.
+- **Specialized Medical OCR:** Converts challenging handwriting into readable clinical transcripts.
+- **Clinical Dosage Audit Engine:** Flags drug interactions, high-risk quantities, and age-limit warnings.
+- **EHR and FHIR Ingestion:** Produces HL7-aligned JSON for Epic, Cerner, or local database workflows.
+- **Adaptive Theme System:** Light/dark mode with FOUC-resistant startup logic.
+- **High-Fidelity Laser Scanning:** HUD-style OCR animations that mimic live server scanning.
+
+---
+
+## How it works
 
 1. **Segment:** Vision model isolates handwriting regions and line tokens.
 2. **Transcribe:** Medical OCR converts text into structured, readable data.
@@ -34,20 +55,18 @@ RxEaseAI is a next-generation web experience that turns handwritten prescription
 
 ---
 
-## 🛠️ Tech Stack & Tools
+## Where to edit content (quick paths)
 
-- **Core:** React 19 + Vite 8
-- **Styling:** Tailwind CSS v4 (CSS-first dark mode variant)
-- **Animations:** Framer Motion + custom CSS `@keyframes`
-- **Scroll Engine:** Lenis Smooth Scroll
-- **Icons:** Lucide React + Google Material Symbols Outlined
-- **Linting:** ESLint 10 + Prettier
+- Page composition: `src/pages/LandingPage.jsx`
+- Sections: `src/components/sections/`
+- Layout: `src/components/layout/`
+- UI primitives: `src/components/ui/`
+- Theme hook: `src/hooks/useTheme.js`
+- Global styles: `src/index.css`
 
 ---
 
-## 📂 Project Structure
-
-The frontend is structured to isolate layout, section composition, and reusable UI:
+## Project structure
 
 ```bash
 src/
@@ -66,47 +85,45 @@ src/
 
 ---
 
-## 🚀 Getting Started
+## Screenshots / Preview (add your own)
 
-### Prerequisites
+<!-- Replace these placeholders with real assets in /public and reference them below.
 
-- Node.js 18+ (LTS recommended)
+| Desktop (Hero) | Analytics | Mobile |
+|---:|:---:|:---:|
+| ![Hero](public/preview-hero.png) | ![Analytics](public/preview-analytics.png) | ![Mobile](public/preview-mobile.png) |
 
-### 1. Install Dependencies
+-->
+
+---
+
+## Development (local)
+
+Prereqs: Node.js 18+ and npm
 
 ```bash
-cd frontend
+# Install
 npm install
-```
 
-### 2. Run the Dev Server
-
-```bash
+# Start dev server
 npm run dev
-```
 
-The app will run locally at `http://localhost:5173/` (or the next available port).
-
-### 3. Production Build
-
-```bash
+# Build
 npm run build
+
+# Preview
+npm run preview
 ```
 
----
-
-## Scripts
-
-- `npm run dev` - Start the Vite dev server
-- `npm run build` - Build for production
-- `npm run preview` - Preview the production build
-- `npm run lint` - Run ESLint
+Notes:
+- This project uses Vite for a fast development loop.
+- Use `npm run lint` to run ESLint.
 
 ---
 
-## 🌗 Theme System Implementation
+## Theme system implementation
 
-RxEaseAI uses a unified light/dark mode system. It prevents flicker (FOUC) by injecting a small script in the `<head>` of `index.html` before the React app mounts:
+RxEaseAI prevents theme flicker (FOUC) by injecting a small script in the `<head>` of `index.html` before the React app mounts:
 
 ```javascript
 (function () {
@@ -128,13 +145,20 @@ Tailwind CSS v4 dark mode support is enabled via the CSS-first directive:
 
 ---
 
-## 🛡️ Compliance & Security (Design Goals)
+## Compliance and security (design goals)
 
 - HIPAA-ready ingestion workflow with client-encrypted upload concepts
 - SOC 2-style audit logging visuals for pharmacist verification actions
 
 ---
 
-## Notes
+## Contributing
 
-This repository contains the frontend experience and UI interactions. Backend services, model hosting, and compliance controls are not included here.
+- This repo is structured for a single front-end experience.
+- Use branches for content updates and open a PR for major layout changes.
+
+---
+
+## Contact
+
+- Add your contact details here (email, LinkedIn, or GitHub)
