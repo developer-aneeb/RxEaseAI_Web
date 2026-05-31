@@ -6,39 +6,21 @@ RxEaseAI is a next-generation web experience that turns handwritten prescription
 
 ## At a Glance
 
-- Under 2s ingestion target with 99.2% OCR accuracy (validated dataset)
+- Under 4m ingestion target with 99.2% OCR accuracy (validated dataset)
 - YOLO-based text segmentation + medical OCR pipeline
 - Dosage safety checks and audit-ready insights
 - FHIR/HL7-ready structured output
 - React 19, Vite 8, Tailwind CSS v4, Framer Motion
 
----
-
-*   **🔍 YOLO Vision Region Detector:** Automatically detects and isolates bounding boxes for text regions, lines, and tokens, drastically reducing handwriting recognition noise.
-*   **🩺 Specialized Medical OCR:** Translates challenging doctor handwriting into legible, clean digital transcripts.
-*   **💊 Clinical Dosage Audit Engine:** Automatically cross-references extracted drug names and dosages to flag possible drug-to-drug interactions, high-risk quantities, and age-limit warnings.
-*   **💾 EHR & FHIR Ingestion:** Formats results in a clean, HL7-compliant JSON schema ready for Epic, Cerner, or local database integration.
-*   **🌗 Adaptive Theme System:** Clean light/dark mode persistence utilizing Tailwind CSS v4 class-based overrides and immediate FOUC-preventative scripting.
-*   **🟢 High-Fidelity Laser Scanning:** Animated HUD/OCR interface mimicking live server scanning processes.
-
-
----
-
-*   **🔍 YOLO Vision Region Detector:** Automatically detects and isolates bounding boxes for text regions, lines, and tokens, drastically reducing handwriting recognition noise.
-*   **🩺 Specialized Medical OCR:** Translates challenging doctor handwriting into legible, clean digital transcripts.
-*   **💊 Clinical Dosage Audit Engine:** Automatically cross-references extracted drug names and dosages to flag possible drug-to-drug interactions, high-risk quantities, and age-limit warnings.
-*   **💾 EHR & FHIR Ingestion:** Formats results in a clean, HL7-compliant JSON schema ready for Epic, Cerner, or local database integration.
-*   **🌗 Adaptive Theme System:** Clean light/dark mode persistence utilizing Tailwind CSS v4 class-based overrides and immediate FOUC-preventative scripting.
-*   **🟢 High-Fidelity Laser Scanning:** Animated HUD/OCR interface mimicking live server scanning processes.
 
 ## ✨ Features & Capabilities
 
-- **YOLO Vision Region Detector:** Automatically detects and isolates text regions, lines, and tokens to reduce handwriting noise.
-- **Specialized Medical OCR:** Translates challenging doctor handwriting into legible clinical transcripts.
-- **Clinical Dosage Audit Engine:** Flags drug interactions, high-risk quantities, and age-limit warnings.
-- **EHR and FHIR Ingestion:** Produces HL7-aligned JSON for Epic, Cerner, or local database workflows.
-- **Adaptive Theme System:** Clean light/dark mode with FOUC-resistant startup logic.
-- **High-Fidelity Laser Scanning:** HUD-style OCR animations that mimic live server scanning.
+- **🔍 YOLO Vision Region Detector:** Automatically detects and isolates text regions, lines, and tokens to reduce handwriting noise.
+- **🩺 Specialized Medical OCR:** Translates challenging doctor handwriting into legible clinical transcripts.
+- **💊 Clinical Dosage Audit Engine:** Flags drug interactions, high-risk quantities, and age-limit warnings.
+- **💾 EHR and FHIR Ingestion:** Produces HL7-aligned JSON for Epic, Cerner, or local database workflows.
+- **🌗 Adaptive Theme System:** Clean light/dark mode with FOUC-resistant startup logic.
+- **🟢 High-Fidelity Laser Scanning:** HUD-style OCR animations that mimic live server scanning.
 
 ---
 
