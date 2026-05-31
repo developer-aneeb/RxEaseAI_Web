@@ -1,4 +1,4 @@
-# RxEaseAI - AI-Powered Prescription Ingestion 👨‍💻✨
+# RxEaseAI - AI-Powered Prescription Ingestion ✨
 
 ![React](https://img.shields.io/badge/React-Frontend-61DAFB?logo=react&logoColor=white) ![Vite](https://img.shields.io/badge/Vite-Build-646CFF?logo=vite&logoColor=white) ![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS-Styling-38BDF8?logo=tailwindcss&logoColor=white) ![Framer Motion](https://img.shields.io/badge/Framer%20Motion-Animations-black?logo=framer&logoColor=white) ![ESLint](https://img.shields.io/badge/ESLint-Linting-4B32C3?logo=eslint&logoColor=white) ![Lucide](https://img.shields.io/badge/Lucide-Icons-111827)
 
@@ -8,7 +8,7 @@ Transform handwritten prescriptions into structured clinical intelligence. RxEas
 
 ## 🌐 Live Demo
 
-- 🚀 Portfolio Website: [View Live Portfolio](https://portfolio-six-nu-20.vercel.app/)
+- 🚀 RxEaseAI Website: [View Live Portfolio](https://RxEaseAI.vercel.app/)
 
 ---
 
@@ -161,4 +161,7 @@ Tailwind CSS v4 dark mode support is enabled via the CSS-first directive:
 
 ## Contact
 
-- Add your contact details here (email, LinkedIn, or GitHub)
+**ANEEB UR REHMAN — Full Stack AI Engineer**  
+Email: dev.aneeb.rehman@gmail.com  
+GitHub:https://github.com/developer-aneeb
+LinkedIn: https://www.linkedin.com/in/aneeb-ur-rehman-528a50299/
