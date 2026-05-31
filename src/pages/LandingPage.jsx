@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import Lenis from 'lenis';
 import Navbar from '../components/layout/Navbar';
 import Footer from '../components/layout/Footer';
