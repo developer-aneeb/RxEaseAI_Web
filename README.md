@@ -36,12 +36,12 @@ Transform handwritten prescriptions into structured clinical intelligence. RxEas
 
 ## Features and capabilities
 
-- **YOLO Vision Region Detector:** Isolates text regions, lines, and tokens to reduce handwriting noise.
-- **Specialized Medical OCR:** Converts challenging handwriting into readable clinical transcripts.
-- **Clinical Dosage Audit Engine:** Flags drug interactions, high-risk quantities, and age-limit warnings.
-- **EHR and FHIR Ingestion:** Produces HL7-aligned JSON for Epic, Cerner, or local database workflows.
-- **Adaptive Theme System:** Light/dark mode with FOUC-resistant startup logic.
-- **High-Fidelity Laser Scanning:** HUD-style OCR animations that mimic live server scanning.
+- **🔍 YOLO Vision Region Detector:** Automatically detects and isolates text regions, lines, and tokens to reduce handwriting noise.
+- **🩺 Specialized Medical OCR:** Translates challenging doctor handwriting into legible clinical transcripts.
+- **💊 Clinical Dosage Audit Engine:** Flags drug interactions, high-risk quantities, and age-limit warnings.
+- **💾 EHR and FHIR Ingestion:** Produces HL7-aligned JSON for Epic, Cerner, or local database workflows.
+- **🌗 Adaptive Theme System:** Clean light/dark mode with FOUC-resistant startup logic.
+- **🟢 High-Fidelity Laser Scanning:** HUD-style OCR animations that mimic live server scanning.
 
 ---
 
