@@ -11,6 +11,7 @@ export const staggerContainer = (staggerChildren = 0.15, delayChildren = 0.1) =>
   },
 });
 
+
 export const fadeInUp = (yOffset = 30, duration = 0.5) => ({
   hidden: { y: yOffset, opacity: 0 },
   visible: {
