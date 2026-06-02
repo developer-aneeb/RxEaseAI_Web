@@ -90,7 +90,7 @@ export default function Hero() {
               </div>
               <div className="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400 font-medium">
                 <CheckCircle2 className="w-4.5 h-4.5 text-indigo-500 dark:text-indigo-400 shrink-0" />
-                99.2% Accuracy
+                74% Accuracy
               </div>
               <div className="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400 font-medium">
                 <Zap className="w-4.5 h-4.5 text-indigo-500 dark:text-indigo-400 shrink-0" />
