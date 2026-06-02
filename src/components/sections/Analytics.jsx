@@ -19,7 +19,7 @@ export default function Analytics() {
       { label: 'Queue Clearance Rate', value: '98.8%', change: '+14% improvement', icon: BarChart2 },
     ],
     accuracy: [
-      { label: 'OCR Transcription Accuracy', value: '99.2%', change: 'Validated clinical dataset', icon: ShieldCheck },
+      { label: 'OCR Transcription Accuracy', value: '74%', change: 'Validated clinical dataset', icon: ShieldCheck },
       { label: 'Dosage Flag Coverage', value: '100%', change: 'All prescriptions audited', icon: Sparkles },
       { label: 'Dispensing Errors Prevented', value: '142', change: 'in past 30 days', icon: TrendingUp },
     ],
