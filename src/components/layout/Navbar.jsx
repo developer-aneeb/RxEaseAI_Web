@@ -37,7 +37,6 @@ export default function Navbar() {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between">
-          
           {/* Logo */}
           <div className="flex items-center gap-2">
             <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/20">
@@ -47,7 +46,6 @@ export default function Navbar() {
               RxEase<span className="text-indigo-500">AI</span>
             </span>
           </div>
-
           {/* Desktop Nav Links */}
           <div className="hidden md:flex items-center gap-8">
             {navLinks.map((link) => (
@@ -60,10 +58,8 @@ export default function Navbar() {
               </a>
             ))}
           </div>
-
           {/* CTA & Theme Controls */}
           <div className="hidden md:flex items-center gap-4">
-            
             {/* Theme Toggle Button */}
             <Button
               variant="outline"
@@ -75,16 +71,13 @@ export default function Navbar() {
             >
               {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
             </Button>
-
             <Button variant="ghost" size="sm">
               Sign In
             </Button>
-            
             <Button variant="accent" size="sm" icon={ChevronRight}>
               Get Started
             </Button>
           </div>
-
           {/* Mobile menu and theme buttons */}
           <div className="flex md:hidden items-center gap-2">
             {/* Mobile Theme Toggle */}
@@ -98,7 +91,6 @@ export default function Navbar() {
             >
               {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
             </Button>
-
             <Button
               variant="ghost"
               size="sm"
@@ -108,7 +100,6 @@ export default function Navbar() {
               {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </Button>
           </div>
-
         </div>
       </div>
 
