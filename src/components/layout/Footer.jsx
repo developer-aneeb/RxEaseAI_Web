@@ -72,9 +72,7 @@ export default function Footer() {
               </Button>
             </div>
           </div>
-
         </div>
-
         {/* Bottom copyright & status */}
         <div className="border-t border-slate-200 dark:border-slate-900/60 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="text-[10px] text-slate-500 font-mono">
