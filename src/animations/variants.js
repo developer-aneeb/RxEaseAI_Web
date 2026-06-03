@@ -25,7 +25,7 @@ export const fadeIn = (duration = 0.5, delay = 0) => ({
   visible: {
     opacity: 1,
     transition: { duration, ease: 'easeOut', delay },
-  },
+  }, 
 });
 
 export const scaleIn = (scale = 0.95, duration = 0.8, delay = 0.3) => ({
