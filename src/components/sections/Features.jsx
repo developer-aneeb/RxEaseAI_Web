@@ -7,7 +7,7 @@ export default function Features() {
     {
       icon: Cpu,
       title: 'Handwriting Parsing',
-      description: 'Translates unstructured handwritten prescriptions into structured text with over 99.2% accuracy.',
+      description: "Interprets Pakistani doctors' handwritten prescriptions with 74% accuracy today, improving each iteration.",
       color: 'from-blue-500 to-indigo-600',
     },
     {
@@ -31,13 +31,13 @@ export default function Features() {
     {
       icon: Layers,
       title: 'Segmenter Pipeline',
-      description: 'Segments text regions, lines, and tokens before OCR analysis, providing higher reliability.',
+      description: 'Uses YOLO instance segmentation to isolate text regions before OCR for higher reliability.',
       color: 'from-cyan-500 to-blue-600',
     },
     {
       icon: ShieldCheck,
       title: 'HIPAA & SOC 2 Secured',
-      description: 'Features enterprise-grade encryption and access controls, protecting all patient health records.',
+      description: 'Uses encryption and access controls, with ongoing security improvements to protect patient data.',
       color: 'from-emerald-500 to-teal-600',
     },
   ];

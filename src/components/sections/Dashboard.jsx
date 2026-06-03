@@ -177,10 +177,10 @@ export default function Dashboard() {
                   <Card variant="glassLight" className="p-3.5 bg-white dark:bg-slate-950/80">
                     <div className="flex items-center justify-between mb-2">
                       <span className="text-[10px] text-slate-500 font-mono">AI CONFIDENCE SCORE</span>
-                      <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400">99.1%</span>
+                      <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400">74%</span>
                     </div>
                     <div className="w-full bg-slate-100 dark:bg-slate-900 h-1.5 rounded-full overflow-hidden">
-                      <div className="bg-indigo-600 dark:bg-indigo-500 h-full rounded-full w-[99.1%]" />
+                      <div className="bg-indigo-600 dark:bg-indigo-500 h-full rounded-full w-[74%]" />
                     </div>
                   </Card>
                   

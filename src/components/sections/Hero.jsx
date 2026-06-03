@@ -54,7 +54,7 @@ export default function Hero() {
               variants={fadeInUp(25)}
               className="text-base sm:text-lg text-slate-650 dark:text-slate-300 max-w-2xl font-light leading-relaxed"
             >
-              Experience unparalleled accuracy with our AI-driven platform. Instantly convert complex medical handwriting into structured, actionable data while ensuring complete clinical compliance.
+              We are working to interpret and read Pakistani doctors' handwritten prescriptions. Current accuracy is 74%, and we will keep improving accuracy and security to protect patient data.
             </motion.p>
 
             {/* CTAs */}
@@ -94,7 +94,7 @@ export default function Hero() {
               </div>
               <div className="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400 font-medium">
                 <Zap className="w-4.5 h-4.5 text-indigo-500 dark:text-indigo-400 shrink-0" />
-                &lt; 2s Processing
+                4m Processing
               </div>
             </motion.div>
           </motion.div>
@@ -170,7 +170,7 @@ export default function Hero() {
               </div>
               <div className="text-left">
                 <div className="text-[9px] text-slate-400 font-mono font-semibold">LATENCY</div>
-                <div className="text-xs font-bold text-slate-800 dark:text-white">1.8 seconds</div>
+                <div className="text-xs font-bold text-slate-800 dark:text-white">4m average</div>
               </div>
             </motion.div>
 

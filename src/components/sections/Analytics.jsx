@@ -14,12 +14,12 @@ export default function Analytics() {
 
   const stats = {
     efficiency: [
-      { label: 'Avg Ingestion Time', value: '1.8s', change: '-84% vs manual entry', icon: Sparkles },
+      { label: 'Avg Ingestion Time', value: '4m', change: '-84% vs manual entry', icon: Sparkles },
       { label: 'Pharmacist Time Saved', value: '4.2 hrs', change: 'per shifts daily', icon: TrendingUp },
       { label: 'Queue Clearance Rate', value: '98.8%', change: '+14% improvement', icon: BarChart2 },
     ],
     accuracy: [
-      { label: 'OCR Transcription Accuracy', value: '74%', change: 'Validated clinical dataset', icon: ShieldCheck },
+      { label: 'OCR Transcription Accuracy', value: '74%', change: "Pakistani doctors' handwriting dataset", icon: ShieldCheck },
       { label: 'Dosage Flag Coverage', value: '100%', change: 'All prescriptions audited', icon: Sparkles },
       { label: 'Dispensing Errors Prevented', value: '142', change: 'in past 30 days', icon: TrendingUp },
     ],
@@ -102,9 +102,9 @@ export default function Analytics() {
         <Card variant="glass" className="mt-12 p-6 rounded-3xl">
           <div className="flex flex-col md:flex-row items-center justify-between gap-6">
             <div className="text-left space-y-2">
-              <h3 className="text-lg font-bold text-slate-900 dark:text-white">Daily Queue Latency (Seconds)</h3>
+              <h3 className="text-lg font-bold text-slate-900 dark:text-white">Daily Queue Latency (Minutes)</h3>
               <p className="text-xs text-slate-655 dark:text-slate-400 max-w-md">
-                Tracking AI server roundtrip processing time including document image segmentation and clinical database checks.
+                Tracking AI server roundtrip processing time including YOLO instance segmentation and clinical database checks.
               </p>
             </div>
             
@@ -134,7 +134,7 @@ export default function Analytics() {
                 <circle cx="160" cy="30" r="4.5" fill="#a855f7" />
               </svg>
               <div className="absolute top-1 left-[165px] bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 px-2 py-0.5 rounded text-[9px] font-mono text-slate-705 dark:text-purple-400 transition-colors duration-300">
-                1.8s (Peak Load)
+                4m (Peak Load)
               </div>
             </div>
           </div>

@@ -10,7 +10,7 @@ export default function Faq() {
   const faqs = [
     {
       q: 'How accurate is the RxEaseAI handwriting OCR?',
-      a: 'RxEaseAI achieves over 99.2% accuracy on standard clinical prescriptions. Our custom line and character segmenters are specifically trained on handwriting variations of medical practitioners globally.',
+      a: "Current accuracy is 74% on Pakistani doctors' handwritten prescriptions. We are improving accuracy and security to keep patient data safe.",
     },
     {
       q: 'Is the platform HIPAA and SOC 2 compliant?',

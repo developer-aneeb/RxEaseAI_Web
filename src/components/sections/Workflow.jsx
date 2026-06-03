@@ -15,7 +15,7 @@ export default function Workflow() {
     {
       id: 2,
       title: '2. YOLO Vision',
-      description: 'Advanced bounding box detection isolates text regions.',
+      description: 'YOLO instance segmentation isolates text regions instead of simple box detection.',
       icon: 'visibility',
       color: 'text-[#0F6FFF]',
       align: 'right',
