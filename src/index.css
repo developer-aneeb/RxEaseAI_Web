@@ -328,7 +328,7 @@
 }
 .dark .float-label-input:focus ~ .float-label,
 .dark .float-label-input:not(:placeholder-shown) ~ .float-label {
-  background-color: #172033; /* Dark theme card content background */
+  background-color: #0f172a; /* Dark theme card content background */
 }
 
 /* Pipeline activation animation classes */
