@@ -63,29 +63,29 @@ export default function SignUp() {
     // Scroll to top on mount
     window.scrollTo(0, 0);
 
-    // Accuracy count up to 99.2
+    // Accuracy count up to 74
     let currentAcc = 0;
     const accInterval = setInterval(() => {
-      currentAcc += 1.5;
-      if (currentAcc >= 99.2) {
-        setAccuracy(99.2);
+      currentAcc += 2;
+      if (currentAcc >= 74) {
+        setAccuracy(74);
         clearInterval(accInterval);
       } else {
-        setAccuracy(parseFloat(currentAcc.toFixed(1)));
+        setAccuracy(currentAcc);
       }
     }, 16);
 
-    // Prescriptions count up to 50
+    // Prescriptions count up to 1
     let currentPres = 0;
     const presInterval = setInterval(() => {
-      currentPres += 1.2;
-      if (currentPres >= 50) {
-        setPrescriptions(50);
+      currentPres += 1;
+      if (currentPres >= 1) {
+        setPrescriptions(1);
         clearInterval(presInterval);
       } else {
-        setPrescriptions(Math.floor(currentPres));
+        setPrescriptions(currentPres);
       }
-    }, 24);
+    }, 100);
 
     return () => {
       clearInterval(accInterval);
@@ -99,6 +99,14 @@ export default function SignUp() {
       alert('Please fill out all fields.');
       return;
     }
+    
+    // Alphanumeric/subdomain email validator covers students.au.edu.pk, gmail.com, yahoo.com etc.
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!emailRegex.test(email)) {
+      alert('Please enter a valid email address (e.g. name@gmail.com or student@students.au.edu.pk).');
+      return;
+    }
+
     if (strengthScore < 4) {
       alert('Please satisfy all password strength requirements.');
       return;
@@ -189,7 +197,7 @@ export default function SignUp() {
                 <span className="font-label-sm text-[11px] text-on-surface-variant dark:text-slate-400 uppercase tracking-wider">Accuracy</span>
               </div>
               <div className="flex flex-col">
-                <span className="text-[28px] font-bold text-on-surface dark:text-white font-headline-lg">&lt;2s</span>
+                <span className="text-[28px] font-bold text-on-surface dark:text-white font-headline-lg">4m</span>
                 <span className="font-label-sm text-[11px] text-on-surface-variant dark:text-slate-400 uppercase tracking-wider">Processing</span>
               </div>
               <div className="flex flex-col">
