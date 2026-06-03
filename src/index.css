@@ -98,14 +98,15 @@
   --border-radius-full: 9999px;
 
   --spacing-base: 4px;
-  --spacing-xs: 8px;
-  --spacing-sm: 16px;
-  --spacing-md: 24px;
-  --spacing-lg: 40px;
-  --spacing-xl: 64px;
   --spacing-gutter: 24px;
   --spacing-margin-mobile: 16px;
   --spacing-container-max: 1440px;
+
+  --spacing-stitch-xs: 8px;
+  --spacing-stitch-sm: 16px;
+  --spacing-stitch-md: 24px;
+  --spacing-stitch-lg: 40px;
+  --spacing-stitch-xl: 64px;
 
   --animate-shimmer: shimmer 1.5s infinite;
   --animate-float: float 4s ease-in-out infinite;
