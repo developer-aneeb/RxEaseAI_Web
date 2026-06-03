@@ -20,7 +20,7 @@ Transform handwritten prescriptions into structured clinical intelligence. RxEas
 
 ## Key facts (quick)
 
-- Target: sub-2s ingestion and 99.2% OCR accuracy (validated dataset)
+- Target: sub-2s ingestion and 74% OCR accuracy (validated dataset)
 - YOLO-based segmentation with medical OCR concepts
 - FHIR/HL7-ready structured output
 - React 19, Vite 8, Tailwind CSS v4, Framer Motion
