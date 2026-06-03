@@ -12,6 +12,8 @@ export default function SignUp() {
   const [password, setPassword] = useState('');
   const [terms, setTerms] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
 
@@ -55,8 +57,12 @@ export default function SignUp() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!fullName || !email || !password) {
+    if (!fullName || !email || !password || !confirmPassword) {
       alert('Please fill out all fields.');
+      return;
+    }
+    if (password !== confirmPassword) {
+      alert('Passwords do not match.');
       return;
     }
     if (!terms) {
@@ -351,6 +357,28 @@ export default function SignUp() {
                       type="button"
                     >
                       <span className="material-symbols-outlined">{showPassword ? 'visibility_off' : 'visibility'}</span>
+                    </button>
+                  </div>
+
+                  {/* Confirm Password */}
+                  <div className="relative">
+                    <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline-variant dark:text-slate-500 z-10">lock</span>
+                    <input 
+                      className="float-label-input w-full pl-[48px] pr-[48px] py-3 rounded-xl bg-white/50 dark:bg-slate-950/50 border border-outline-variant/50 dark:border-slate-800 focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all font-body-md text-body-md text-on-surface dark:text-white peer placeholder-transparent" 
+                      id="confirmPassword" 
+                      placeholder="Confirm Password" 
+                      type={showConfirmPassword ? "text" : "password"}
+                      value={confirmPassword}
+                      onChange={(e) => setConfirmPassword(e.target.value)}
+                      required
+                    />
+                    <label className="float-label absolute left-[48px] top-1/2 -translate-y-1/2 text-outline-variant dark:text-slate-500 font-body-md transition-all duration-200 pointer-events-none peer-focus:text-primary" htmlFor="confirmPassword">Confirm Password</label>
+                    <button 
+                      className="absolute right-4 top-1/2 -translate-y-1/2 text-outline-variant dark:text-slate-500 hover:text-on-surface dark:hover:text-white transition-colors focus:outline-none z-10" 
+                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                      type="button"
+                    >
+                      <span className="material-symbols-outlined">{showConfirmPassword ? 'visibility_off' : 'visibility'}</span>
                     </button>
                   </div>
 
