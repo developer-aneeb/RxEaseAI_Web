@@ -38,14 +38,14 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between">
           {/* Logo */}
-          <div className="flex items-center gap-2">
+          <a href="#" className="flex items-center gap-2 cursor-pointer">
             <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/20">
               <Activity className="w-5 h-5 text-white" />
             </div>
             <span className="font-bold text-xl tracking-tight bg-gradient-to-r from-slate-900 via-slate-800 to-slate-600 dark:from-white dark:via-slate-200 dark:to-slate-400 bg-clip-text text-transparent">
               RxEase<span className="text-indigo-500">AI</span>
             </span>
-          </div>
+          </a>
           {/* Desktop Nav Links */}
           <div className="hidden md:flex items-center gap-8">
             {navLinks.map((link) => (
@@ -71,10 +71,10 @@ export default function Navbar() {
             >
               {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
             </Button>
-            <Button variant="ghost" size="sm">
+            <Button variant="ghost" size="sm" onClick={() => window.location.hash = '#signup'}>
               Sign In
             </Button>
-            <Button variant="accent" size="sm" icon={ChevronRight}>
+            <Button variant="accent" size="sm" icon={ChevronRight} onClick={() => window.location.hash = '#signup'}>
               Get Started
             </Button>
           </div>
@@ -125,10 +125,10 @@ export default function Navbar() {
                 </a>
               ))}
               <div className="pt-4 pb-2 border-t border-slate-200 dark:border-slate-800/80 px-3 flex flex-col gap-3">
-                <Button variant="ghost" className="w-full text-center py-2.5">
+                <Button variant="ghost" className="w-full text-center py-2.5" onClick={() => { setIsOpen(false); window.location.hash = '#signup'; }}>
                   Sign In
                 </Button>
-                <Button variant="accent" className="w-full text-center py-2.5">
+                <Button variant="accent" className="w-full text-center py-2.5" onClick={() => { setIsOpen(false); window.location.hash = '#signup'; }}>
                   Get Started
                 </Button>
               </div>
