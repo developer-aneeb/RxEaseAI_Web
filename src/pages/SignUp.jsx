@@ -5,7 +5,7 @@ import Button from '../components/ui/Button';
 
 export default function SignUp() {
   const { theme, toggleTheme } = useTheme();
-  
+
   // Form State
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
@@ -99,7 +99,7 @@ export default function SignUp() {
       alert('Please fill out all fields.');
       return;
     }
-    
+
     // Alphanumeric/subdomain email validator covers students.au.edu.pk, gmail.com, yahoo.com etc.
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     if (!emailRegex.test(email)) {
@@ -134,7 +134,7 @@ export default function SignUp() {
 
   return (
     <div className="bg-background text-on-background min-h-screen flex flex-col font-geist antialiased bg-grid-pattern relative overflow-x-hidden dark:bg-slate-950 dark:text-slate-100 transition-colors duration-300">
-      
+
       {/* Ambient Glows */}
       <div className="fixed top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-primary/10 blur-[120px] pointer-events-none"></div>
       <div className="fixed bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-secondary/10 blur-[120px] pointer-events-none"></div>
@@ -171,18 +171,18 @@ export default function SignUp() {
       </header>
 
       {/* Main Content */}
-      <main className="flex-grow flex items-center justify-center p-margin-mobile md:p-lg xl:p-xl w-full max-w-container-max mx-auto relative z-10">
-        <div className="w-full flex flex-col lg:flex-row gap-lg md:gap-xl xl:gap-[80px] items-stretch">
-          
+      <main className="flex-grow flex items-center justify-center p-margin-mobile md:p-stitch-lg xl:p-stitch-xl w-full max-w-container-max mx-auto relative z-10">
+        <div className="w-full flex flex-col lg:flex-row gap-stitch-lg md:gap-stitch-xl xl:gap-[80px] items-stretch">
+
           {/* Left Panel: Storytelling/Showcase (55%) */}
-          <div className="flex-1 lg:w-[55%] flex flex-col justify-center space-y-lg order-2 lg:order-1 pt-xl lg:pt-0">
+          <div className="flex-1 lg:w-[55%] flex flex-col justify-center space-y-stitch-lg order-2 lg:order-1 pt-stitch-xl lg:pt-0">
             <div className="space-y-md animate-fade-in-up">
-              <div className="inline-flex items-center gap-xs px-sm py-xs rounded-full glass-panel border border-primary/20 text-primary dark:border-primary/30 relative">
+              <div className="inline-flex items-center gap-stitch-xs px-stitch-sm py-stitch-xs rounded-full glass-panel border border-primary/20 text-primary dark:border-primary/30 relative">
                 <div className="w-2 h-2 rounded-full bg-primary animate-pulse-ring mr-1"></div>
                 <span className="font-label-sm text-label-sm uppercase tracking-wider font-semibold">AI-Powered Prescription Intelligence</span>
               </div>
               <h1 className="font-display-lg text-[36px] md:text-5xl font-semibold text-on-surface dark:text-white leading-tight">
-                Join the Future of <br className="hidden lg:block"/>
+                Join the Future of <br className="hidden lg:block" />
                 <span className="text-gradient font-bold">Prescription Intelligence</span>
               </h1>
               <p className="font-body-lg text-body-lg text-on-surface-variant dark:text-slate-350 max-w-[540px]">
@@ -191,7 +191,7 @@ export default function SignUp() {
             </div>
 
             {/* Trust Metrics Row */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-sm md:gap-md animate-fade-in-up delay-100 border-y border-outline-variant/30 dark:border-slate-800 py-md">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-stitch-sm md:gap-stitch-md animate-fade-in-up delay-100 border-y border-outline-variant/30 dark:border-slate-800 py-stitch-md">
               <div className="flex flex-col">
                 <span className="text-[28px] font-bold text-on-surface dark:text-white font-headline-lg">{accuracy}%</span>
                 <span className="font-label-sm text-[11px] text-on-surface-variant dark:text-slate-400 uppercase tracking-wider">Accuracy</span>
@@ -213,48 +213,48 @@ export default function SignUp() {
             </div>
 
             {/* AI Pipeline Visualization (Large) */}
-            <div className="relative animate-fade-in-up delay-200 mt-lg hidden md:block">
-              <h3 className="font-label-md text-label-md text-on-surface-variant dark:text-slate-400 mb-md uppercase tracking-wider">Intelligence Pipeline</h3>
-              <div className="flex items-center justify-between relative px-xs py-md">
-                
+            <div className="relative animate-fade-in-up delay-200 mt-stitch-lg hidden md:block">
+              <h3 className="font-label-md text-label-md text-on-surface-variant dark:text-slate-400 mb-stitch-md uppercase tracking-wider">Intelligence Pipeline</h3>
+              <div className="flex items-center justify-between relative px-stitch-xs py-stitch-md">
+
                 {/* Connecting line */}
                 <div className="absolute left-[30px] right-[30px] top-1/2 -translate-y-1/2 h-[2px] bg-outline-variant/20 dark:bg-slate-800 z-0"></div>
-                
+
                 {/* Glowing animated line */}
                 <div className="absolute left-[30px] right-[30px] top-1/2 -translate-y-1/2 h-[2px] bg-gradient-to-r from-primary via-secondary to-primary bg-[length:200%_100%] animate-flow z-0 opacity-50"></div>
-                
+
                 {/* Nodes */}
-                <div className="relative z-10 flex flex-col items-center gap-xs">
+                <div className="relative z-10 flex flex-col items-center gap-stitch-xs">
                   <div className="w-12 h-12 rounded-xl bg-surface-container-lowest dark:bg-slate-900 border-2 border-primary/20 dark:border-primary/40 flex items-center justify-center text-primary pipeline-node-1 transition-all">
                     <span className="material-symbols-outlined">upload_file</span>
                   </div>
                   <span className="font-label-sm text-[11px] text-on-surface dark:text-slate-300 font-medium">Upload</span>
                 </div>
-                <div className="relative z-10 flex flex-col items-center gap-xs">
+                <div className="relative z-10 flex flex-col items-center gap-stitch-xs">
                   <div className="w-12 h-12 rounded-xl bg-surface-container-lowest dark:bg-slate-900 border-2 border-primary/20 dark:border-primary/40 flex items-center justify-center text-primary pipeline-node-2 transition-all">
                     <span className="material-symbols-outlined">troubleshoot</span>
                   </div>
                   <span className="font-label-sm text-[11px] text-on-surface dark:text-slate-300 font-medium">YOLO</span>
                 </div>
-                <div className="relative z-10 flex flex-col items-center gap-xs">
+                <div className="relative z-10 flex flex-col items-center gap-stitch-xs">
                   <div className="w-12 h-12 rounded-xl bg-surface-container-lowest dark:bg-slate-900 border-2 border-primary/20 dark:border-primary/40 flex items-center justify-center text-primary pipeline-node-3 transition-all">
                     <span className="material-symbols-outlined">text_snippet</span>
                   </div>
                   <span className="font-label-sm text-[11px] text-on-surface dark:text-slate-300 font-medium">OCR</span>
                 </div>
-                <div className="relative z-10 flex flex-col items-center gap-xs">
+                <div className="relative z-10 flex flex-col items-center gap-stitch-xs">
                   <div className="w-12 h-12 rounded-xl bg-surface-container-lowest dark:bg-slate-900 border-2 border-primary/20 dark:border-primary/40 flex items-center justify-center text-secondary pipeline-node-4 transition-all">
                     <span className="material-symbols-outlined">verified_user</span>
                   </div>
                   <span className="font-label-sm text-[11px] text-on-surface dark:text-slate-300 font-medium">Verify</span>
                 </div>
-                <div className="relative z-10 flex flex-col items-center gap-xs">
+                <div className="relative z-10 flex flex-col items-center gap-stitch-xs">
                   <div className="w-12 h-12 rounded-xl bg-surface-container-lowest dark:bg-slate-900 border-2 border-primary/20 dark:border-primary/40 flex items-center justify-center text-tertiary pipeline-node-5 transition-all">
                     <span className="material-symbols-outlined">medication</span>
                   </div>
                   <span className="font-label-sm text-[11px] text-on-surface dark:text-slate-300 font-medium">Recommend</span>
                 </div>
-                <div className="relative z-10 flex flex-col items-center gap-xs">
+                <div className="relative z-10 flex flex-col items-center gap-stitch-xs">
                   <div className="w-12 h-12 rounded-xl bg-surface-container-lowest dark:bg-slate-900 border-2 border-primary/20 dark:border-primary/40 flex items-center justify-center text-primary pipeline-node-6 transition-all">
                     <span className="material-symbols-outlined">analytics</span>
                   </div>
@@ -264,15 +264,15 @@ export default function SignUp() {
             </div>
 
             {/* Mini Dashboard Preview & Floating Cards */}
-            <div className="relative mt-lg animate-fade-in-up delay-300 h-[240px] hidden lg:block">
+            <div className="relative mt-stitch-lg animate-fade-in-up delay-300 h-[240px] hidden lg:block">
               <div className="absolute inset-0 bg-surface-container-lowest dark:bg-slate-900 rounded-xl border border-outline-variant/30 dark:border-slate-800/80 shadow-lg overflow-hidden flex flex-col">
-                <div className="h-8 bg-surface-container-low dark:bg-slate-950 border-b border-outline-variant/30 dark:border-slate-800/80 flex items-center px-sm gap-2">
+                <div className="h-8 bg-surface-container-low dark:bg-slate-950 border-b border-outline-variant/30 dark:border-slate-800/80 flex items-center px-stitch-sm gap-2">
                   <div className="w-2.5 h-2.5 rounded-full bg-error/80"></div>
                   <div className="w-2.5 h-2.5 rounded-full bg-[#fbbc05]"></div>
                   <div className="w-2.5 h-2.5 rounded-full bg-secondary/80"></div>
                   <div className="ml-auto text-[10px] font-label-sm text-on-surface-variant dark:text-slate-400">Workspace Preview</div>
                 </div>
-                <div className="p-md flex gap-md h-full">
+                <div className="p-stitch-md flex gap-stitch-md h-full">
                   <div className="w-1/3 flex flex-col gap-2">
                     <div className="h-4 w-3/4 bg-surface-variant dark:bg-slate-850 rounded"></div>
                     <div className="h-2 w-1/2 bg-surface-container-highest dark:bg-slate-800 rounded mb-4"></div>
@@ -306,7 +306,7 @@ export default function SignUp() {
                   </div>
                 </div>
               </div>
-              
+
               {/* Floating Cards */}
               <div className="absolute -right-6 top-4 glass-panel dark:glassmorphism rounded-lg p-3 flex items-center gap-3 animate-float shadow-xl z-20 w-[260px]">
                 <div className="w-8 h-8 rounded-full bg-secondary/20 flex items-center justify-center text-secondary">
@@ -318,7 +318,7 @@ export default function SignUp() {
                   <p className="font-label-sm text-[10px] text-secondary mt-0.5">99.8% Confidence</p>
                 </div>
               </div>
-              
+
               <div className="absolute -left-4 bottom-8 glass-panel dark:glassmorphism rounded-lg p-3 flex items-center gap-3 animate-float-delayed shadow-xl z-20">
                 <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary">
                   <span className="material-symbols-outlined text-[18px]">payments</span>
@@ -333,15 +333,15 @@ export default function SignUp() {
 
           {/* Right Panel: Signup Form (45%) */}
           <div className="flex-1 lg:w-[45%] w-full max-w-[500px] mx-auto order-1 lg:order-2 animate-fade-in-up delay-400">
-            <div className="glass-panel dark:bg-slate-900/60 dark:border-slate-800/80 rounded-2xl p-lg flex flex-col gap-md ai-glow relative overflow-hidden border-t border-l border-white/60 dark:border-white/10">
-              
+            <div className="glass-panel dark:bg-slate-900/60 dark:border-slate-800/80 rounded-2xl p-stitch-lg flex flex-col gap-stitch-md ai-glow relative overflow-hidden border-t border-l border-white/60 dark:border-white/10">
+
               {/* Decorative gradient */}
               <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary via-secondary to-tertiary"></div>
               <div className="absolute -top-24 -right-24 w-48 h-48 bg-primary/10 rounded-full blur-3xl pointer-events-none"></div>
               <div className="absolute -bottom-24 -left-24 w-48 h-48 bg-secondary/10 rounded-full blur-3xl pointer-events-none"></div>
-              
-              <div className="text-left mb-sm relative z-10">
-                <h2 className="font-headline-md text-[26px] text-on-surface dark:text-white font-semibold mb-xs">Create Your Healthcare Workspace</h2>
+
+              <div className="text-left mb-stitch-sm relative z-10">
+                <h2 className="font-headline-md text-[26px] text-on-surface dark:text-white font-semibold mb-stitch-xs">Create Your Healthcare Workspace</h2>
                 <p className="font-body-md text-body-md text-on-surface-variant dark:text-slate-400">Start managing prescriptions intelligently in under 60 seconds.</p>
               </div>
 
@@ -356,15 +356,15 @@ export default function SignUp() {
                   </p>
                 </div>
               ) : (
-                <form className="flex flex-col gap-md relative z-10" onSubmit={handleSubmit}>
-                  
+                <form className="flex flex-col gap-stitch-md relative z-10" onSubmit={handleSubmit}>
+
                   {/* Full Name */}
                   <div className="relative">
                     <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline-variant dark:text-slate-500 z-10">person</span>
-                    <input 
-                      className="float-label-input w-full pl-[48px] pr-sm py-3 rounded-xl bg-white/50 dark:bg-slate-950/50 border border-outline-variant/50 dark:border-slate-800 focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all font-body-md text-body-md text-on-surface dark:text-white peer placeholder-transparent" 
-                      id="fullName" 
-                      placeholder="Full Name" 
+                    <input
+                      className="float-label-input w-full pl-[48px] pr-stitch-sm py-3 rounded-xl bg-white/50 dark:bg-slate-950/50 border border-outline-variant/50 dark:border-slate-800 focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all font-body-md text-body-md text-on-surface dark:text-white peer placeholder-transparent"
+                      id="fullName"
+                      placeholder="Full Name"
                       type="text"
                       value={fullName}
                       onChange={(e) => setFullName(e.target.value)}
@@ -376,33 +376,33 @@ export default function SignUp() {
                   {/* Email */}
                   <div className="relative">
                     <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline-variant dark:text-slate-500 z-10">mail</span>
-                    <input 
-                      className="float-label-input w-full pl-[48px] pr-sm py-3 rounded-xl bg-white/50 dark:bg-slate-950/50 border border-outline-variant/50 dark:border-slate-800 focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all font-body-md text-body-md text-on-surface dark:text-white peer placeholder-transparent" 
-                      id="email" 
-                      placeholder="Email" 
+                    <input
+                      className="float-label-input w-full pl-[48px] pr-stitch-sm py-3 rounded-xl bg-white/50 dark:bg-slate-950/50 border border-outline-variant/50 dark:border-slate-800 focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all font-body-md text-body-md text-on-surface dark:text-white peer placeholder-transparent"
+                      id="email"
+                      placeholder="Email"
                       type="email"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       required
                     />
-                    <label className="float-label absolute left-[48px] top-1/2 -translate-y-1/2 text-outline-variant dark:text-slate-500 font-body-md transition-all duration-200 pointer-events-none peer-focus:text-primary" htmlFor="email">Work Email</label>
+                    <label className="float-label absolute left-[48px] top-1/2 -translate-y-1/2 text-outline-variant dark:text-slate-500 font-body-md transition-all duration-200 pointer-events-none peer-focus:text-primary" htmlFor="email">Email</label>
                   </div>
 
                   {/* Password */}
                   <div className="relative">
                     <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline-variant dark:text-slate-500 z-10">lock</span>
-                    <input 
-                      className="float-label-input w-full pl-[48px] pr-[48px] py-3 rounded-xl bg-white/50 dark:bg-slate-950/50 border border-outline-variant/50 dark:border-slate-800 focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all font-body-md text-body-md text-on-surface dark:text-white peer placeholder-transparent" 
-                      id="password" 
-                      placeholder="Password" 
+                    <input
+                      className="float-label-input w-full pl-[48px] pr-[48px] py-3 rounded-xl bg-white/50 dark:bg-slate-950/50 border border-outline-variant/50 dark:border-slate-800 focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all font-body-md text-body-md text-on-surface dark:text-white peer placeholder-transparent"
+                      id="password"
+                      placeholder="Password"
                       type={showPassword ? "text" : "password"}
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       required
                     />
                     <label className="float-label absolute left-[48px] top-1/2 -translate-y-1/2 text-outline-variant dark:text-slate-500 font-body-md transition-all duration-200 pointer-events-none peer-focus:text-primary" htmlFor="password">Password</label>
-                    <button 
-                      className="absolute right-4 top-1/2 -translate-y-1/2 text-outline-variant dark:text-slate-500 hover:text-on-surface dark:hover:text-white transition-colors focus:outline-none z-10" 
+                    <button
+                      className="absolute right-4 top-1/2 -translate-y-1/2 text-outline-variant dark:text-slate-500 hover:text-on-surface dark:hover:text-white transition-colors focus:outline-none z-10"
                       onClick={() => setShowPassword(!showPassword)}
                       type="button"
                     >
@@ -417,7 +417,7 @@ export default function SignUp() {
                         <span className="text-on-surface-variant dark:text-slate-400">Password Strength</span>
                         <span className={`${getStrengthTextColor()} font-semibold`}>{getStrengthText()}</span>
                       </div>
-                      
+
                       {/* Strength indicator 4 bars */}
                       <div className="grid grid-cols-4 gap-2 h-1.5 w-full mt-0.5">
                         <div className={`h-full rounded-full transition-all duration-300 ${strengthScore >= 1 ? getStrengthColorClass() : 'bg-slate-200 dark:bg-slate-800'}`}></div>
@@ -425,7 +425,7 @@ export default function SignUp() {
                         <div className={`h-full rounded-full transition-all duration-300 ${strengthScore >= 3 ? getStrengthColorClass() : 'bg-slate-200 dark:bg-slate-800'}`}></div>
                         <div className={`h-full rounded-full transition-all duration-300 ${strengthScore >= 4 ? getStrengthColorClass() : 'bg-slate-200 dark:bg-slate-800'}`}></div>
                       </div>
-                      
+
                       {/* Validation checks */}
                       <div className="grid grid-cols-2 gap-x-4 gap-y-2 mt-2">
                         {/* 8+ characters */}
@@ -490,18 +490,18 @@ export default function SignUp() {
                   {/* Confirm Password */}
                   <div className="relative">
                     <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline-variant dark:text-slate-500 z-10">lock</span>
-                    <input 
-                      className="float-label-input w-full pl-[48px] pr-[48px] py-3 rounded-xl bg-white/50 dark:bg-slate-950/50 border border-outline-variant/50 dark:border-slate-800 focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all font-body-md text-body-md text-on-surface dark:text-white peer placeholder-transparent" 
-                      id="confirmPassword" 
-                      placeholder="Confirm Password" 
+                    <input
+                      className="float-label-input w-full pl-[48px] pr-[48px] py-3 rounded-xl bg-white/50 dark:bg-slate-950/50 border border-outline-variant/50 dark:border-slate-800 focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all font-body-md text-body-md text-on-surface dark:text-white peer placeholder-transparent"
+                      id="confirmPassword"
+                      placeholder="Confirm Password"
                       type={showConfirmPassword ? "text" : "password"}
                       value={confirmPassword}
                       onChange={(e) => setConfirmPassword(e.target.value)}
                       required
                     />
                     <label className="float-label absolute left-[48px] top-1/2 -translate-y-1/2 text-outline-variant dark:text-slate-500 font-body-md transition-all duration-200 pointer-events-none peer-focus:text-primary" htmlFor="confirmPassword">Confirm Password</label>
-                    <button 
-                      className="absolute right-4 top-1/2 -translate-y-1/2 text-outline-variant dark:text-slate-500 hover:text-on-surface dark:hover:text-white transition-colors focus:outline-none z-10" 
+                    <button
+                      className="absolute right-4 top-1/2 -translate-y-1/2 text-outline-variant dark:text-slate-500 hover:text-on-surface dark:hover:text-white transition-colors focus:outline-none z-10"
                       onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                       type="button"
                     >
@@ -511,9 +511,9 @@ export default function SignUp() {
 
                   {/* Terms Checkbox */}
                   <div className="flex items-start gap-3 mt-2">
-                    <input 
-                      className="mt-1 w-4 h-4 rounded border-outline-variant/50 text-primary focus:ring-primary/20 bg-white/50 cursor-pointer" 
-                      id="terms" 
+                    <input
+                      className="mt-1 w-4 h-4 rounded border-outline-variant/50 text-primary focus:ring-primary/20 bg-white/50 cursor-pointer"
+                      id="terms"
                       type="checkbox"
                       checked={terms}
                       onChange={(e) => setTerms(e.target.checked)}
@@ -525,8 +525,8 @@ export default function SignUp() {
                   </div>
 
                   {/* Submit Button */}
-                  <button 
-                    className="w-full mt-2 py-3.5 px-lg rounded-xl bg-gradient-btn text-white font-label-md text-[16px] font-semibold transition-all duration-300 transform hover:-translate-y-1 hover:shadow-[0_10px_25px_-5px_rgba(0,85,201,0.4)] flex justify-center items-center gap-xs relative overflow-hidden group cursor-pointer" 
+                  <button
+                    className="w-full mt-2 py-3.5 px-stitch-lg rounded-xl bg-gradient-btn text-white font-label-md text-[16px] font-semibold transition-all duration-300 transform hover:-translate-y-1 hover:shadow-[0_10px_25px_-5px_rgba(0,85,201,0.4)] flex justify-center items-center gap-stitch-xs relative overflow-hidden group cursor-pointer"
                     type="submit"
                     disabled={isSubmitting}
                   >
@@ -538,15 +538,15 @@ export default function SignUp() {
               )}
 
               {/* Divider */}
-              <div className="flex items-center gap-sm my-4 relative z-10">
+              <div className="flex items-center gap-stitch-sm my-4 relative z-10">
                 <div className="h-px bg-outline-variant/30 dark:bg-slate-800 flex-grow"></div>
                 <span className="font-label-sm text-[12px] text-outline-variant dark:text-slate-500 uppercase tracking-widest">Or connect with</span>
                 <div className="h-px bg-outline-variant/30 dark:bg-slate-800 flex-grow"></div>
               </div>
 
               {/* OAuth Button */}
-              <button 
-                className="w-full py-3 px-lg rounded-xl bg-white/80 dark:bg-slate-900 border border-outline-variant/40 dark:border-slate-800 hover:bg-white dark:hover:bg-slate-850 text-on-surface dark:text-slate-200 font-label-md text-label-md transition-all duration-200 flex justify-center items-center gap-3 shadow-sm hover:shadow-md relative z-10 cursor-pointer" 
+              <button
+                className="w-full py-3 px-stitch-lg rounded-xl bg-white/80 dark:bg-slate-900 border border-outline-variant/40 dark:border-slate-800 hover:bg-white dark:hover:bg-slate-850 text-on-surface dark:text-slate-200 font-label-md text-label-md transition-all duration-200 flex justify-center items-center gap-3 shadow-sm hover:shadow-md relative z-10 cursor-pointer"
                 type="button"
                 onClick={() => alert('Social integration simulation: Signed in via Google.')}
               >
@@ -572,14 +572,14 @@ export default function SignUp() {
               </div>
 
               {/* Bottom Link */}
-              <p className="text-center font-body-md text-[14px] text-on-surface-variant dark:text-slate-400 mt-md relative z-10">
+              <p className="text-center font-body-md text-[14px] text-on-surface-variant dark:text-slate-400 mt-stitch-md relative z-10">
                 Already have an account? <a className="font-label-md text-primary dark:text-indigo-400 hover:text-primary-fixed-variant hover:underline transition-colors font-semibold" href="#">Sign In</a>
               </p>
 
               {/* Trusted Healthcare AI Security Block */}
-              <div className="mt-lg pt-md border-t border-outline-variant/30 dark:border-slate-800 relative z-10">
+              <div className="mt-stitch-lg pt-stitch-md border-t border-outline-variant/30 dark:border-slate-800 relative z-10">
                 <p className="text-center font-label-sm text-[11px] text-on-surface-variant dark:text-slate-500 uppercase tracking-wider mb-3">Trusted Healthcare AI</p>
-                <div className="flex justify-center gap-md opacity-80">
+                <div className="flex justify-center gap-stitch-md opacity-80">
                   <div className="flex items-center gap-[6px] text-on-surface dark:text-slate-300">
                     <div className="w-6 h-6 rounded bg-surface-container-highest dark:bg-slate-800 flex items-center justify-center">
                       <span className="material-symbols-outlined text-[14px]">health_and_safety</span>
