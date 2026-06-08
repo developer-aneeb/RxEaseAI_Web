@@ -42,7 +42,7 @@ export default function Navbar() {
                             <Activity className="w-5 h-5 text-white" />
                         </div>
                         <span className="font-bold text-xl tracking-tight bg-gradient-to-r from-slate-900 via-slate-800 to-slate-600 dark:from-white dark:via-slate-200 dark:to-slate-400 bg-clip-text text-transparent">
-                            RxEase<span className="text-indigo-500">AI</span>
+                            RxEaseAI<span className="text-indigo-500">AI</span>
                         </span>
                     </a>
                     {/* Desktop Nav Links */}
