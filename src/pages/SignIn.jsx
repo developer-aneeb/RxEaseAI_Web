@@ -108,7 +108,7 @@ export default function SignIn() {
 
   return (
     <div className="bg-background text-on-background min-h-screen flex flex-col font-geist antialiased bg-grid-pattern relative overflow-x-hidden dark:bg-slate-950 dark:text-slate-100 transition-colors duration-300">
-      
+
       {/* Ambient Glows */}
       <div className="fixed top-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full bg-primary/10 dark:bg-primary/5 blur-[120px] pointer-events-none"></div>
       <div className="fixed bottom-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full bg-secondary/10 dark:bg-secondary/5 blur-[120px] pointer-events-none"></div>
@@ -147,7 +147,7 @@ export default function SignIn() {
       {/* Main Content */}
       <main className="flex-grow flex items-center justify-center p-margin-mobile md:p-stitch-lg xl:p-stitch-xl w-full max-w-container-max mx-auto relative z-10">
         <div className="w-full flex flex-col lg:flex-row gap-stitch-lg md:gap-stitch-xl xl:gap-[80px] items-stretch">
-          
+
           {/* Left Panel: Value Proposition & Storytelling (55%) */}
           <div className="flex-1 lg:w-[55%] flex flex-col justify-center space-y-stitch-lg order-2 lg:order-1 pt-stitch-xl lg:pt-0">
             <div className="space-y-md animate-fade-in-up">
@@ -265,7 +265,7 @@ export default function SignIn() {
           {/* Right Panel: Sign In Form (45%) */}
           <div className="flex-1 lg:w-[45%] w-full max-w-[500px] mx-auto order-1 lg:order-2 animate-fade-in-up delay-400">
             <div className="glass-panel dark:bg-slate-900/60 dark:border-slate-800/80 rounded-2xl p-stitch-lg flex flex-col gap-stitch-md ai-glow relative overflow-hidden border-t border-l border-white/60 dark:border-white/10">
-              
+
               {/* Decorative top gradient bar */}
               <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary via-secondary to-tertiary"></div>
               <div className="absolute -top-24 -right-24 w-48 h-48 bg-primary/10 rounded-full blur-3xl pointer-events-none"></div>
@@ -291,7 +291,7 @@ export default function SignIn() {
                 </div>
               ) : (
                 <form className="flex flex-col gap-stitch-md relative z-10" onSubmit={handleSubmit}>
-                  
+
                   {/* Email */}
                   <div className="relative">
                     <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-outline-variant dark:text-slate-500 z-10 w-5 h-5" />
@@ -408,7 +408,7 @@ export default function SignIn() {
                     <span className="text-[10px] leading-tight font-medium">Data Protected</span>
                   </div>
                 </div>
-                
+
                 {/* Uptime Status Bar */}
                 <div className="flex items-center justify-center gap-2 bg-white/40 dark:bg-white/5 py-2 rounded-lg border border-outline-variant/20 dark:border-white/5">
                   <span className="relative flex h-2 w-2">
