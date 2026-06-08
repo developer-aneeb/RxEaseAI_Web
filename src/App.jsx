@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import LandingPage from './pages/LandingPage';
 import SignUp from './pages/SignUp';
+import SignIn from './pages/SignIn';
 
 function App() {
   const [currentHash, setCurrentHash] = useState(window.location.hash || '#');
@@ -16,6 +17,10 @@ function App() {
 
   if (currentHash === '#signup') {
     return <SignUp />;
+  }
+
+  if (currentHash === '#signin') {
+    return <SignIn />;
   }
 
   return <LandingPage />;
