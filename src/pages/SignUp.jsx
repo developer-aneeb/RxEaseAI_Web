@@ -573,7 +573,7 @@ export default function SignUp() {
 
               {/* Bottom Link */}
               <p className="text-center font-body-md text-[14px] text-on-surface-variant dark:text-slate-400 mt-stitch-md relative z-10">
-                Already have an account? <a className="font-label-md text-primary dark:text-indigo-400 hover:text-primary-fixed-variant hover:underline transition-colors font-semibold" href="#">Sign In</a>
+                Already have an account? <a className="font-label-md text-primary dark:text-indigo-400 hover:text-primary-fixed-variant hover:underline transition-colors font-semibold" href="#signin">Sign In</a>
               </p>
 
               {/* Trusted Healthcare AI Security Block */}
