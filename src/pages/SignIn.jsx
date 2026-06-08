@@ -24,12 +24,12 @@ export default function SignIn() {
     // Scroll to top on mount
     window.scrollTo(0, 0);
 
-    // Accuracy count up to 99.2
+    // Accuracy count up to 74
     let currentAcc = 0;
     const accInterval = setInterval(() => {
       currentAcc += 2.3;
-      if (currentAcc >= 99.2) {
-        setAccuracy(99.2);
+      if (currentAcc >= 74) {
+        setAccuracy(74);
         clearInterval(accInterval);
       } else {
         setAccuracy(parseFloat(currentAcc.toFixed(1)));
@@ -173,7 +173,7 @@ export default function SignIn() {
                 </div>
                 <div>
                   <span className="text-label-sm font-label-sm text-on-surface dark:text-white block font-medium">Prescription Verified</span>
-                  <span className="text-[10px] text-on-surface-variant dark:text-slate-400">99.2% Confidence</span>
+                  <span className="text-[10px] text-on-surface-variant dark:text-slate-400">74% Confidence</span>
                 </div>
               </div>
 
