@@ -342,7 +342,7 @@ export default function SignUp() {
 
               <div className="text-left mb-stitch-sm relative z-10">
                 <h2 className="font-headline-md text-[26px] text-on-surface dark:text-white font-semibold mb-stitch-xs">Create Your Healthcare Workspace</h2>
-                <p className="font-body-md text-body-md text-on-surface-variant dark:text-slate-400">Start managing prescriptions intelligently in under 60 seconds.</p>
+                <p className="font-body-md text-body-md text-on-surface-variant dark:text-slate-400">Start managing prescriptions intelligently.</p>
               </div>
 
               {isSuccess ? (
