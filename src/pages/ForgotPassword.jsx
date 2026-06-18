@@ -95,7 +95,7 @@ export default function ForgotPassword() {
       </header>
 
       {/* Main Content */}
-      <main className="flex-grow flex items-center justify-center p-margin-mobile md:p-stitch-lg xl:p-stitch-xl w-full max-w-container-max mx-auto relative z-10">
+      <main className="flex-grow flex items-start justify-center py-6 md:py-10 px-margin-mobile md:px-stitch-lg xl:px-stitch-xl w-full max-w-container-max mx-auto relative z-10">
         <div className="w-full flex flex-col lg:flex-row gap-stitch-lg md:gap-stitch-xl xl:gap-[80px] items-stretch">
           
           {/* Left Side: Storytelling (Hidden on mobile) */}
@@ -103,14 +103,14 @@ export default function ForgotPassword() {
             variants={staggerContainer(0.15, 0.1)}
             initial="hidden"
             animate="visible"
-            className="hidden lg:flex w-[45%] flex-col justify-center px-stitch-xl py-stitch-xl border-r border-outline-variant/20 dark:border-slate-800/40 relative"
+            className="hidden lg:flex w-[45%] flex-col justify-start px-stitch-lg py-6 border-r border-outline-variant/20 dark:border-slate-800/40 relative"
           >
             <div className="max-w-md mx-auto">
               
               {/* Badge */}
               <motion.div 
                 variants={fadeInUp(20, 0.5)}
-                className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full glass-panel border border-primary-fixed dark:border-primary/30 mb-8"
+                className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full glass-panel border border-primary-fixed dark:border-primary/30 mb-6"
               >
                 <div className="w-2 h-2 rounded-full bg-primary animate-pulse mr-1"></div>
                 <span className="font-label-sm text-[11px] text-primary dark:text-indigo-400 uppercase tracking-wider font-semibold">SECURE ACCOUNT RECOVERY</span>
@@ -119,29 +119,29 @@ export default function ForgotPassword() {
               {/* Typography */}
               <motion.h1 
                 variants={fadeInUp(20, 0.5)}
-                className="font-display-lg text-4xl lg:text-display-lg text-on-surface dark:text-white mb-6 font-semibold leading-tight"
+                className="font-display-lg text-4xl lg:text-display-lg text-on-surface dark:text-white mb-4 font-semibold leading-tight"
               >
                 Recover Access To Your <span className="glow-text">RxEaseAI Workspace</span>
               </motion.h1>
 
               <motion.p 
                 variants={fadeInUp(20, 0.5)}
-                className="font-body-lg text-body-lg text-on-surface-variant dark:text-slate-350 mb-12"
+                className="font-body-lg text-body-lg text-on-surface-variant dark:text-slate-350 mb-6"
               >
                 Forgot your password? No problem. Enter your registered email address and we'll send you a secure password reset link.
               </motion.p>
 
               {/* Feature Cards */}
-              <motion.div variants={fadeInUp(20, 0.5)} className="space-y-4 mb-12">
-                <div className="glass-panel p-4 rounded-xl flex items-center gap-4 animate-float bg-surface/5 backdrop-blur-md border border-outline-variant/20 dark:border-slate-800/50">
+              <motion.div variants={fadeInUp(20, 0.5)} className="space-y-3 mb-6">
+                <div className="glass-panel p-3.5 rounded-xl flex items-center gap-4 animate-float bg-surface/5 backdrop-blur-md border border-outline-variant/20 dark:border-slate-800/50">
                   <span className="material-symbols-outlined text-primary text-[24px]">lock</span>
                   <span className="font-label-md text-label-md text-on-surface dark:text-slate-200">End-to-End Secure Recovery</span>
                 </div>
-                <div className="glass-panel p-4 rounded-xl flex items-center gap-4 animate-float-delayed bg-surface/5 backdrop-blur-md border border-outline-variant/20 dark:border-slate-800/50">
+                <div className="glass-panel p-3.5 rounded-xl flex items-center gap-4 animate-float-delayed bg-surface/5 backdrop-blur-md border border-outline-variant/20 dark:border-slate-800/50">
                   <span className="material-symbols-outlined text-secondary text-[24px]">bolt</span>
                   <span className="font-label-md text-label-md text-on-surface dark:text-slate-200">Reset Link Delivered Instantly</span>
                 </div>
-                <div className="glass-panel p-4 rounded-xl flex items-center gap-4 animate-float bg-surface/5 backdrop-blur-md border border-outline-variant/20 dark:border-slate-800/50" style={{ animationDelay: '2s' }}>
+                <div className="glass-panel p-3.5 rounded-xl flex items-center gap-4 animate-float bg-surface/5 backdrop-blur-md border border-outline-variant/20 dark:border-slate-800/50" style={{ animationDelay: '2s' }}>
                   <span className="material-symbols-outlined text-tertiary text-[24px]">shield</span>
                   <span className="font-label-md text-label-md text-on-surface dark:text-slate-200 font-medium">HIPAA-Compliant Authentication</span>
                 </div>
@@ -150,7 +150,7 @@ export default function ForgotPassword() {
               {/* Recovery Flow Visualization */}
               <motion.div 
                 variants={fadeInUp(20, 0.5)}
-                className="flex items-center justify-between glass-panel p-6 rounded-xl relative bg-surface/5 dark:bg-slate-900/40 border border-outline-variant/20 dark:border-slate-800/50"
+                className="flex items-center justify-between glass-panel p-4 rounded-xl relative bg-surface/5 dark:bg-slate-900/40 border border-outline-variant/20 dark:border-slate-800/50"
               >
                 <div className="absolute top-1/2 left-8 right-8 h-[2px] bg-outline-variant/30 dark:bg-slate-800 -z-10 -translate-y-1/2">
                   <div 
@@ -160,45 +160,45 @@ export default function ForgotPassword() {
                 </div>
                 
                 {/* Step 1: Mail */}
-                <div className={`flex flex-col items-center bg-white dark:bg-slate-950 w-10 h-10 rounded-full justify-center shadow-sm border z-10 transition-colors duration-300 ${
+                <div className={`flex flex-col items-center bg-white dark:bg-slate-950 w-9 h-9 rounded-full justify-center shadow-sm border z-10 transition-colors duration-300 ${
                   flowStep >= 0 ? 'border-primary text-primary' : 'border-outline-variant/20 text-outline'
                 }`}>
-                  <span className="material-symbols-outlined text-[20px]">mail</span>
+                  <span className="material-symbols-outlined text-[18px]">mail</span>
                 </div>
 
                 {/* Step 2: Verification */}
-                <div className={`flex flex-col items-center bg-white dark:bg-slate-950 w-10 h-10 rounded-full justify-center shadow-sm border z-10 transition-colors duration-300 ${
+                <div className={`flex flex-col items-center bg-white dark:bg-slate-950 w-9 h-9 rounded-full justify-center shadow-sm border z-10 transition-colors duration-300 ${
                   flowStep >= 1 ? 'border-primary text-primary animate-pulse' : 'border-outline-variant/20 text-outline'
                 }`}>
-                  <span className="material-symbols-outlined text-[20px]">verified_user</span>
+                  <span className="material-symbols-outlined text-[18px]">verified_user</span>
                 </div>
 
                 {/* Step 3: Link Generation */}
-                <div className={`flex flex-col items-center bg-white dark:bg-slate-950 w-10 h-10 rounded-full justify-center shadow-sm border z-10 transition-colors duration-300 ${
+                <div className={`flex flex-col items-center bg-white dark:bg-slate-950 w-9 h-9 rounded-full justify-center shadow-sm border z-10 transition-colors duration-300 ${
                   flowStep >= 2 ? 'border-primary text-primary' : 'border-outline-variant/20 text-outline'
                 }`}>
-                  <span className="material-symbols-outlined text-[20px]">link</span>
+                  <span className="material-symbols-outlined text-[18px]">link</span>
                 </div>
 
                 {/* Step 4: Key reset */}
-                <div className={`flex flex-col items-center bg-white dark:bg-slate-950 w-10 h-10 rounded-full justify-center shadow-sm border z-10 transition-colors duration-300 ${
+                <div className={`flex flex-col items-center bg-white dark:bg-slate-950 w-9 h-9 rounded-full justify-center shadow-sm border z-10 transition-colors duration-300 ${
                   flowStep >= 3 ? 'border-primary text-primary' : 'border-outline-variant/20 text-outline'
                 }`}>
-                  <span className="material-symbols-outlined text-[20px]">key</span>
+                  <span className="material-symbols-outlined text-[18px]">key</span>
                 </div>
               </motion.div>
 
               {/* Trust Metrics */}
               <motion.div 
                 variants={fadeInUp(20, 0.5)}
-                className="mt-12 grid grid-cols-2 gap-6 pt-8 border-t border-outline-variant/20 dark:border-slate-800/40"
+                className="mt-6 grid grid-cols-2 gap-6 pt-6 border-t border-outline-variant/20 dark:border-slate-800/40"
               >
                 <div>
-                  <div className="font-headline-lg text-headline-lg text-on-surface dark:text-white mb-1 font-semibold">99.98%</div>
+                  <div className="font-headline-lg text-headline-lg text-on-surface dark:text-white mb-0.5 font-semibold">99.98%</div>
                   <div className="font-label-sm text-label-sm text-on-surface-variant dark:text-slate-400">Uptime</div>
                 </div>
                 <div>
-                  <div className="font-headline-lg text-headline-lg text-on-surface dark:text-white mb-1 font-semibold">256-bit</div>
+                  <div className="font-headline-lg text-headline-lg text-on-surface dark:text-white mb-0.5 font-semibold">256-bit</div>
                   <div className="font-label-sm text-label-sm text-on-surface-variant dark:text-slate-400">Encryption</div>
                 </div>
               </motion.div>
@@ -211,7 +211,7 @@ export default function ForgotPassword() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="w-full lg:w-[55%] flex items-center justify-center p-margin-mobile md:p-stitch-lg max-w-[500px] lg:max-w-[550px] mx-auto"
+            className="w-full lg:w-[55%] p-margin-mobile md:p-stitch-lg pt-6 md:pt-10 max-w-[500px] lg:max-w-[550px] mx-auto order-1 lg:order-2"
           >
             <div className="w-full glass-panel dark:bg-slate-900/60 dark:border-slate-800/80 rounded-2xl p-8 md:p-10 shadow-[0_8px_32px_rgba(0,0,0,0.08)] border-t border-l border-white/60 dark:border-white/10 relative overflow-hidden ai-glow">
               
