@@ -190,13 +190,13 @@ export default function ForgotPassword() {
                 className="mt-6 grid grid-cols-2 gap-6 pt-6 border-t border-outline-variant/20 dark:border-slate-800/40"
               >
                 <div>
-                  <div className="font-headline-lg text-headline-lg text-on-surface dark:text-white mb-0.5 font-semibold">80%div>
-                    <div className="font-label-sm text-label-sm text-on-surface-variant dark:text-slate-400">Uptime</div>
-                  </div>
-                  <div>
-                    <div className="font-headline-lg text-headline-lg text-on-surface dark:text-white mb-0.5 font-semibold">256-bit</div>
-                    <div className="font-label-sm text-label-sm text-on-surface-variant dark:text-slate-400">Encryption</div>
-                  </div>
+                  <div className="font-headline-lg text-headline-lg text-on-surface dark:text-white mb-0.5 font-semibold">80%</div>
+                  <div className="font-label-sm text-label-sm text-on-surface-variant dark:text-slate-400">Uptime</div>
+                </div>
+                <div>
+                  <div className="font-headline-lg text-headline-lg text-on-surface dark:text-white mb-0.5 font-semibold">256-bit</div>
+                  <div className="font-label-sm text-label-sm text-on-surface-variant dark:text-slate-400">Encryption</div>
+                </div>
               </motion.div>
 
             </div>
