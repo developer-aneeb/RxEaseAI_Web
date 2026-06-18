@@ -57,7 +57,7 @@ export default function ForgotPassword() {
   };
 
   return (
-    <div className="bg-background text-on-background min-h-screen flex flex-col font-geist antialiased bg-grid relative overflow-x-hidden dark:bg-slate-950 dark:text-slate-100 transition-colors duration-300">
+    <div className="bg-background text-on-background min-h-screen flex flex-col font-geist antialiased bg-grid-pattern relative overflow-x-hidden dark:bg-slate-950 dark:text-slate-100 transition-colors duration-300">
 
       {/* Ambient Glows */}
       <div className="fixed top-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full bg-primary/10 dark:bg-primary/5 blur-[120px] pointer-events-none"></div>
@@ -190,7 +190,7 @@ export default function ForgotPassword() {
                 className="mt-6 grid grid-cols-2 gap-6 pt-6 border-t border-outline-variant/20 dark:border-slate-800/40"
               >
                 <div>
-                  <div className="font-headline-lg text-headline-lg text-on-surface dark:text-white mb-0.5 font-semibold">80%</div>
+                  <div className="font-headline-lg text-headline-lg text-on-surface dark:text-white mb-0.5 font-semibold">99.98%</div>
                   <div className="font-label-sm text-label-sm text-on-surface-variant dark:text-slate-400">Uptime</div>
                 </div>
                 <div>
