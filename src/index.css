@@ -365,4 +365,20 @@
 .font-body-md { font-family: 'Inter', sans-serif; }
 .text-body-md { font-size: 16px; line-height: 1.5; font-weight: 400; }
 
+/* Stitch Forgot Password Specific CSS */
+.glow-text {
+  background: linear-gradient(135deg, #0055c9, #6b38d4);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
 
+.bg-grid {
+  background-image: linear-gradient(to right, rgba(0, 0, 0, 0.05) 1px, transparent 1px),
+                    linear-gradient(to bottom, rgba(0, 0, 0, 0.05) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+.dark .bg-grid {
+  background-image: linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                    linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+}
