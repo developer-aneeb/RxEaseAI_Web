@@ -310,7 +310,7 @@ export default function ForgotPassword() {
       {/* System Status Widget */}
       <div className="fixed bottom-6 left-1/2 -translate-x-1/2 glass-panel px-4 py-2 rounded-full flex items-center gap-2 shadow-sm border border-outline-variant/30 dark:border-slate-800/80 bg-white/70 dark:bg-slate-900/70 z-50">
         <div className="w-2 h-2 rounded-full bg-secondary animate-pulse mr-0.5"></div>
-        <span className="font-label-sm text-[11px] text-on-surface-variant dark:text-slate-400">All Systems Operational | 99.98% Uptime</span>
+        <span className="font-label-sm text-[11px] text-on-surface-variant dark:text-slate-400">All Systems Operational |80% Uptime</span>
       </div>
 
     </div>
