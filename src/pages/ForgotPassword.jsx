@@ -57,11 +57,11 @@ export default function ForgotPassword() {
   };
 
   return (
-    <div className="bg-background text-on-background min-h-screen flex flex-col font-geist antialiased bg-grid-pattern relative overflow-x-hidden dark:bg-slate-950 dark:text-slate-100 transition-colors duration-300">
+    <div className="bg-[#f8f9fa] text-slate-900 min-h-screen flex flex-col font-geist antialiased bg-grid-pattern relative overflow-x-hidden dark:bg-slate-950 dark:text-slate-100 transition-colors duration-300">
 
       {/* Ambient Glows */}
-      <div className="fixed top-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full bg-primary/10 dark:bg-primary/5 blur-[120px] pointer-events-none"></div>
-      <div className="fixed bottom-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full bg-tertiary/10 dark:bg-tertiary/5 blur-[120px] pointer-events-none"></div>
+      <div className="fixed top-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full bg-blue-500/5 dark:bg-blue-500/10 blur-[120px] pointer-events-none"></div>
+      <div className="fixed bottom-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full bg-indigo-500/5 dark:bg-indigo-500/10 blur-[120px] pointer-events-none"></div>
 
       {/* Header */}
       <header className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 flex items-center justify-between relative z-50">
@@ -95,17 +95,17 @@ export default function ForgotPassword() {
       </header>
 
       {/* Main Content */}
-      <main className="flex-grow flex items-start justify-center py-6 md:py-10 px-margin-mobile md:px-stitch-lg xl:px-stitch-xl w-full max-w-container-max mx-auto relative z-10">
-        <div className="w-full flex flex-col lg:flex-row gap-stitch-lg md:gap-stitch-xl xl:gap-[80px] items-stretch">
+      <main className="flex-grow flex items-center justify-center py-10 px-6 md:px-12 w-full max-w-[1200px] mx-auto relative z-10">
+        <div className="w-full flex flex-col lg:flex-row gap-12 lg:gap-20 xl:gap-28 items-center justify-between">
 
           {/* Left Side: Storytelling (Hidden on mobile) */}
           <motion.div
             variants={staggerContainer(0.15, 0.1)}
             initial="hidden"
             animate="visible"
-            className="hidden lg:flex w-[45%] flex-col justify-start px-stitch-lg py-6 border-r border-outline-variant/20 dark:border-slate-800/40 relative"
+            className="hidden lg:flex w-1/2 flex-col justify-start py-6 relative"
           >
-            <div className="max-w-md mx-auto">
+            <div className="max-w-[480px]">
 
               {/* Badge */}
               <motion.div
@@ -119,9 +119,9 @@ export default function ForgotPassword() {
               {/* Typography */}
               <motion.h1
                 variants={fadeInUp(20, 0.5)}
-                className="font-display-lg text-4xl lg:text-display-lg text-on-surface dark:text-white mb-4 font-semibold leading-tight"
+                className="font-display-lg text-4xl lg:text-[44px] text-slate-900 dark:text-white mb-5 font-bold leading-[1.15] tracking-tight"
               >
-                Recover Access To Your <span className="glow-text">RxEaseAI Workspace</span>
+                Recover Access To Your <span className="text-blue-600 dark:text-blue-500">RxEaseAI Workspace</span>
               </motion.h1>
 
               <motion.p
@@ -207,13 +207,12 @@ export default function ForgotPassword() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="w-full lg:w-[55%] p-margin-mobile md:p-stitch-lg pt-6 md:pt-10 max-w-[500px] lg:max-w-[550px] mx-auto order-1 lg:order-2"
+            className="w-full lg:w-[45%] max-w-[480px] mx-auto order-1 lg:order-2"
           >
-            <div className="w-full glass-panel dark:bg-slate-900/60 dark:border-slate-800/80 rounded-2xl p-8 md:p-10 shadow-[0_8px_32px_rgba(0,0,0,0.08)] border-t border-l border-white/60 dark:border-white/10 relative overflow-hidden ai-glow">
+            <div className="w-full bg-white dark:bg-slate-900/80 dark:border-slate-800/80 rounded-[24px] p-8 md:p-10 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 dark:border-white/10 relative overflow-hidden">
 
               {/* Decorative top gradient bar */}
-              <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary via-secondary to-tertiary"></div>
-              <div className="absolute -top-20 -right-20 w-40 h-40 bg-primary/10 rounded-full blur-3xl pointer-events-none"></div>
+              <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 opacity-0 hidden"></div>
 
               {isSuccess ? (
                 <div className="flex flex-col items-center justify-center py-10 text-center relative z-10 animate-fade-in-up">
@@ -235,13 +234,13 @@ export default function ForgotPassword() {
               ) : (
                 <div className="relative z-10 flex flex-col gap-6">
                   {/* Top Icon */}
-                  <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-primary/25 to-tertiary/25 border border-primary/30 flex items-center justify-center shadow-[0_0_20px_rgba(0,85,201,0.2)]">
-                    <span className="material-symbols-outlined text-primary text-[28px]" style={{ fontVariationSettings: "'FILL' 1" }}>lock_reset</span>
+                  <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-500 flex items-center justify-center shadow-md shadow-blue-500/20 mb-2">
+                    <span className="material-symbols-outlined text-white text-[32px]" style={{ fontVariationSettings: "'FILL' 1" }}>lock_reset</span>
                   </div>
 
                   <div>
-                    <h2 className="font-headline-md text-headline-md text-on-surface dark:text-white font-semibold mb-2">Forgot Password?</h2>
-                    <p className="font-body-md text-body-md text-on-surface-variant dark:text-slate-400">
+                    <h2 className="text-3xl md:text-[34px] text-slate-900 dark:text-white font-bold mb-3 tracking-tight">Forgot Password?</h2>
+                    <p className="font-body-md text-slate-600 dark:text-slate-400">
                       Enter your email address and we'll send you a secure password reset link.
                     </p>
                   </div>
@@ -249,11 +248,11 @@ export default function ForgotPassword() {
                   {/* Form */}
                   <form onSubmit={handleSubmit} className="space-y-6">
                     <div className="relative">
-                      <label className="font-label-sm text-label-sm text-on-surface-variant dark:text-slate-400 mb-2 block" htmlFor="email">Email Address</label>
+                      <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2 block" htmlFor="email">Email Address</label>
                       <div className="relative flex items-center">
-                        <span className="material-symbols-outlined absolute left-4 text-outline dark:text-slate-500 text-[20px]">mail</span>
+                        <span className="material-symbols-outlined absolute left-4 text-slate-400 dark:text-slate-500 text-[20px]">mail</span>
                         <input
-                          className="w-full pl-12 pr-4 py-3 bg-surface dark:bg-slate-950 border border-outline-variant/60 dark:border-slate-800 rounded-lg font-body-md text-body-md text-on-surface dark:text-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-shadow duration-200"
+                          className="w-full pl-12 pr-4 py-3 bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-shadow duration-200"
                           id="email"
                           placeholder="doctor@hospital.com"
                           required
@@ -265,7 +264,7 @@ export default function ForgotPassword() {
                     </div>
 
                     <button
-                      className="w-full py-3 px-4 bg-gradient-to-r from-primary to-secondary rounded-lg font-label-md text-label-md text-white shadow-md hover:shadow-lg hover:scale-[1.02] transition-all duration-200 flex items-center justify-center gap-2 group cursor-pointer"
+                      className="w-full py-3.5 px-4 bg-[#046B46] hover:bg-[#035939] rounded-lg text-white font-medium shadow-sm transition-colors duration-200 flex items-center justify-center gap-2 group cursor-pointer"
                       type="submit"
                       disabled={isSubmitting}
                     >
@@ -275,28 +274,28 @@ export default function ForgotPassword() {
                   </form>
 
                   <div className="mt-6 text-center">
-                    <a className="font-label-md text-label-md text-primary dark:text-indigo-400 hover:text-on-primary-fixed-variant transition-colors" href="#signin">
+                    <a className="text-sm font-semibold text-blue-600 dark:text-blue-500 hover:text-blue-800 transition-colors" href="#signin">
                       Remember your password? Sign In
                     </a>
                   </div>
 
                   {/* Security Block */}
-                  <div className="mt-4 pt-6 border-t border-outline-variant/30 dark:border-slate-800/60 grid grid-cols-2 gap-4">
-                    <div className="flex items-center gap-2 text-on-surface-variant dark:text-slate-400">
-                      <span className="material-symbols-outlined text-secondary text-[16px]">lock</span>
-                      <span className="font-label-sm text-label-sm">Secure Auth</span>
+                  <div className="mt-8 pt-8 border-t border-slate-100 dark:border-slate-800/60 grid grid-cols-2 gap-y-4 gap-x-2">
+                    <div className="flex items-center gap-2 text-slate-700 dark:text-slate-300">
+                      <span className="material-symbols-outlined text-[#046B46] text-[18px]">lock</span>
+                      <span className="text-sm font-medium">Secure Auth</span>
                     </div>
-                    <div className="flex items-center gap-2 text-on-surface-variant dark:text-slate-400">
-                      <span className="material-symbols-outlined text-primary text-[16px]">shield</span>
-                      <span className="font-label-sm text-label-sm">HIPAA Ready</span>
+                    <div className="flex items-center gap-2 text-slate-700 dark:text-slate-300">
+                      <span className="material-symbols-outlined text-blue-600 text-[18px]">shield</span>
+                      <span className="text-sm font-medium">HIPAA Ready</span>
                     </div>
-                    <div className="flex items-center gap-2 text-on-surface-variant dark:text-slate-400">
-                      <span className="material-symbols-outlined text-tertiary text-[16px]">bolt</span>
-                      <span className="font-label-sm text-label-sm">Fast Recovery</span>
+                    <div className="flex items-center gap-2 text-slate-700 dark:text-slate-300">
+                      <span className="material-symbols-outlined text-purple-600 text-[18px]">bolt</span>
+                      <span className="text-sm font-medium">Fast Recovery</span>
                     </div>
-                    <div className="flex items-center gap-2 text-on-surface-variant dark:text-slate-400">
-                      <span className="material-symbols-outlined text-secondary text-[16px]">verified</span>
-                      <span className="font-label-sm text-label-sm">Data Protected</span>
+                    <div className="flex items-center gap-2 text-slate-700 dark:text-slate-300">
+                      <span className="material-symbols-outlined text-[#046B46] text-[18px]">verified</span>
+                      <span className="text-sm font-medium">Data Protected</span>
                     </div>
                   </div>
                 </div>
@@ -308,9 +307,9 @@ export default function ForgotPassword() {
       </main>
 
       {/* System Status Widget */}
-      <div className="fixed bottom-6 left-1/2 -translate-x-1/2 glass-panel px-4 py-2 rounded-full flex items-center gap-2 shadow-sm border border-outline-variant/30 dark:border-slate-800/80 bg-white/70 dark:bg-slate-900/70 z-50">
-        <div className="w-2 h-2 rounded-full bg-secondary animate-pulse mr-0.5"></div>
-        <span className="font-label-sm text-[11px] text-on-surface-variant dark:text-slate-400">All Systems Operational |80% Uptime</span>
+      <div className="fixed bottom-6 left-6 py-2 px-0 flex items-center gap-2 z-50">
+        <div className="w-2 h-2 rounded-full bg-emerald-500"></div>
+        <span className="text-xs font-medium text-slate-500 dark:text-slate-400 tracking-wide">All Systems Operational | 99.98% Uptime</span>
       </div>
 
     </div>
