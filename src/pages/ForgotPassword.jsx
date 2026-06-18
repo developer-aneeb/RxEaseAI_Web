@@ -57,11 +57,8 @@ export default function ForgotPassword() {
   };
 
   return (
-    <div className="bg-white text-on-background min-h-screen flex flex-col font-geist antialiased relative overflow-x-hidden dark:bg-slate-950 dark:text-slate-100 transition-colors duration-300">
+    <div className="bg-white text-on-background min-h-screen flex flex-col font-geist antialiased relative overflow-x-hidden transition-colors duration-300">
 
-      {/* Ambient Glows */}
-      <div className="fixed top-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full bg-primary/10 dark:bg-primary/5 blur-[120px] pointer-events-none"></div>
-      <div className="fixed bottom-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full bg-tertiary/10 dark:bg-tertiary/5 blur-[120px] pointer-events-none"></div>
 
       {/* Header */}
       <header className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 flex items-center justify-between relative z-50">
@@ -95,15 +92,15 @@ export default function ForgotPassword() {
       </header>
 
       {/* Main Content */}
-      <main className="flex-grow flex items-start justify-center py-6 md:py-10 px-margin-mobile md:px-stitch-lg w-full max-w-5xl mx-auto relative z-10">
-        <div className="w-full flex flex-col lg:flex-row gap-8 md:gap-12 items-stretch">
+      <main className="flex-grow flex items-center justify-center py-6 md:py-10 px-4 w-full relative z-10">
+        <div className="w-full flex flex-col lg:flex-row gap-6 md:gap-8 items-center justify-center max-w-5xl mx-auto">
 
           {/* Left Side: Storytelling (Hidden on mobile) */}
           <motion.div
             variants={staggerContainer(0.15, 0.1)}
             initial="hidden"
             animate="visible"
-            className="hidden lg:flex w-[45%] flex-col justify-start px-stitch-lg py-6 border-r border-outline-variant/20 dark:border-slate-800/40 relative"
+            className="hidden lg:flex w-[45%] flex-col justify-center px-4 md:px-8 py-6 relative"
           >
             <div className="max-w-md mx-auto">
 
@@ -207,7 +204,7 @@ export default function ForgotPassword() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="w-full lg:w-[55%] p-margin-mobile md:p-stitch-lg pt-6 md:pt-10 max-w-[500px] lg:max-w-[550px] mx-auto order-1 lg:order-2"
+            className="w-full lg:w-[50%] p-4 pt-6 md:pt-10 max-w-[450px] lg:max-w-[500px] mx-auto order-1 lg:order-2"
           >
             <div className="w-full glass-panel dark:bg-slate-900/60 dark:border-slate-800/80 rounded-2xl p-8 md:p-10 shadow-[0_8px_32px_rgba(0,0,0,0.08)] border-t border-l border-white/60 dark:border-white/10 relative overflow-hidden ai-glow">
 
