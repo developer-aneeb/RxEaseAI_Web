@@ -7,7 +7,7 @@ import { fadeInUp, fadeIn, staggerContainer } from '../animations/variants';
 
 export default function ForgotPassword() {
   const { theme, toggleTheme } = useTheme();
-  
+
   // Form State
   const [email, setEmail] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -43,12 +43,12 @@ export default function ForgotPassword() {
     }
 
     setIsSubmitting(true);
-    
+
     // Simulate reset link delivery API call
     setTimeout(() => {
       setIsSubmitting(false);
       setIsSuccess(true);
-      
+
       // Auto-redirect to sign-in page after 3.5 seconds
       setTimeout(() => {
         window.location.hash = '#signin';
@@ -58,7 +58,7 @@ export default function ForgotPassword() {
 
   return (
     <div className="bg-background text-on-background min-h-screen flex flex-col font-geist antialiased bg-grid relative overflow-x-hidden dark:bg-slate-950 dark:text-slate-100 transition-colors duration-300">
-      
+
       {/* Ambient Glows */}
       <div className="fixed top-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full bg-primary/10 dark:bg-primary/5 blur-[120px] pointer-events-none"></div>
       <div className="fixed bottom-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full bg-tertiary/10 dark:bg-tertiary/5 blur-[120px] pointer-events-none"></div>
@@ -70,7 +70,7 @@ export default function ForgotPassword() {
             <Activity className="w-4.5 h-4.5 text-white" />
           </div>
           <span className="font-bold text-lg tracking-tight bg-gradient-to-r from-slate-900 via-slate-800 to-slate-600 dark:from-white dark:via-slate-200 dark:to-slate-400 bg-clip-text text-transparent">
-            RxEase<span className="text-indigo-500">AI</span>
+            RxEaseAI<span className="text-indigo-500">AI</span>
           </span>
         </a>
         <div className="flex items-center gap-4">
@@ -97,18 +97,18 @@ export default function ForgotPassword() {
       {/* Main Content */}
       <main className="flex-grow flex items-start justify-center py-6 md:py-10 px-margin-mobile md:px-stitch-lg xl:px-stitch-xl w-full max-w-container-max mx-auto relative z-10">
         <div className="w-full flex flex-col lg:flex-row gap-stitch-lg md:gap-stitch-xl xl:gap-[80px] items-stretch">
-          
+
           {/* Left Side: Storytelling (Hidden on mobile) */}
-          <motion.div 
+          <motion.div
             variants={staggerContainer(0.15, 0.1)}
             initial="hidden"
             animate="visible"
             className="hidden lg:flex w-[45%] flex-col justify-start px-stitch-lg py-6 border-r border-outline-variant/20 dark:border-slate-800/40 relative"
           >
             <div className="max-w-md mx-auto">
-              
+
               {/* Badge */}
-              <motion.div 
+              <motion.div
                 variants={fadeInUp(20, 0.5)}
                 className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full glass-panel border border-primary-fixed dark:border-primary/30 mb-6"
               >
@@ -117,14 +117,14 @@ export default function ForgotPassword() {
               </motion.div>
 
               {/* Typography */}
-              <motion.h1 
+              <motion.h1
                 variants={fadeInUp(20, 0.5)}
                 className="font-display-lg text-4xl lg:text-display-lg text-on-surface dark:text-white mb-4 font-semibold leading-tight"
               >
                 Recover Access To Your <span className="glow-text">RxEaseAI Workspace</span>
               </motion.h1>
 
-              <motion.p 
+              <motion.p
                 variants={fadeInUp(20, 0.5)}
                 className="font-body-lg text-body-lg text-on-surface-variant dark:text-slate-350 mb-6"
               >
@@ -148,48 +148,44 @@ export default function ForgotPassword() {
               </motion.div>
 
               {/* Recovery Flow Visualization */}
-              <motion.div 
+              <motion.div
                 variants={fadeInUp(20, 0.5)}
                 className="flex items-center justify-between glass-panel p-4 rounded-xl relative bg-surface/5 dark:bg-slate-900/40 border border-outline-variant/20 dark:border-slate-800/50"
               >
                 <div className="absolute top-1/2 left-8 right-8 h-[2px] bg-outline-variant/30 dark:bg-slate-800 -z-10 -translate-y-1/2">
-                  <div 
-                    className="h-full bg-primary transition-all duration-1000 ease-out" 
+                  <div
+                    className="h-full bg-primary transition-all duration-1000 ease-out"
                     style={{ width: `${flowStep * 33.3}%` }}
                   ></div>
                 </div>
-                
+
                 {/* Step 1: Mail */}
-                <div className={`flex flex-col items-center bg-white dark:bg-slate-950 w-9 h-9 rounded-full justify-center shadow-sm border z-10 transition-colors duration-300 ${
-                  flowStep >= 0 ? 'border-primary text-primary' : 'border-outline-variant/20 text-outline'
-                }`}>
+                <div className={`flex flex-col items-center bg-white dark:bg-slate-950 w-9 h-9 rounded-full justify-center shadow-sm border z-10 transition-colors duration-300 ${flowStep >= 0 ? 'border-primary text-primary' : 'border-outline-variant/20 text-outline'
+                  }`}>
                   <span className="material-symbols-outlined text-[18px]">mail</span>
                 </div>
 
                 {/* Step 2: Verification */}
-                <div className={`flex flex-col items-center bg-white dark:bg-slate-950 w-9 h-9 rounded-full justify-center shadow-sm border z-10 transition-colors duration-300 ${
-                  flowStep >= 1 ? 'border-primary text-primary animate-pulse' : 'border-outline-variant/20 text-outline'
-                }`}>
+                <div className={`flex flex-col items-center bg-white dark:bg-slate-950 w-9 h-9 rounded-full justify-center shadow-sm border z-10 transition-colors duration-300 ${flowStep >= 1 ? 'border-primary text-primary animate-pulse' : 'border-outline-variant/20 text-outline'
+                  }`}>
                   <span className="material-symbols-outlined text-[18px]">verified_user</span>
                 </div>
 
                 {/* Step 3: Link Generation */}
-                <div className={`flex flex-col items-center bg-white dark:bg-slate-950 w-9 h-9 rounded-full justify-center shadow-sm border z-10 transition-colors duration-300 ${
-                  flowStep >= 2 ? 'border-primary text-primary' : 'border-outline-variant/20 text-outline'
-                }`}>
+                <div className={`flex flex-col items-center bg-white dark:bg-slate-950 w-9 h-9 rounded-full justify-center shadow-sm border z-10 transition-colors duration-300 ${flowStep >= 2 ? 'border-primary text-primary' : 'border-outline-variant/20 text-outline'
+                  }`}>
                   <span className="material-symbols-outlined text-[18px]">link</span>
                 </div>
 
                 {/* Step 4: Key reset */}
-                <div className={`flex flex-col items-center bg-white dark:bg-slate-950 w-9 h-9 rounded-full justify-center shadow-sm border z-10 transition-colors duration-300 ${
-                  flowStep >= 3 ? 'border-primary text-primary' : 'border-outline-variant/20 text-outline'
-                }`}>
+                <div className={`flex flex-col items-center bg-white dark:bg-slate-950 w-9 h-9 rounded-full justify-center shadow-sm border z-10 transition-colors duration-300 ${flowStep >= 3 ? 'border-primary text-primary' : 'border-outline-variant/20 text-outline'
+                  }`}>
                   <span className="material-symbols-outlined text-[18px]">key</span>
                 </div>
               </motion.div>
 
               {/* Trust Metrics */}
-              <motion.div 
+              <motion.div
                 variants={fadeInUp(20, 0.5)}
                 className="mt-6 grid grid-cols-2 gap-6 pt-6 border-t border-outline-variant/20 dark:border-slate-800/40"
               >
@@ -207,14 +203,14 @@ export default function ForgotPassword() {
           </motion.div>
 
           {/* Right Side: Auth Card */}
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
             className="w-full lg:w-[55%] p-margin-mobile md:p-stitch-lg pt-6 md:pt-10 max-w-[500px] lg:max-w-[550px] mx-auto order-1 lg:order-2"
           >
             <div className="w-full glass-panel dark:bg-slate-900/60 dark:border-slate-800/80 rounded-2xl p-8 md:p-10 shadow-[0_8px_32px_rgba(0,0,0,0.08)] border-t border-l border-white/60 dark:border-white/10 relative overflow-hidden ai-glow">
-              
+
               {/* Decorative top gradient bar */}
               <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary via-secondary to-tertiary"></div>
               <div className="absolute -top-20 -right-20 w-40 h-40 bg-primary/10 rounded-full blur-3xl pointer-events-none"></div>
