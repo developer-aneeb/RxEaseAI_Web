@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import LandingPage from './pages/LandingPage';
 import SignUp from './pages/SignUp';
 import SignIn from './pages/SignIn';
+import ForgotPassword from './pages/ForgotPassword';
 
 function App() {
     const [currentHash, setCurrentHash] = useState(window.location.hash || '#');
@@ -21,6 +22,10 @@ function App() {
 
     if (currentHash === '#signin') {
         return <SignIn />;
+    }
+
+    if (currentHash === '#forgot-password') {
+        return <ForgotPassword />;
     }
 
     return <LandingPage />;
