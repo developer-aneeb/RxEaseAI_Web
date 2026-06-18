@@ -343,7 +343,7 @@ export default function SignIn() {
                         Remember me
                       </label>
                     </div>
-                    <a className="text-[13px] font-semibold text-primary dark:text-indigo-450 hover:underline transition-colors" href="#">
+                    <a className="text-[13px] font-semibold text-primary dark:text-indigo-450 hover:underline transition-colors" href="#forgot-password">
                       Forgot Password?
                     </a>
                   </div>
