@@ -57,7 +57,7 @@ export default function ForgotPassword() {
   };
 
   return (
-    <div className="bg-white text-on-background min-h-screen flex flex-col font-geist antialiased relative overflow-x-hidden dark:bg-slate-950 dark:text-slate-100 transition-colors duration-300">
+    <div className="bg-background text-on-background min-h-screen flex flex-col font-geist antialiased bg-grid relative overflow-x-hidden dark:bg-slate-950 dark:text-slate-100 transition-colors duration-300">
 
       {/* Ambient Glows */}
       <div className="fixed top-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full bg-primary/10 dark:bg-primary/5 blur-[120px] pointer-events-none"></div>
@@ -70,7 +70,7 @@ export default function ForgotPassword() {
             <Activity className="w-4.5 h-4.5 text-white" />
           </div>
           <span className="font-bold text-lg tracking-tight bg-gradient-to-r from-slate-900 via-slate-800 to-slate-600 dark:from-white dark:via-slate-200 dark:to-slate-400 bg-clip-text text-transparent">
-            RxEase<span className="text-indigo-500">AI</span>
+            RxEaseAI<span className="text-indigo-500">AI</span>
           </span>
         </a>
         <div className="flex items-center gap-4">
@@ -95,8 +95,8 @@ export default function ForgotPassword() {
       </header>
 
       {/* Main Content */}
-      <main className="flex-grow flex items-start justify-center py-6 md:py-10 px-margin-mobile md:px-stitch-lg w-full max-w-5xl mx-auto relative z-10">
-        <div className="w-full flex flex-col lg:flex-row gap-8 md:gap-12 items-stretch">
+      <main className="flex-grow flex items-start justify-center py-6 md:py-10 px-margin-mobile md:px-stitch-lg xl:px-stitch-xl w-full max-w-container-max mx-auto relative z-10">
+        <div className="w-full flex flex-col lg:flex-row gap-stitch-lg md:gap-stitch-xl xl:gap-[80px] items-stretch">
 
           {/* Left Side: Storytelling (Hidden on mobile) */}
           <motion.div
@@ -190,7 +190,7 @@ export default function ForgotPassword() {
                 className="mt-6 grid grid-cols-2 gap-6 pt-6 border-t border-outline-variant/20 dark:border-slate-800/40"
               >
                 <div>
-                  <div className="font-headline-lg text-headline-lg text-on-surface dark:text-white mb-0.5 font-semibold">80%</div>
+                  <div className="font-headline-lg text-headline-lg text-on-surface dark:text-white mb-0.5 font-semibold">99.98%</div>
                   <div className="font-label-sm text-label-sm text-on-surface-variant dark:text-slate-400">Uptime</div>
                 </div>
                 <div>
