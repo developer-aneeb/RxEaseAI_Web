@@ -249,32 +249,33 @@ export default function ForgotPassword() {
                   {/* Form */}
                   <form onSubmit={handleSubmit} className="space-y-6">
                     <div className="relative">
-                      <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-outline-variant dark:text-slate-500 z-10 w-5 h-5" />
-                      <input
-                        className="float-label-input w-full pl-[48px] pr-stitch-sm py-3.5 rounded-xl bg-white/50 dark:bg-slate-950/50 border border-outline-variant/50 dark:border-slate-800 focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all font-body-md text-body-md text-on-surface dark:text-white peer placeholder-transparent"
-                        id="email"
-                        placeholder="Email Address"
-                        type="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        required
-                      />
-                      <label className="float-label absolute left-[48px] top-1/2 -translate-y-1/2 text-outline-variant dark:text-slate-500 font-body-md transition-all duration-200 pointer-events-none peer-focus:text-primary" htmlFor="email">Email Address</label>
+                      <label className="font-label-sm text-label-sm text-on-surface-variant dark:text-slate-400 mb-2 block" htmlFor="email">Email Address</label>
+                      <div className="relative flex items-center">
+                        <span className="material-symbols-outlined absolute left-4 text-outline dark:text-slate-500 text-[20px]">mail</span>
+                        <input
+                          className="w-full pl-12 pr-4 py-3 bg-surface dark:bg-slate-950 border border-outline-variant/60 dark:border-slate-800 rounded-lg font-body-md text-body-md text-on-surface dark:text-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-shadow duration-200"
+                          id="email"
+                          placeholder="doctor@hospital.com"
+                          required
+                          type="email"
+                          value={email}
+                          onChange={(e) => setEmail(e.target.value)}
+                        />
+                      </div>
                     </div>
 
                     <button
-                      className="w-full mt-3 py-3.5 px-stitch-lg rounded-xl bg-gradient-btn text-white font-label-md text-[16px] font-semibold transition-all duration-300 transform hover:-translate-y-1 hover:shadow-[0_10px_25px_-5px_rgba(0,85,201,0.4)] flex justify-center items-center gap-2 relative overflow-hidden group cursor-pointer"
+                      className="w-full py-3 px-4 bg-gradient-to-r from-primary to-secondary rounded-lg font-label-md text-label-md text-white shadow-md hover:shadow-lg hover:scale-[1.02] transition-all duration-200 flex items-center justify-center gap-2 group cursor-pointer"
                       type="submit"
                       disabled={isSubmitting}
                     >
-                      <div className="absolute inset-0 w-full h-full bg-white/20 -translate-x-full group-hover:animate-shimmer skew-x-12"></div>
                       <span>{isSubmitting ? 'Sending Reset Link...' : 'Send Reset Link'}</span>
-                      {!isSubmitting && <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />}
+                      {!isSubmitting && <span className="material-symbols-outlined text-[20px] group-hover:translate-x-1 transition-transform">arrow_forward</span>}
                     </button>
                   </form>
 
-                  <div className="text-center">
-                    <a className="font-label-md text-label-md text-primary dark:text-indigo-400 hover:underline transition-colors font-semibold" href="#signin">
+                  <div className="mt-6 text-center">
+                    <a className="font-label-md text-label-md text-primary dark:text-indigo-400 hover:text-on-primary-fixed-variant transition-colors" href="#signin">
                       Remember your password? Sign In
                     </a>
                   </div>
