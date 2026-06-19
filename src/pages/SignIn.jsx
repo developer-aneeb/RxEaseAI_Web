@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Activity, Sun, Moon, ArrowLeft, Mail, Lock, Eye, EyeOff, CheckCircle } from 'lucide-react';
 import useTheme from '../hooks/useTheme';
 import Button from '../components/ui/Button';
+import PasswordStrengthPanel from '../components/PasswordStrengthPanel';
 
 export default function SignIn() {
   const { theme, toggleTheme } = useTheme();
@@ -328,6 +329,9 @@ export default function SignIn() {
                       {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                     </button>
                   </div>
+
+                  {/* Password Strength Panel */}
+                  <PasswordStrengthPanel password={password} />
 
                   {/* Remember Me & Forgot Password */}
                   <div className="flex items-center justify-between mt-1">
