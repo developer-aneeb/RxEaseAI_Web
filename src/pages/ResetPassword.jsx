@@ -105,7 +105,6 @@ export default function ResetPassword() {
 
       {/* Ambient Background Elements */}
       <div className="fixed inset-0 pointer-events-none z-0">
-        <div className="absolute inset-0 bg-grid-pattern opacity-50 dark:opacity-20"></div>
         <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] ambient-glow-primary rounded-full animate-pulse-slow"></div>
         <div className="absolute bottom-[-10%] right-[-5%] w-[40%] h-[40%] ambient-glow-tertiary rounded-full animate-pulse-slow" style={{ animationDelay: '2s' }}></div>
         <div className="absolute top-[30%] left-[40%] w-[30%] h-[30%] ambient-glow-secondary rounded-full animate-pulse-slow" style={{ animationDelay: '1s' }}></div>

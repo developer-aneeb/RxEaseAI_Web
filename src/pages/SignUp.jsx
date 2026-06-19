@@ -104,7 +104,7 @@ export default function SignUp() {
   };
 
   return (
-    <div className="bg-background text-on-background min-h-screen flex flex-col font-geist antialiased bg-grid-pattern relative overflow-x-hidden dark:bg-slate-950 dark:text-slate-100 transition-colors duration-300">
+    <div className="bg-background text-on-background min-h-screen flex flex-col font-geist antialiased relative overflow-x-hidden dark:bg-slate-950 dark:text-slate-100 transition-colors duration-300">
 
       {/* Ambient Glows */}
       <div className="fixed top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-primary/10 blur-[120px] pointer-events-none"></div>
