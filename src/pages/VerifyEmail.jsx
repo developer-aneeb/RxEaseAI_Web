@@ -85,25 +85,25 @@ export default function VerifyEmail() {
             {/* Verification Journey */}
             <div className="relative py-6">
               <div className="flex flex-col gap-4">
-                <div className="flex items-center gap-6">
-                  <div className="w-8 h-8 rounded-full bg-secondary flex items-center justify-center text-white">
+                <div className="flex items-center gap-4">
+                  <div className="w-8 h-8 rounded-full bg-[#006d3e] flex items-center justify-center text-white shrink-0">
                     <span className="material-symbols-outlined text-[18px]">check</span>
                   </div>
-                  <span className="font-label-md text-[14px] text-on-surface dark:text-white opacity-60">Create Account</span>
-                  <div className="h-[2px] flex-1 bg-secondary/30 hidden md:block"></div>
+                  <span className="font-label-md text-[14px] text-on-surface dark:text-white opacity-60 whitespace-nowrap">Create Account</span>
+                  <div className="h-[2px] w-full max-w-[200px] bg-[#006d3e]/30 hidden md:block ml-2"></div>
                 </div>
-                <div className="flex items-center gap-6">
-                  <div className="w-8 h-8 rounded-full bg-primary animate-pulse-glow flex items-center justify-center text-white shadow-lg shadow-primary/20">
+                <div className="flex items-center gap-4">
+                  <div className="w-8 h-8 rounded-full bg-[#0055c9] animate-pulse-glow flex items-center justify-center text-white shadow-lg shadow-primary/20 shrink-0">
                     <span className="material-symbols-outlined text-[18px]">mail</span>
                   </div>
-                  <span className="font-label-md text-[14px] text-primary font-bold">Email Sent</span>
-                  <div className="h-[2px] flex-1 bg-outline-variant/30 dark:bg-slate-700 hidden md:block"></div>
+                  <span className="font-label-md text-[14px] text-[#0055c9] font-bold whitespace-nowrap">Email Sent</span>
+                  <div className="h-[2px] w-full max-w-[200px] bg-outline-variant/30 dark:bg-slate-700 hidden md:block ml-2"></div>
                 </div>
-                <div className="flex items-center gap-6 opacity-40">
-                  <div className="w-8 h-8 rounded-full bg-outline-variant dark:bg-slate-700 flex items-center justify-center text-on-surface-variant dark:text-slate-400">
+                <div className="flex items-center gap-4 opacity-40">
+                  <div className="w-8 h-8 rounded-full bg-outline-variant dark:bg-slate-700 flex items-center justify-center text-on-surface-variant dark:text-slate-400 shrink-0">
                     <span className="material-symbols-outlined text-[18px]">fingerprint</span>
                   </div>
-                  <span className="font-label-md text-[14px] text-on-surface dark:text-white">Verify Identity</span>
+                  <span className="font-label-md text-[14px] text-on-surface dark:text-white whitespace-nowrap">Verify Identity</span>
                 </div>
               </div>
             </div>
@@ -130,28 +130,28 @@ export default function VerifyEmail() {
           </div>
           
           {/* Floating Cards Decor */}
-          <div className="absolute right-0 top-1/4 hidden lg:block pointer-events-none">
+          <div className="absolute right-[5%] top-[30%] hidden lg:block pointer-events-none z-20">
             <div className="animate-float" style={{ animationDelay: '0s' }}>
-              <div className="glass-panel p-4 rounded-xl shadow-xl border border-white/40 dark:border-slate-800 bg-white/60 dark:bg-slate-900/60 backdrop-blur-md mb-6 -translate-x-12">
+              <div className="bg-white dark:bg-slate-800 p-4 rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-white/60 dark:border-slate-700 mb-6 -translate-x-20">
                 <div className="flex items-center gap-4">
-                  <div className="p-2 bg-primary/10 rounded-lg"><span className="material-symbols-outlined text-primary">send</span></div>
-                  <span className="font-label-md text-[14px] font-medium">Verification Email Sent</span>
+                  <div className="p-2 bg-primary/10 rounded-lg"><span className="material-symbols-outlined text-primary text-[20px]">send</span></div>
+                  <span className="font-label-md text-[13px] font-semibold text-on-surface dark:text-white">Verification Email Sent</span>
                 </div>
               </div>
             </div>
             <div className="animate-float" style={{ animationDelay: '1s' }}>
-              <div className="glass-panel p-4 rounded-xl shadow-xl border border-white/40 dark:border-slate-800 bg-white/60 dark:bg-slate-900/60 backdrop-blur-md mb-6 translate-x-4">
+              <div className="bg-white dark:bg-slate-800 p-4 rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-white/60 dark:border-slate-700 mb-6 translate-x-4">
                 <div className="flex items-center gap-4">
-                  <div className="p-2 bg-secondary/10 rounded-lg"><span className="material-symbols-outlined text-secondary">security</span></div>
-                  <span className="font-label-md text-[14px] font-medium">Identity Protection Enabled</span>
+                  <div className="p-2 bg-secondary/10 rounded-lg"><span className="material-symbols-outlined text-secondary text-[20px]">security</span></div>
+                  <span className="font-label-md text-[13px] font-semibold text-on-surface dark:text-white">Identity Protection Enabled</span>
                 </div>
               </div>
             </div>
             <div className="animate-float" style={{ animationDelay: '2s' }}>
-              <div className="glass-panel p-4 rounded-xl shadow-xl border border-white/40 dark:border-slate-800 bg-white/60 dark:bg-slate-900/60 backdrop-blur-md translate-x-12">
+              <div className="bg-white dark:bg-slate-800 p-4 rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-white/60 dark:border-slate-700 translate-x-12">
                 <div className="flex items-center gap-4">
-                  <div className="p-2 bg-tertiary/10 rounded-lg"><span className="material-symbols-outlined text-tertiary dark:text-purple-400">pending</span></div>
-                  <span className="font-label-md text-[14px] font-medium">Activation Pending</span>
+                  <div className="p-2 bg-tertiary/10 rounded-lg"><span className="material-symbols-outlined text-tertiary dark:text-purple-400 text-[20px]">pending</span></div>
+                  <span className="font-label-md text-[13px] font-semibold text-on-surface dark:text-white">Activation Pending</span>
                 </div>
               </div>
             </div>
@@ -170,17 +170,17 @@ export default function VerifyEmail() {
           
           <div className="w-full max-w-lg animate-fade-in-up duration-700 delay-200">
             {/* Main Glassmorphic Card */}
-            <div className="glass-panel p-10 rounded-[2rem] shadow-2xl relative overflow-hidden bg-white/70 dark:bg-slate-900/70 border border-white/40 dark:border-slate-700">
+            <div className="bg-[#cfe2f3]/80 dark:bg-slate-800/80 p-10 rounded-[2rem] shadow-2xl relative overflow-hidden border border-white/40 dark:border-slate-700 backdrop-blur-xl">
               <div className="flex flex-col items-center text-center space-y-6">
                 
                 {/* Icon with Glowing Gradient Square */}
                 <div className="relative group">
-                  <div className="absolute inset-0 bg-primary/20 blur-xl group-hover:bg-primary/30 transition-all rounded-full animate-pulse-glow"></div>
-                  <div className="relative w-20 h-20 bg-gradient-to-br from-primary to-secondary rounded-2xl flex items-center justify-center shadow-lg transform group-hover:rotate-6 transition-transform">
+                  <div className="absolute inset-0 bg-[#0055c9]/20 blur-xl group-hover:bg-[#0055c9]/30 transition-all rounded-full animate-pulse-glow"></div>
+                  <div className="relative w-20 h-20 bg-gradient-to-br from-[#0055c9] to-[#006d3e] rounded-2xl flex items-center justify-center shadow-lg transform group-hover:rotate-6 transition-transform">
                     <span className="material-symbols-outlined text-white text-[40px]">mark_email_read</span>
                   </div>
                   {/* Success Pulse */}
-                  <div className="absolute -inset-2 border-2 border-primary/20 rounded-2xl animate-ping opacity-25"></div>
+                  <div className="absolute -inset-2 border-2 border-[#0055c9]/20 rounded-2xl animate-ping opacity-25"></div>
                 </div>
                 
                 <div className="space-y-2">
@@ -193,46 +193,46 @@ export default function VerifyEmail() {
                 
                 {/* CTA Section */}
                 <div className="w-full pt-6 space-y-4">
-                  <button className="w-full py-3.5 bg-gradient-to-r from-primary to-secondary text-white font-label-md text-[16px] font-semibold rounded-xl shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all">
+                  <button className="w-full py-3.5 bg-gradient-to-r from-[#0055c9] to-[#006d3e] text-white font-label-md text-[16px] font-semibold rounded-xl shadow-xl shadow-[#0055c9]/20 hover:scale-[1.02] active:scale-95 transition-all">
                     Open Email App
                   </button>
-                  <div className="flex flex-col items-center gap-2">
+                  <div className="flex flex-col items-center gap-2 mt-2">
                     <button 
-                      className="font-label-md text-[14px] text-primary hover:underline disabled:text-on-surface-variant/40 dark:disabled:text-slate-600 disabled:no-underline font-semibold" 
+                      className="font-label-md text-[14px] text-[#0055c9] hover:underline disabled:text-on-surface-variant/40 dark:disabled:text-slate-400 disabled:no-underline font-bold" 
                       disabled={timeLeft > 0} 
                       onClick={() => setTimeLeft(42)}
                     >
                       Resend Verification Email
                     </button>
-                    <span className={`font-label-sm text-[12px] ${timeLeft > 0 ? 'text-on-surface-variant dark:text-slate-400 opacity-60' : 'text-secondary font-semibold'}`}>
+                    <span className={`font-label-sm text-[12px] ${timeLeft > 0 ? 'text-on-surface-variant dark:text-slate-400 opacity-60' : 'text-[#006d3e] font-semibold'}`}>
                       {timeLeft > 0 ? `Wait ${timeLeft}s before resending` : 'Ready to resend link'}
                     </span>
                   </div>
                 </div>
                 
                 {/* Status Widget */}
-                <div className="w-full bg-white/40 dark:bg-slate-950/40 rounded-2xl p-6 border border-white/20 dark:border-slate-800 mt-10">
+                <div className="w-full bg-white/80 dark:bg-slate-900/80 rounded-2xl p-6 border border-white/40 dark:border-slate-700 mt-10 shadow-sm">
                   <div className="flex flex-col gap-4">
                     <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-4">
-                        <span className="material-symbols-outlined text-secondary text-[20px]">check_circle</span>
-                        <span className="font-label-md text-[14px] font-semibold text-on-surface dark:text-slate-200">Email Sent</span>
+                      <div className="flex items-center gap-3">
+                        <span className="material-symbols-outlined text-[#006d3e] text-[20px]">check_circle</span>
+                        <span className="font-label-md text-[14px] font-bold text-on-surface dark:text-slate-200">Email Sent</span>
                       </div>
-                      <span className="font-label-sm text-[12px] text-on-surface-variant dark:text-slate-400">Just now</span>
+                      <span className="font-label-sm text-[12px] font-medium text-on-surface-variant dark:text-slate-400">12:04 PM</span>
                     </div>
                     <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-4">
-                        <span className="material-symbols-outlined text-secondary text-[20px]">task_alt</span>
-                        <span className="font-label-md text-[14px] font-semibold text-on-surface dark:text-slate-200">Delivery Confirmed</span>
+                      <div className="flex items-center gap-3">
+                        <span className="material-symbols-outlined text-[#006d3e] text-[20px]">task_alt</span>
+                        <span className="font-label-md text-[14px] font-bold text-on-surface dark:text-slate-200">Delivery Confirmed</span>
                       </div>
-                      <span className="font-label-sm text-[12px] text-on-surface-variant dark:text-slate-400">Just now</span>
+                      <span className="font-label-sm text-[12px] font-medium text-on-surface-variant dark:text-slate-400">12:05 PM</span>
                     </div>
                     <div className="flex items-center justify-between animate-pulse">
-                      <div className="flex items-center gap-4">
-                        <span className="material-symbols-outlined text-primary text-[20px]">sync</span>
-                        <span className="font-label-md text-[14px] font-semibold text-primary">Awaiting Verification</span>
+                      <div className="flex items-center gap-3">
+                        <span className="material-symbols-outlined text-[#0055c9] text-[20px]">sync</span>
+                        <span className="font-label-md text-[14px] font-bold text-[#0055c9]">Awaiting Verification</span>
                       </div>
-                      <span className="font-label-sm text-[12px] text-primary font-semibold">Live...</span>
+                      <span className="font-label-sm text-[12px] text-[#0055c9] font-bold">Live...</span>
                     </div>
                   </div>
                 </div>
