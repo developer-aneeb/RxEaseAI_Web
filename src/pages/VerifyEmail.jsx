@@ -62,11 +62,11 @@ export default function VerifyEmail() {
 
       <main className="relative z-10 pt-20 flex flex-col md:flex-row min-h-screen">
         {/* Left Side: Informational & Brand Identity (45%) */}
-        <section className="w-full md:w-[45%] p-gutter flex flex-col justify-center relative overflow-hidden">
+        <section className="w-full md:w-[45%] p-6 flex flex-col justify-center relative overflow-hidden">
           {/* Staggered Entrance Content */}
-          <div className="max-w-xl mx-auto md:ml-xl space-y-lg animate-in fade-in slide-in-from-left-8 duration-700">
+          <div className="max-w-xl mx-auto md:ml-16 space-y-10 animate-in fade-in slide-in-from-left-8 duration-700">
             {/* Badge */}
-            <div className="inline-flex items-center px-sm py-xs glass-panel rounded-full border border-primary/20 bg-white/70 dark:bg-slate-900/70 backdrop-blur-md">
+            <div className="inline-flex items-center px-4 py-2 glass-panel rounded-full border border-primary/20 bg-white/70 dark:bg-slate-900/70 backdrop-blur-md">
               <span className="w-2 h-2 rounded-full bg-primary animate-pulse mr-2"></span>
               <span className="font-label-sm text-label-sm text-primary tracking-wider">ACCOUNT VERIFICATION REQUIRED</span>
             </div>
@@ -83,23 +83,23 @@ export default function VerifyEmail() {
             </p>
             
             {/* Verification Journey */}
-            <div className="relative py-md">
-              <div className="flex flex-col gap-sm">
-                <div className="flex items-center gap-md">
+            <div className="relative py-6">
+              <div className="flex flex-col gap-4">
+                <div className="flex items-center gap-6">
                   <div className="w-8 h-8 rounded-full bg-secondary flex items-center justify-center text-white">
                     <span className="material-symbols-outlined text-[18px]">check</span>
                   </div>
                   <span className="font-label-md text-[14px] text-on-surface dark:text-white opacity-60">Create Account</span>
                   <div className="h-[2px] flex-1 bg-secondary/30 hidden md:block"></div>
                 </div>
-                <div className="flex items-center gap-md">
+                <div className="flex items-center gap-6">
                   <div className="w-8 h-8 rounded-full bg-primary animate-pulse-glow flex items-center justify-center text-white shadow-lg shadow-primary/20">
                     <span className="material-symbols-outlined text-[18px]">mail</span>
                   </div>
                   <span className="font-label-md text-[14px] text-primary font-bold">Email Sent</span>
                   <div className="h-[2px] flex-1 bg-outline-variant/30 dark:bg-slate-700 hidden md:block"></div>
                 </div>
-                <div className="flex items-center gap-md opacity-40">
+                <div className="flex items-center gap-6 opacity-40">
                   <div className="w-8 h-8 rounded-full bg-outline-variant dark:bg-slate-700 flex items-center justify-center text-on-surface-variant dark:text-slate-400">
                     <span className="material-symbols-outlined text-[18px]">fingerprint</span>
                   </div>
@@ -109,20 +109,20 @@ export default function VerifyEmail() {
             </div>
             
             {/* Metrics Grid */}
-            <div className="grid grid-cols-2 gap-md pt-lg">
-              <div className="space-y-xs">
+            <div className="grid grid-cols-2 gap-6 pt-10">
+              <div className="space-y-2">
                 <div className="font-headline-md text-[24px] font-bold text-primary">50K+</div>
                 <div className="font-label-sm text-[12px] text-on-surface-variant dark:text-slate-400">Prescriptions</div>
               </div>
-              <div className="space-y-xs">
+              <div className="space-y-2">
                 <div className="font-headline-md text-[24px] font-bold text-secondary">99.2%</div>
                 <div className="font-label-sm text-[12px] text-on-surface-variant dark:text-slate-400">OCR Accuracy</div>
               </div>
-              <div className="space-y-xs">
+              <div className="space-y-2">
                 <div className="font-headline-md text-[24px] font-bold text-on-surface dark:text-white">HIPAA</div>
                 <div className="font-label-sm text-[12px] text-on-surface-variant dark:text-slate-400">Ready</div>
               </div>
-              <div className="space-y-xs">
+              <div className="space-y-2">
                 <div className="font-headline-md text-[24px] font-bold text-on-surface dark:text-white">99.98%</div>
                 <div className="font-label-sm text-[12px] text-on-surface-variant dark:text-slate-400">Uptime</div>
               </div>
@@ -132,25 +132,25 @@ export default function VerifyEmail() {
           {/* Floating Cards Decor */}
           <div className="absolute right-0 top-1/4 hidden lg:block pointer-events-none">
             <div className="animate-float" style={{ animationDelay: '0s' }}>
-              <div className="glass-panel p-sm rounded-xl shadow-xl border border-white/40 dark:border-slate-800 bg-white/60 dark:bg-slate-900/60 backdrop-blur-md mb-md -translate-x-12">
-                <div className="flex items-center gap-sm">
-                  <div className="p-xs bg-primary/10 rounded-lg"><span className="material-symbols-outlined text-primary">send</span></div>
+              <div className="glass-panel p-4 rounded-xl shadow-xl border border-white/40 dark:border-slate-800 bg-white/60 dark:bg-slate-900/60 backdrop-blur-md mb-6 -translate-x-12">
+                <div className="flex items-center gap-4">
+                  <div className="p-2 bg-primary/10 rounded-lg"><span className="material-symbols-outlined text-primary">send</span></div>
                   <span className="font-label-md text-[14px] font-medium">Verification Email Sent</span>
                 </div>
               </div>
             </div>
             <div className="animate-float" style={{ animationDelay: '1s' }}>
-              <div className="glass-panel p-sm rounded-xl shadow-xl border border-white/40 dark:border-slate-800 bg-white/60 dark:bg-slate-900/60 backdrop-blur-md mb-md translate-x-4">
-                <div className="flex items-center gap-sm">
-                  <div className="p-xs bg-secondary/10 rounded-lg"><span className="material-symbols-outlined text-secondary">security</span></div>
+              <div className="glass-panel p-4 rounded-xl shadow-xl border border-white/40 dark:border-slate-800 bg-white/60 dark:bg-slate-900/60 backdrop-blur-md mb-6 translate-x-4">
+                <div className="flex items-center gap-4">
+                  <div className="p-2 bg-secondary/10 rounded-lg"><span className="material-symbols-outlined text-secondary">security</span></div>
                   <span className="font-label-md text-[14px] font-medium">Identity Protection Enabled</span>
                 </div>
               </div>
             </div>
             <div className="animate-float" style={{ animationDelay: '2s' }}>
-              <div className="glass-panel p-sm rounded-xl shadow-xl border border-white/40 dark:border-slate-800 bg-white/60 dark:bg-slate-900/60 backdrop-blur-md translate-x-12">
-                <div className="flex items-center gap-sm">
-                  <div className="p-xs bg-tertiary/10 rounded-lg"><span className="material-symbols-outlined text-tertiary dark:text-purple-400">pending</span></div>
+              <div className="glass-panel p-4 rounded-xl shadow-xl border border-white/40 dark:border-slate-800 bg-white/60 dark:bg-slate-900/60 backdrop-blur-md translate-x-12">
+                <div className="flex items-center gap-4">
+                  <div className="p-2 bg-tertiary/10 rounded-lg"><span className="material-symbols-outlined text-tertiary dark:text-purple-400">pending</span></div>
                   <span className="font-label-md text-[14px] font-medium">Activation Pending</span>
                 </div>
               </div>
@@ -159,10 +159,10 @@ export default function VerifyEmail() {
         </section>
 
         {/* Right Side: Verification Card (55%) */}
-        <section className="w-full md:w-[55%] p-gutter flex items-center justify-center relative bg-surface-container-low/30 dark:bg-slate-900/30 border-l border-outline-variant/30 dark:border-slate-800">
+        <section className="w-full md:w-[55%] p-6 flex items-center justify-center relative bg-surface-container-low/30 dark:bg-slate-900/30 border-l border-outline-variant/30 dark:border-slate-800">
           {/* System Status Glass Widget */}
-          <div className="absolute top-gutter right-gutter">
-            <div className="glass-panel px-sm py-xs rounded-full flex items-center gap-sm border border-white/40 dark:border-slate-800 bg-white/60 dark:bg-slate-900/60 backdrop-blur-md shadow-sm animate-pulse">
+          <div className="absolute top-6 right-6">
+            <div className="glass-panel px-4 py-2 rounded-full flex items-center gap-4 border border-white/40 dark:border-slate-800 bg-white/60 dark:bg-slate-900/60 backdrop-blur-md shadow-sm animate-pulse">
               <span className="w-2 h-2 rounded-full bg-secondary"></span>
               <span className="font-label-sm text-[12px] font-medium text-on-surface-variant dark:text-slate-400">All Systems Operational</span>
             </div>
@@ -170,8 +170,8 @@ export default function VerifyEmail() {
           
           <div className="w-full max-w-lg animate-fade-in-up duration-700 delay-200">
             {/* Main Glassmorphic Card */}
-            <div className="glass-panel p-lg rounded-[2rem] shadow-2xl relative overflow-hidden bg-white/70 dark:bg-slate-900/70 border border-white/40 dark:border-slate-700">
-              <div className="flex flex-col items-center text-center space-y-md">
+            <div className="glass-panel p-10 rounded-[2rem] shadow-2xl relative overflow-hidden bg-white/70 dark:bg-slate-900/70 border border-white/40 dark:border-slate-700">
+              <div className="flex flex-col items-center text-center space-y-6">
                 
                 {/* Icon with Glowing Gradient Square */}
                 <div className="relative group">
@@ -183,7 +183,7 @@ export default function VerifyEmail() {
                   <div className="absolute -inset-2 border-2 border-primary/20 rounded-2xl animate-ping opacity-25"></div>
                 </div>
                 
-                <div className="space-y-xs">
+                <div className="space-y-2">
                   <h2 className="font-headline-lg text-[32px] font-bold text-on-surface dark:text-white">Check Your Email</h2>
                   <p className="font-body-md text-[16px] text-on-surface-variant dark:text-slate-400">
                     We've sent a verification link to: <br/>
@@ -192,11 +192,11 @@ export default function VerifyEmail() {
                 </div>
                 
                 {/* CTA Section */}
-                <div className="w-full pt-md space-y-sm">
+                <div className="w-full pt-6 space-y-4">
                   <button className="w-full py-3.5 bg-gradient-to-r from-primary to-secondary text-white font-label-md text-[16px] font-semibold rounded-xl shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all">
                     Open Email App
                   </button>
-                  <div className="flex flex-col items-center gap-xs">
+                  <div className="flex flex-col items-center gap-2">
                     <button 
                       className="font-label-md text-[14px] text-primary hover:underline disabled:text-on-surface-variant/40 dark:disabled:text-slate-600 disabled:no-underline font-semibold" 
                       disabled={timeLeft > 0} 
@@ -211,24 +211,24 @@ export default function VerifyEmail() {
                 </div>
                 
                 {/* Status Widget */}
-                <div className="w-full bg-white/40 dark:bg-slate-950/40 rounded-2xl p-md border border-white/20 dark:border-slate-800 mt-lg">
-                  <div className="flex flex-col gap-sm">
+                <div className="w-full bg-white/40 dark:bg-slate-950/40 rounded-2xl p-6 border border-white/20 dark:border-slate-800 mt-10">
+                  <div className="flex flex-col gap-4">
                     <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-sm">
+                      <div className="flex items-center gap-4">
                         <span className="material-symbols-outlined text-secondary text-[20px]">check_circle</span>
                         <span className="font-label-md text-[14px] font-semibold text-on-surface dark:text-slate-200">Email Sent</span>
                       </div>
                       <span className="font-label-sm text-[12px] text-on-surface-variant dark:text-slate-400">Just now</span>
                     </div>
                     <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-sm">
+                      <div className="flex items-center gap-4">
                         <span className="material-symbols-outlined text-secondary text-[20px]">task_alt</span>
                         <span className="font-label-md text-[14px] font-semibold text-on-surface dark:text-slate-200">Delivery Confirmed</span>
                       </div>
                       <span className="font-label-sm text-[12px] text-on-surface-variant dark:text-slate-400">Just now</span>
                     </div>
                     <div className="flex items-center justify-between animate-pulse">
-                      <div className="flex items-center gap-sm">
+                      <div className="flex items-center gap-4">
                         <span className="material-symbols-outlined text-primary text-[20px]">sync</span>
                         <span className="font-label-md text-[14px] font-semibold text-primary">Awaiting Verification</span>
                       </div>
@@ -238,8 +238,8 @@ export default function VerifyEmail() {
                 </div>
                 
                 {/* Auto-detection Card */}
-                <div className="w-full glass-panel p-sm rounded-xl border border-primary/10 bg-primary/5 flex items-center justify-between mt-sm">
-                  <div className="flex items-center gap-sm">
+                <div className="w-full glass-panel p-4 rounded-xl border border-primary/10 bg-primary/5 flex items-center justify-between mt-4">
+                  <div className="flex items-center gap-4">
                     <div className="w-2 h-2 bg-primary rounded-full animate-bounce"></div>
                     <span className="font-label-sm text-[12px] font-medium text-on-surface-variant dark:text-slate-400">Automatically detecting verification...</span>
                   </div>
@@ -247,7 +247,7 @@ export default function VerifyEmail() {
                 </div>
                 
                 {/* Action Links */}
-                <div className="flex gap-md pt-md border-t border-outline-variant/30 dark:border-slate-800 w-full justify-center">
+                <div className="flex gap-6 pt-6 border-t border-outline-variant/30 dark:border-slate-800 w-full justify-center">
                   <a className="font-label-sm text-[12px] font-semibold text-on-surface-variant dark:text-slate-400 hover:text-primary transition-colors" href="#">Change Email</a>
                   <a className="font-label-sm text-[12px] font-semibold text-on-surface-variant dark:text-slate-400 hover:text-primary transition-colors" href="#signin">Back to Sign In</a>
                   <a className="font-label-sm text-[12px] font-semibold text-on-surface-variant dark:text-slate-400 hover:text-primary transition-colors" href="#">Need Help?</a>
@@ -256,20 +256,20 @@ export default function VerifyEmail() {
             </div>
             
             {/* Security Badges Block */}
-            <div className="grid grid-cols-4 gap-sm mt-lg px-md">
-              <div className="flex flex-col items-center text-center space-y-xs opacity-60 hover:opacity-100 transition-opacity">
+            <div className="grid grid-cols-4 gap-4 mt-10 px-6">
+              <div className="flex flex-col items-center text-center space-y-2 opacity-60 hover:opacity-100 transition-opacity">
                 <span className="material-symbols-outlined text-on-surface-variant dark:text-slate-400 text-[20px]">verified_user</span>
                 <span className="font-label-sm text-[10px] leading-tight text-on-surface-variant dark:text-slate-400">Secure Verification</span>
               </div>
-              <div className="flex flex-col items-center text-center space-y-xs opacity-60 hover:opacity-100 transition-opacity">
+              <div className="flex flex-col items-center text-center space-y-2 opacity-60 hover:opacity-100 transition-opacity">
                 <span className="material-symbols-outlined text-on-surface-variant dark:text-slate-400 text-[20px]">medical_services</span>
                 <span className="font-label-sm text-[10px] leading-tight text-on-surface-variant dark:text-slate-400">HIPAA Ready</span>
               </div>
-              <div className="flex flex-col items-center text-center space-y-xs opacity-60 hover:opacity-100 transition-opacity">
+              <div className="flex flex-col items-center text-center space-y-2 opacity-60 hover:opacity-100 transition-opacity">
                 <span className="material-symbols-outlined text-on-surface-variant dark:text-slate-400 text-[20px]">bolt</span>
                 <span className="font-label-sm text-[10px] leading-tight text-on-surface-variant dark:text-slate-400">Fast Activation</span>
               </div>
-              <div className="flex flex-col items-center text-center space-y-xs opacity-60 hover:opacity-100 transition-opacity">
+              <div className="flex flex-col items-center text-center space-y-2 opacity-60 hover:opacity-100 transition-opacity">
                 <span className="material-symbols-outlined text-on-surface-variant dark:text-slate-400 text-[20px]">lock</span>
                 <span className="font-label-sm text-[10px] leading-tight text-on-surface-variant dark:text-slate-400">Data Protected</span>
               </div>
