@@ -37,13 +37,13 @@ export default function VerifyEmail() {
 
   return (
     <div className="bg-background text-on-surface font-body-md min-h-screen overflow-x-hidden relative dark:bg-slate-950 dark:text-slate-100 transition-colors duration-300">
-      
+
       {/* Background Elements */}
       <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none">
         <div className="absolute -top-1/4 -left-1/4 w-1/2 h-1/2 bg-primary/10 blur-[120px] rounded-full"></div>
         <div className="absolute -bottom-1/4 -right-1/4 w-1/2 h-1/2 bg-secondary/10 blur-[120px] rounded-full"></div>
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-1/3 h-1/3 bg-tertiary/5 blur-[120px] rounded-full"></div>
-        
+
         {/* Render particles */}
         {particles.map((p) => (
           <div
@@ -70,18 +70,18 @@ export default function VerifyEmail() {
               <span className="w-2 h-2 rounded-full bg-primary animate-pulse mr-2 shrink-0"></span>
               <span className="font-label-sm text-[12px] font-bold text-primary tracking-wider uppercase">ACCOUNT VERIFICATION REQUIRED</span>
             </div>
-            
+
             {/* Headline */}
             <h1 className="font-display-lg text-[48px] leading-tight font-semibold text-on-surface dark:text-white">
-              Verify Your <br/>
+              Verify Your <br />
               <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">Email Address</span>
             </h1>
-            
+
             {/* Description */}
             <p className="font-body-lg text-[18px] text-on-surface-variant dark:text-slate-400 max-w-md">
               We have sent a verification link to your email. Verify your account to securely access prescription intelligence and automated clinical workflows.
             </p>
-            
+
             {/* Verification Journey */}
             <div className="relative py-6">
               <div className="flex flex-col gap-4">
@@ -107,15 +107,15 @@ export default function VerifyEmail() {
                 </div>
               </div>
             </div>
-            
+
             {/* Metrics Grid */}
             <div className="grid grid-cols-2 gap-6 pt-10">
               <div className="space-y-2">
-                <div className="font-headline-md text-[24px] font-bold text-primary">50K+</div>
+                <div className="font-headline-md text-[24px] font-bold text-primary">1K+</div>
                 <div className="font-label-sm text-[12px] text-on-surface-variant dark:text-slate-400">Prescriptions</div>
               </div>
               <div className="space-y-2">
-                <div className="font-headline-md text-[24px] font-bold text-secondary">99.2%</div>
+                <div className="font-headline-md text-[24px] font-bold text-secondary">74%</div>
                 <div className="font-label-sm text-[12px] text-on-surface-variant dark:text-slate-400">OCR Accuracy</div>
               </div>
               <div className="space-y-2">
@@ -128,7 +128,7 @@ export default function VerifyEmail() {
               </div>
             </div>
           </div>
-          
+
           {/* Floating Cards Decor */}
           <div className="absolute right-[5%] top-[30%] hidden lg:block pointer-events-none z-20">
             <div className="animate-float" style={{ animationDelay: '0s' }}>
@@ -167,12 +167,12 @@ export default function VerifyEmail() {
               <span className="font-label-sm text-[12px] font-medium text-on-surface-variant dark:text-slate-400">All Systems Operational</span>
             </div>
           </div>
-          
+
           <div className="w-full max-w-lg animate-fade-in-up duration-700 delay-200">
             {/* Main Glassmorphic Card */}
             <div className="bg-[#cfe2f3]/80 dark:bg-slate-800/80 p-10 rounded-[2rem] shadow-2xl relative overflow-hidden border border-white/40 dark:border-slate-700 backdrop-blur-xl">
               <div className="flex flex-col items-center text-center space-y-6">
-                
+
                 {/* Icon with Glowing Gradient Square */}
                 <div className="relative group">
                   <div className="absolute inset-0 bg-[#0055c9]/20 blur-xl group-hover:bg-[#0055c9]/30 transition-all rounded-full animate-pulse-glow"></div>
@@ -182,24 +182,24 @@ export default function VerifyEmail() {
                   {/* Success Pulse */}
                   <div className="absolute -inset-2 border-2 border-[#0055c9]/20 rounded-2xl animate-ping opacity-25"></div>
                 </div>
-                
+
                 <div className="space-y-2">
                   <h2 className="font-headline-lg text-[32px] font-bold text-on-surface dark:text-white">Check Your Email</h2>
                   <p className="font-body-md text-[16px] text-on-surface-variant dark:text-slate-400">
-                    We've sent a verification link to: <br/>
+                    We've sent a verification link to: <br />
                     <span className="font-semibold text-on-surface dark:text-white underline decoration-primary/30">doctor@hospital.com</span>
                   </p>
                 </div>
-                
+
                 {/* CTA Section */}
                 <div className="w-full pt-6 space-y-4">
                   <button className="w-full py-3.5 bg-gradient-to-r from-[#0055c9] to-[#006d3e] text-white font-label-md text-[16px] font-semibold rounded-xl shadow-xl shadow-[#0055c9]/20 hover:scale-[1.02] active:scale-95 transition-all">
                     Open Email App
                   </button>
                   <div className="flex flex-col items-center gap-2 mt-2">
-                    <button 
-                      className="font-label-md text-[14px] text-[#0055c9] hover:underline disabled:text-on-surface-variant/40 dark:disabled:text-slate-400 disabled:no-underline font-bold" 
-                      disabled={timeLeft > 0} 
+                    <button
+                      className="font-label-md text-[14px] text-[#0055c9] hover:underline disabled:text-on-surface-variant/40 dark:disabled:text-slate-400 disabled:no-underline font-bold"
+                      disabled={timeLeft > 0}
                       onClick={() => setTimeLeft(42)}
                     >
                       Resend Verification Email
@@ -209,7 +209,7 @@ export default function VerifyEmail() {
                     </span>
                   </div>
                 </div>
-                
+
                 {/* Status Widget */}
                 <div className="w-full bg-white/80 dark:bg-slate-900/80 rounded-2xl p-6 border border-white/40 dark:border-slate-700 mt-10 shadow-sm">
                   <div className="flex flex-col gap-4">
@@ -236,7 +236,7 @@ export default function VerifyEmail() {
                     </div>
                   </div>
                 </div>
-                
+
                 {/* Auto-detection Card */}
                 <div className="w-full glass-panel p-4 rounded-xl border border-primary/10 bg-primary/5 flex items-center justify-between mt-4">
                   <div className="flex items-center gap-4">
@@ -245,7 +245,7 @@ export default function VerifyEmail() {
                   </div>
                   <span className="material-symbols-outlined text-[16px] text-primary animate-spin">refresh</span>
                 </div>
-                
+
                 {/* Action Links */}
                 <div className="flex gap-6 pt-6 border-t border-outline-variant/30 dark:border-slate-800 w-full justify-center">
                   <a className="font-label-sm text-[12px] font-semibold text-on-surface-variant dark:text-slate-400 hover:text-primary transition-colors" href="#">Change Email</a>
@@ -254,7 +254,7 @@ export default function VerifyEmail() {
                 </div>
               </div>
             </div>
-            
+
             {/* Security Badges Block */}
             <div className="grid grid-cols-4 gap-4 mt-10 px-6">
               <div className="flex flex-col items-center text-center space-y-2 opacity-60 hover:opacity-100 transition-opacity">
