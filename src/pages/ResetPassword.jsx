@@ -2,11 +2,14 @@ import { useState, useEffect } from 'react';
 import useTheme from '../hooks/useTheme';
 import { Sun, Moon, ArrowLeft } from 'lucide-react';
 import Button from '../components/ui/Button';
+import PasswordStrengthPanel from '../components/PasswordStrengthPanel';
 
 export default function ResetPassword() {
   const { theme, toggleTheme } = useTheme();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
 
   return (
     <div className={`reset-password-page min-h-screen overflow-x-hidden font-body-md antialiased flex flex-col bg-surface text-on-surface dark:bg-slate-950 dark:text-slate-100 transition-colors duration-300`}>
@@ -209,51 +212,19 @@ export default function ResetPassword() {
               {/* Password Field */}
               <div>
                 <div className="relative">
-                  <input className="float-label-input w-full pl-4 pr-12 py-3 h-14 rounded-xl bg-white dark:bg-slate-900 border border-outline-variant/50 dark:border-slate-800 focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all font-body-md text-body-md text-on-surface dark:text-white peer placeholder-transparent" id="new-password" placeholder="New Password" type={showPassword ? "text" : "password"} />
+                  <input className="float-label-input w-full pl-4 pr-12 py-3 h-14 rounded-xl bg-white dark:bg-slate-900 border border-outline-variant/50 dark:border-slate-800 focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all font-body-md text-body-md text-on-surface dark:text-white peer placeholder-transparent" id="new-password" placeholder="New Password" type={showPassword ? "text" : "password"} value={password} onChange={(e) => setPassword(e.target.value)} />
                   <label className="float-label absolute left-4 top-1/2 -translate-y-1/2 text-outline-variant dark:text-slate-500 font-body-md transition-all duration-200 pointer-events-none peer-focus:text-primary" htmlFor="new-password">New Password</label>
                   <button className="absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant dark:text-slate-400 hover:text-primary dark:hover:text-blue-400 transition-colors focus:outline-none z-10" type="button" onClick={() => setShowPassword(!showPassword)}>
                     <span className="material-symbols-outlined text-[20px]">{showPassword ? 'visibility_off' : 'visibility'}</span>
                   </button>
                 </div>
 
-                {/* Strength Meter */}
-                <div className="mt-4">
-                  <div className="flex justify-between items-center mb-1">
-                    <span className="font-label-sm text-xs text-on-surface-variant dark:text-slate-400">Password Strength</span>
-                    <span className="font-label-sm text-xs text-primary dark:text-blue-400 font-semibold">Medium</span>
-                  </div>
-                  <div className="flex gap-1 h-1.5">
-                    <div className="h-full flex-1 rounded-full bg-secondary"></div>
-                    <div className="h-full flex-1 rounded-full bg-secondary"></div>
-                    <div className="h-full flex-1 rounded-full bg-surface-container-high dark:bg-slate-700"></div>
-                    <div className="h-full flex-1 rounded-full bg-surface-container-high dark:bg-slate-700"></div>
-                  </div>
-                </div>
-
-                {/* Requirements Checklist */}
-                <div className="mt-4 grid grid-cols-2 gap-2">
-                  <div className="flex items-center gap-2 text-on-surface-variant dark:text-slate-400 font-label-md text-xs">
-                    <span className="material-symbols-outlined text-[16px] text-secondary">check_circle</span>
-                    8+ characters
-                  </div>
-                  <div className="flex items-center gap-2 text-on-surface-variant dark:text-slate-400 font-label-md text-xs">
-                    <span className="material-symbols-outlined text-[16px]">radio_button_unchecked</span>
-                    Uppercase letter
-                  </div>
-                  <div className="flex items-center gap-2 text-on-surface-variant dark:text-slate-400 font-label-md text-xs">
-                    <span className="material-symbols-outlined text-[16px] text-secondary">check_circle</span>
-                    Lowercase letter
-                  </div>
-                  <div className="flex items-center gap-2 text-on-surface-variant dark:text-slate-400 font-label-md text-xs">
-                    <span className="material-symbols-outlined text-[16px]">radio_button_unchecked</span>
-                    Number or symbol
-                  </div>
-                </div>
+                <PasswordStrengthPanel password={password} />
               </div>
 
               {/* Confirm Password Field */}
               <div className="relative">
-                <input className="float-label-input w-full pl-4 pr-12 py-3 h-14 rounded-xl bg-white dark:bg-slate-900 border border-outline-variant/50 dark:border-slate-800 focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all font-body-md text-body-md text-on-surface dark:text-white peer placeholder-transparent" id="confirm-password" placeholder="Confirm Password" type={showConfirmPassword ? "text" : "password"} />
+                <input className="float-label-input w-full pl-4 pr-12 py-3 h-14 rounded-xl bg-white dark:bg-slate-900 border border-outline-variant/50 dark:border-slate-800 focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all font-body-md text-body-md text-on-surface dark:text-white peer placeholder-transparent" id="confirm-password" placeholder="Confirm Password" type={showConfirmPassword ? "text" : "password"} value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
                 <label className="float-label absolute left-4 top-1/2 -translate-y-1/2 text-outline-variant dark:text-slate-500 font-body-md transition-all duration-200 pointer-events-none peer-focus:text-primary" htmlFor="confirm-password">Confirm Password</label>
                 <button className="absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant dark:text-slate-400 hover:text-primary dark:hover:text-blue-400 transition-colors focus:outline-none z-10" type="button" onClick={() => setShowConfirmPassword(!showConfirmPassword)}>
                   <span className="material-symbols-outlined text-[20px]">{showConfirmPassword ? 'visibility_off' : 'visibility'}</span>
