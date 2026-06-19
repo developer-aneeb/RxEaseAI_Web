@@ -67,8 +67,7 @@ export default function VerifyEmail() {
           <div className="max-w-xl mx-auto md:ml-16 space-y-10 animate-in fade-in slide-in-from-left-8 duration-700">
             {/* Badge */}
             <div className="inline-flex items-center px-4 py-2 glass-panel rounded-full border border-primary/20 bg-white/70 dark:bg-slate-900/70 backdrop-blur-md">
-              <span className="w-2 h-2 rounded-full bg-primary animate-pulse mr-2"></span>
-              <span className="font-label-sm text-label-sm text-primary tracking-wider">ACCOUNT VERIFICATION REQUIRED</span>
+              <span className="font-label-sm text-[12px] font-bold text-primary tracking-wider uppercase">ACCOUNT VERIFICATION REQUIRED</span>
             </div>
             
             {/* Headline */}
