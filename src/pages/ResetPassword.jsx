@@ -41,51 +41,7 @@ export default function ResetPassword() {
         .reset-password-page .ambient-glow-secondary {
             background: radial-gradient(circle, rgba(0, 109, 62, 0.1) 0%, rgba(255,255,255,0) 70%);
         }
-        
-        .reset-password-page .input-animated {
-            position: relative;
-        }
-        .reset-password-page .input-animated input {
-            border: 1px solid #e2e8f8;
-            transition: all 0.3s ease;
-        }
-        .dark .reset-password-page .input-animated input {
-            border-color: #1e293b;
-            background: rgba(15, 23, 42, 0.5);
-            color: #f8fafc;
-        }
-        .reset-password-page .input-animated input:focus {
-            border-color: #0055c9;
-            box-shadow: 0 0 0 4px rgba(0, 85, 201, 0.1);
-            outline: none;
-        }
-        .reset-password-page .input-animated label {
-            position: absolute;
-            left: 16px;
-            top: 50%;
-            transform: translateY(-50%);
-            transition: all 0.2s ease;
-            pointer-events: none;
-            color: #727787;
-        }
-        .dark .reset-password-page .input-animated label {
-            color: #94a3b8;
-        }
-        .reset-password-page .input-animated input:focus ~ label,
-        .reset-password-page .input-animated input:not(:placeholder-shown) ~ label {
-            top: -10px;
-            left: 12px;
-            font-size: 12px;
-            background: white;
-            padding: 0 4px;
-            color: #0055c9;
-            font-weight: 500;
-        }
-        .dark .reset-password-page .input-animated input:focus ~ label,
-        .dark .reset-password-page .input-animated input:not(:placeholder-shown) ~ label {
-            background: #0f172a;
-            color: #b1c5ff;
-        }
+
         
         /* Animations */
         @keyframes customPulse {
@@ -154,8 +110,8 @@ export default function ResetPassword() {
       <main className="flex-1 flex flex-col md:flex-row relative z-10 w-full max-w-[1440px] mx-auto min-h-screen items-stretch">
         
         {/* Left Side: Storytelling (45%) */}
-        <section className="hidden md:flex md:w-[45%] lg:w-[45%] flex-col justify-center p-16 relative border-r border-outline-variant/30 dark:border-slate-800/60 bg-surface/50 dark:bg-slate-950/50 backdrop-blur-sm h-full">
-          <div className="animate-slide-up max-w-lg">
+        <section className="hidden md:flex md:w-[45%] lg:w-[45%] flex-col p-16 border-r border-outline-variant/30 dark:border-slate-800/60 bg-surface/50 dark:bg-slate-950/50 backdrop-blur-sm overflow-y-auto">
+          <div className="animate-slide-up max-w-lg flex flex-col justify-center flex-1">
             
             {/* Top Badge */}
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-surface-container-high/80 dark:bg-slate-800/80 border border-white dark:border-slate-700 backdrop-blur-md mb-10 shadow-sm">
@@ -174,11 +130,11 @@ export default function ResetPassword() {
             
             {/* Process Flow */}
             <div className="mb-16">
-              <div className="flex items-center justify-between text-on-surface-variant/50 dark:text-slate-500 font-label-sm text-label-sm mb-2 px-2">
-                <span>Recovery Link</span>
-                <span>Identity Verified</span>
-                <span className="text-primary dark:text-blue-400">Create Password</span>
-                <span>Workspace Restored</span>
+              <div className="flex items-center w-full text-on-surface-variant/50 dark:text-slate-500 font-label-sm text-[11px] mb-2 gap-1">
+                <span className="flex-1 text-center leading-tight">Recovery Link</span>
+                <span className="flex-1 text-center leading-tight">Identity Verified</span>
+                <span className="flex-1 text-center leading-tight text-primary dark:text-blue-400">Create Password</span>
+                <span className="flex-1 text-center leading-tight">Workspace Restored</span>
               </div>
               <div className="h-1 bg-surface-container-high dark:bg-slate-800 rounded-full overflow-hidden flex relative">
                 <div className="w-1/4 h-full bg-secondary"></div>
@@ -212,22 +168,24 @@ export default function ResetPassword() {
               </div>
             </div>
             
-            {/* Bottom Metrics */}
-            <div className="absolute bottom-16 left-16 right-16 flex justify-between items-center border-t border-outline-variant/30 dark:border-slate-800/60 pt-10">
-              <div className="text-center">
-                <div className="font-headline-md text-lg font-bold text-on-surface dark:text-slate-200">256-bit</div>
-                <div className="font-label-sm text-xs text-on-surface-variant dark:text-slate-400 uppercase mt-1">Encryption</div>
-              </div>
-              <div className="text-center">
-                <div className="font-headline-md text-lg font-bold text-on-surface dark:text-slate-200">HIPAA</div>
-                <div className="font-label-sm text-xs text-on-surface-variant dark:text-slate-400 uppercase mt-1">Ready</div>
-              </div>
-              <div className="text-center">
-                <div className="font-headline-md text-lg font-bold text-on-surface dark:text-slate-200">99.98%</div>
-                <div className="font-label-sm text-xs text-on-surface-variant dark:text-slate-400 uppercase mt-1">Uptime</div>
-              </div>
             </div>
             
+          </div>
+          
+          {/* Bottom Metrics */}
+          <div className="mt-auto pt-10 mt-10 border-t border-outline-variant/30 dark:border-slate-800/60 flex justify-between items-center shrink-0 w-full animate-slide-up" style={{animationDelay: '0.2s'}}>
+            <div className="text-center">
+              <div className="font-headline-md text-lg font-bold text-on-surface dark:text-slate-200">256-bit</div>
+              <div className="font-label-sm text-xs text-on-surface-variant dark:text-slate-400 uppercase mt-1">Encryption</div>
+            </div>
+            <div className="text-center">
+              <div className="font-headline-md text-lg font-bold text-on-surface dark:text-slate-200">HIPAA</div>
+              <div className="font-label-sm text-xs text-on-surface-variant dark:text-slate-400 uppercase mt-1">Ready</div>
+            </div>
+            <div className="text-center">
+              <div className="font-headline-md text-lg font-bold text-on-surface dark:text-slate-200">99.98%</div>
+              <div className="font-label-sm text-xs text-on-surface-variant dark:text-slate-400 uppercase mt-1">Uptime</div>
+            </div>
           </div>
         </section>
         
@@ -251,10 +209,10 @@ export default function ResetPassword() {
             <form className="space-y-6">
               {/* Password Field */}
               <div>
-                <div className="input-animated">
-                  <input className="w-full h-14 rounded-xl px-4 pt-4 pb-1 placeholder-transparent focus:ring-0" id="new-password" placeholder=" " type="password"/>
-                  <label htmlFor="new-password">New Password</label>
-                  <button className="absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant dark:text-slate-400 hover:text-primary dark:hover:text-blue-400 transition-colors" type="button">
+                <div className="relative">
+                  <input className="float-label-input w-full pl-4 pr-12 py-3 h-14 rounded-xl bg-surface/50 dark:bg-slate-950/50 border border-outline-variant/50 dark:border-slate-800 focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all font-body-md text-body-md text-on-surface dark:text-white peer placeholder-transparent" id="new-password" placeholder="New Password" type="password"/>
+                  <label className="float-label absolute left-4 top-1/2 -translate-y-1/2 text-outline-variant dark:text-slate-500 font-body-md transition-all duration-200 pointer-events-none peer-focus:text-primary" htmlFor="new-password">New Password</label>
+                  <button className="absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant dark:text-slate-400 hover:text-primary dark:hover:text-blue-400 transition-colors focus:outline-none z-10" type="button">
                     <span className="material-symbols-outlined text-[20px]">visibility_off</span>
                   </button>
                 </div>
@@ -295,9 +253,9 @@ export default function ResetPassword() {
               </div>
               
               {/* Confirm Password Field */}
-              <div className="input-animated">
-                <input className="w-full h-14 rounded-xl px-4 pt-4 pb-1 placeholder-transparent focus:ring-0" id="confirm-password" placeholder=" " type="password"/>
-                <label htmlFor="confirm-password">Confirm Password</label>
+              <div className="relative">
+                <input className="float-label-input w-full pl-4 pr-12 py-3 h-14 rounded-xl bg-surface/50 dark:bg-slate-950/50 border border-outline-variant/50 dark:border-slate-800 focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all font-body-md text-body-md text-on-surface dark:text-white peer placeholder-transparent" id="confirm-password" placeholder="Confirm Password" type="password"/>
+                <label className="float-label absolute left-4 top-1/2 -translate-y-1/2 text-outline-variant dark:text-slate-500 font-body-md transition-all duration-200 pointer-events-none peer-focus:text-primary" htmlFor="confirm-password">Confirm Password</label>
               </div>
               
               {/* Action Button */}
