@@ -5,6 +5,8 @@ import Button from '../components/ui/Button';
 
 export default function ResetPassword() {
   const { theme, toggleTheme } = useTheme();
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   return (
     <div className={`reset-password-page min-h-screen overflow-x-hidden font-body-md antialiased flex flex-col bg-surface text-on-surface dark:bg-slate-950 dark:text-slate-100 transition-colors duration-300`}>
@@ -207,10 +209,10 @@ export default function ResetPassword() {
               {/* Password Field */}
               <div>
                 <div className="relative">
-                  <input className="float-label-input w-full pl-4 pr-12 py-3 h-14 rounded-xl bg-surface/50 dark:bg-slate-950/50 border border-outline-variant/50 dark:border-slate-800 focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all font-body-md text-body-md text-on-surface dark:text-white peer placeholder-transparent" id="new-password" placeholder="New Password" type="password" />
+                  <input className="float-label-input w-full pl-4 pr-12 py-3 h-14 rounded-xl bg-white dark:bg-slate-900 border border-outline-variant/50 dark:border-slate-800 focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all font-body-md text-body-md text-on-surface dark:text-white peer placeholder-transparent" id="new-password" placeholder="New Password" type={showPassword ? "text" : "password"} />
                   <label className="float-label absolute left-4 top-1/2 -translate-y-1/2 text-outline-variant dark:text-slate-500 font-body-md transition-all duration-200 pointer-events-none peer-focus:text-primary" htmlFor="new-password">New Password</label>
-                  <button className="absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant dark:text-slate-400 hover:text-primary dark:hover:text-blue-400 transition-colors focus:outline-none z-10" type="button">
-                    <span className="material-symbols-outlined text-[20px]">visibility_off</span>
+                  <button className="absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant dark:text-slate-400 hover:text-primary dark:hover:text-blue-400 transition-colors focus:outline-none z-10" type="button" onClick={() => setShowPassword(!showPassword)}>
+                    <span className="material-symbols-outlined text-[20px]">{showPassword ? 'visibility_off' : 'visibility'}</span>
                   </button>
                 </div>
 
@@ -251,8 +253,11 @@ export default function ResetPassword() {
 
               {/* Confirm Password Field */}
               <div className="relative">
-                <input className="float-label-input w-full pl-4 pr-12 py-3 h-14 rounded-xl bg-surface/50 dark:bg-slate-950/50 border border-outline-variant/50 dark:border-slate-800 focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all font-body-md text-body-md text-on-surface dark:text-white peer placeholder-transparent" id="confirm-password" placeholder="Confirm Password" type="password" />
+                <input className="float-label-input w-full pl-4 pr-12 py-3 h-14 rounded-xl bg-white dark:bg-slate-900 border border-outline-variant/50 dark:border-slate-800 focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all font-body-md text-body-md text-on-surface dark:text-white peer placeholder-transparent" id="confirm-password" placeholder="Confirm Password" type={showConfirmPassword ? "text" : "password"} />
                 <label className="float-label absolute left-4 top-1/2 -translate-y-1/2 text-outline-variant dark:text-slate-500 font-body-md transition-all duration-200 pointer-events-none peer-focus:text-primary" htmlFor="confirm-password">Confirm Password</label>
+                <button className="absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant dark:text-slate-400 hover:text-primary dark:hover:text-blue-400 transition-colors focus:outline-none z-10" type="button" onClick={() => setShowConfirmPassword(!showConfirmPassword)}>
+                  <span className="material-symbols-outlined text-[20px]">{showConfirmPassword ? 'visibility_off' : 'visibility'}</span>
+                </button>
               </div>
 
               {/* Action Button */}
