@@ -3,6 +3,7 @@ import LandingPage from './pages/LandingPage';
 import SignUp from './pages/SignUp';
 import SignIn from './pages/SignIn';
 import ForgotPassword from './pages/ForgotPassword';
+import ResetPassword from './pages/ResetPassword';
 
 function App() {
     const [currentHash, setCurrentHash] = useState(window.location.hash || '#');
@@ -26,6 +27,10 @@ function App() {
 
     if (currentHash === '#forgot-password') {
         return <ForgotPassword />;
+    }
+
+    if (currentHash === '#reset-password') {
+        return <ResetPassword />;
     }
 
     return <LandingPage />;
