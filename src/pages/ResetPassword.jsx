@@ -10,6 +10,46 @@ export default function ResetPassword() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [errors, setErrors] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const newErrors = {};
+
+    if (!password) {
+      newErrors.password = 'Please enter a password.';
+    } else {
+      const currentStrengthScore = [
+        password.length >= 8,
+        /[a-z]/.test(password),
+        /[A-Z]/.test(password),
+        /[0-9!@#$%^&*(),.?":{}|<>]/.test(password)
+      ].filter(Boolean).length;
+      if (currentStrengthScore < 4) {
+        newErrors.password = 'Please satisfy all password strength requirements.';
+      }
+    }
+
+    if (!confirmPassword) {
+      newErrors.confirmPassword = 'Please confirm your password.';
+    } else if (password !== confirmPassword) {
+      newErrors.confirmPassword = 'Passwords do not match.';
+    }
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+
+    setErrors({});
+    setIsSubmitting(true);
+    // Simulate API update call
+    setTimeout(() => {
+      setIsSubmitting(false);
+      window.location.hash = '#signin';
+    }, 1500);
+  };
 
   return (
     <div className={`reset-password-page min-h-screen overflow-x-hidden font-body-md antialiased flex flex-col bg-surface text-on-surface dark:bg-slate-950 dark:text-slate-100 transition-colors duration-300`}>
@@ -207,32 +247,36 @@ export default function ResetPassword() {
             </div>
 
             {/* Form */}
-            <form className="space-y-6">
+            <form className="space-y-6" onSubmit={handleSubmit}>
               {/* Password Field */}
               <div>
                 <div className="relative">
-                  <input className="float-label-input w-full pl-4 pr-12 py-3 h-14 rounded-xl bg-white dark:bg-slate-900 border border-outline-variant/50 dark:border-slate-800 focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all font-body-md text-body-md text-on-surface dark:text-white peer placeholder-transparent" id="new-password" placeholder="New Password" type={showPassword ? "text" : "password"} value={password} onChange={(e) => setPassword(e.target.value)} />
+                  <input className={`float-label-input w-full pl-4 pr-12 py-3 h-14 rounded-xl bg-white dark:bg-slate-900 border ${errors.password ? 'border-red-500 ring-1 ring-red-500' : 'border-outline-variant/50 dark:border-slate-800'} focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all font-body-md text-body-md text-on-surface dark:text-white peer placeholder-transparent`} id="new-password" placeholder="New Password" type={showPassword ? "text" : "password"} value={password} onChange={(e) => { setPassword(e.target.value); setErrors(prev => ({...prev, password: ''})); }} />
                   <label className="float-label absolute left-4 top-1/2 -translate-y-1/2 text-outline-variant dark:text-slate-500 font-body-md transition-all duration-200 pointer-events-none peer-focus:text-primary" htmlFor="new-password">New Password</label>
                   <button className="absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant dark:text-slate-400 hover:text-primary dark:hover:text-blue-400 transition-colors focus:outline-none z-10" type="button" onClick={() => setShowPassword(!showPassword)}>
                     <span className="material-symbols-outlined text-[20px]">{showPassword ? 'visibility_off' : 'visibility'}</span>
                   </button>
                 </div>
-
-                <PasswordStrengthPanel password={password} />
+                {errors.password && <p className="text-red-500 text-xs mt-1 ml-1 font-medium">{errors.password}</p>}
+                
+                <div className="mt-2">
+                  <PasswordStrengthPanel password={password} />
+                </div>
               </div>
 
               {/* Confirm Password Field */}
               <div className="relative">
-                <input className="float-label-input w-full pl-4 pr-12 py-3 h-14 rounded-xl bg-white dark:bg-slate-900 border border-outline-variant/50 dark:border-slate-800 focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all font-body-md text-body-md text-on-surface dark:text-white peer placeholder-transparent" id="confirm-password" placeholder="Confirm Password" type={showConfirmPassword ? "text" : "password"} value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
+                <input className={`float-label-input w-full pl-4 pr-12 py-3 h-14 rounded-xl bg-white dark:bg-slate-900 border ${errors.confirmPassword ? 'border-red-500 ring-1 ring-red-500' : 'border-outline-variant/50 dark:border-slate-800'} focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all font-body-md text-body-md text-on-surface dark:text-white peer placeholder-transparent`} id="confirm-password" placeholder="Confirm Password" type={showConfirmPassword ? "text" : "password"} value={confirmPassword} onChange={(e) => { setConfirmPassword(e.target.value); setErrors(prev => ({...prev, confirmPassword: ''})); }} />
                 <label className="float-label absolute left-4 top-1/2 -translate-y-1/2 text-outline-variant dark:text-slate-500 font-body-md transition-all duration-200 pointer-events-none peer-focus:text-primary" htmlFor="confirm-password">Confirm Password</label>
                 <button className="absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant dark:text-slate-400 hover:text-primary dark:hover:text-blue-400 transition-colors focus:outline-none z-10" type="button" onClick={() => setShowConfirmPassword(!showConfirmPassword)}>
                   <span className="material-symbols-outlined text-[20px]">{showConfirmPassword ? 'visibility_off' : 'visibility'}</span>
                 </button>
+                {errors.confirmPassword && <p className="text-red-500 text-xs mt-1 ml-1 font-medium">{errors.confirmPassword}</p>}
               </div>
 
               {/* Action Button */}
-              <button className="w-full h-14 rounded-xl bg-primary text-white font-label-md text-base font-semibold hover:bg-primary-container transition-all duration-300 transform hover:scale-[1.02] shadow-[0_4px_14px_rgba(0,85,201,0.3)] hover:shadow-[0_6px_20px_rgba(0,85,201,0.4)] flex items-center justify-center gap-2 group mt-10" type="button" onClick={() => window.location.hash = '#signin'}>
-                Update Password
+              <button disabled={isSubmitting} className="w-full h-14 rounded-xl bg-primary text-white font-label-md text-base font-semibold hover:bg-primary-container transition-all duration-300 transform hover:scale-[1.02] shadow-[0_4px_14px_rgba(0,85,201,0.3)] hover:shadow-[0_6px_20px_rgba(0,85,201,0.4)] flex items-center justify-center gap-2 group mt-10" type="submit">
+                {isSubmitting ? 'Updating...' : 'Update Password'}
                 <span className="material-symbols-outlined group-hover:translate-x-1 transition-transform">arrow_forward</span>
               </button>
             </form>
