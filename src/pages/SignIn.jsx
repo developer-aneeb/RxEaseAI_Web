@@ -14,6 +14,7 @@ export default function SignIn() {
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [errors, setErrors] = useState({});
 
   // Stats Counter State
   const [prescriptions, setPrescriptions] = useState(0);
@@ -83,18 +84,27 @@ export default function SignIn() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!email || !password) {
-      alert('Please fill out all fields.');
+    const newErrors = {};
+
+    if (!email) {
+      newErrors.email = 'Please enter your email.';
+    } else {
+      const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+      if (!emailRegex.test(email)) {
+        newErrors.email = 'Please enter a valid email address.';
+      }
+    }
+
+    if (!password) {
+      newErrors.password = 'Please enter your password.';
+    }
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
       return;
     }
 
-    // Email validation
-    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    if (!emailRegex.test(email)) {
-      alert('Please enter a valid email address.');
-      return;
-    }
-
+    setErrors({});
     setIsSubmitting(true);
     // Simulate API Sign In call
     setTimeout(() => {
@@ -297,40 +307,50 @@ export default function SignIn() {
                   <div className="relative">
                     <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-outline-variant dark:text-slate-500 z-10 w-5 h-5" />
                     <input
-                      className="float-label-input w-full pl-[48px] pr-stitch-sm py-3.5 rounded-xl bg-white/50 dark:bg-slate-950/50 border border-outline-variant/50 dark:border-slate-800 focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all font-body-md text-body-md text-on-surface dark:text-white peer placeholder-transparent"
                       id="email"
-                      placeholder="Email Address"
                       type="email"
+                      placeholder="Email Address"
+                      className={`peer w-full pl-11 pr-4 py-4 rounded-xl border ${errors.email ? 'border-red-500 ring-1 ring-red-500' : 'border-outline-variant dark:border-slate-800'} bg-surface/50 dark:bg-slate-900/50 focus:bg-surface dark:focus:bg-slate-900 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all text-on-surface dark:text-white placeholder-transparent`}
                       value={email}
-                      onChange={(e) => setEmail(e.target.value)}
+                      onChange={(e) => { setEmail(e.target.value); setErrors(prev => ({...prev, email: ''})); }}
                       required
                     />
-                    <label className="float-label absolute left-[48px] top-1/2 -translate-y-1/2 text-outline-variant dark:text-slate-500 font-body-md transition-all duration-200 pointer-events-none peer-focus:text-primary" htmlFor="email">Email Address</label>
+                    <label
+                      htmlFor="email"
+                      className="absolute left-11 -top-2.5 px-1 bg-surface dark:bg-slate-900 text-xs font-medium text-on-surface-variant dark:text-slate-400 transition-all peer-placeholder-shown:text-base peer-placeholder-shown:top-4 peer-focus:-top-2.5 peer-focus:text-xs peer-focus:text-primary pointer-events-none"
+                    >
+                      Email Address
+                    </label>
                   </div>
+                  {errors.email && <p className="text-red-500 text-xs mt-1 ml-1 font-medium">{errors.email}</p>}
 
                   {/* Password */}
                   <div className="relative">
                     <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-outline-variant dark:text-slate-500 z-10 w-5 h-5" />
                     <input
-                      className="float-label-input w-full pl-[48px] pr-[48px] py-3.5 rounded-xl bg-white/50 dark:bg-slate-950/50 border border-outline-variant/50 dark:border-slate-800 focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all font-body-md text-body-md text-on-surface dark:text-white peer placeholder-transparent"
                       id="password"
-                      placeholder="Password"
                       type={showPassword ? "text" : "password"}
+                      placeholder="Password"
+                      className={`peer w-full pl-11 pr-12 py-4 rounded-xl border ${errors.password ? 'border-red-500 ring-1 ring-red-500' : 'border-outline-variant dark:border-slate-800'} bg-surface/50 dark:bg-slate-900/50 focus:bg-surface dark:focus:bg-slate-900 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all text-on-surface dark:text-white placeholder-transparent`}
                       value={password}
-                      onChange={(e) => setPassword(e.target.value)}
+                      onChange={(e) => { setPassword(e.target.value); setErrors(prev => ({...prev, password: ''})); }}
                       required
                     />
-                    <label className="float-label absolute left-[48px] top-1/2 -translate-y-1/2 text-outline-variant dark:text-slate-500 font-body-md transition-all duration-200 pointer-events-none peer-focus:text-primary" htmlFor="password">Password</label>
-                    <button
-                      className="absolute right-4 top-1/2 -translate-y-1/2 text-outline-variant dark:text-slate-500 hover:text-on-surface dark:hover:text-white transition-colors focus:outline-none z-10"
-                      onClick={() => setShowPassword(!showPassword)}
-                      type="button"
+                    <label
+                      htmlFor="password"
+                      className="absolute left-11 -top-2.5 px-1 bg-surface dark:bg-slate-900 text-xs font-medium text-on-surface-variant dark:text-slate-400 transition-all peer-placeholder-shown:text-base peer-placeholder-shown:top-4 peer-focus:-top-2.5 peer-focus:text-xs peer-focus:text-primary pointer-events-none"
                     >
-                      {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                      Password
+                    </label>
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute inset-y-0 right-0 pr-4 flex items-center text-on-surface-variant hover:text-primary transition-colors focus:outline-none"
+                    >
+                      {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                     </button>
                   </div>
-
-                  {/* Password Strength Panel */}
+                  {errors.password && <p className="text-red-500 text-xs mt-1 ml-1 font-medium">{errors.password}</p>}
                   <PasswordStrengthPanel password={password} />
 
                   {/* Remember Me & Forgot Password */}
