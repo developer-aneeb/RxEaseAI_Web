@@ -17,6 +17,7 @@ export default function SignUp() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [errors, setErrors] = useState({});
 
 
   // Stats Counter state
@@ -59,38 +60,49 @@ export default function SignUp() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!fullName || !email || !password || !confirmPassword) {
-      alert('Please fill out all fields.');
-      return;
+    const newErrors = {};
+
+    if (!fullName) newErrors.fullName = 'Please enter your full name.';
+
+    if (!email) {
+      newErrors.email = 'Please enter your email address.';
+    } else {
+      const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+      if (!emailRegex.test(email)) {
+        newErrors.email = 'Please enter a valid email address.';
+      }
     }
 
-    // Alphanumeric/subdomain email validator covers students.au.edu.pk, gmail.com, yahoo.com etc.
-    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    if (!emailRegex.test(email)) {
-      alert('Please enter a valid email address (e.g. name@gmail.com or student@students.au.edu.pk).');
-      return;
+    if (!password) {
+      newErrors.password = 'Please enter a password.';
+    } else {
+      const currentStrengthScore = [
+        password.length >= 8,
+        /[a-z]/.test(password),
+        /[A-Z]/.test(password),
+        /[0-9!@#$%^&*(),.?":{}|<>]/.test(password)
+      ].filter(Boolean).length;
+      if (currentStrengthScore < 4) {
+        newErrors.password = 'Please satisfy all password strength requirements.';
+      }
     }
 
-    const currentStrengthScore = [
-      password.length >= 8,
-      /[a-z]/.test(password),
-      /[A-Z]/.test(password),
-      /[0-9!@#$%^&*(),.?":{}|<>]/.test(password)
-    ].filter(Boolean).length;
+    if (!confirmPassword) {
+      newErrors.confirmPassword = 'Please confirm your password.';
+    } else if (password !== confirmPassword) {
+      newErrors.confirmPassword = 'Passwords do not match.';
+    }
 
-    if (currentStrengthScore < 4) {
-      alert('Please satisfy all password strength requirements.');
-      return;
-    }
-    if (password !== confirmPassword) {
-      alert('Passwords do not match.');
-      return;
-    }
     if (!terms) {
-      alert('You must agree to the Terms of Service and Privacy Policy.');
+      newErrors.terms = 'You must agree to the terms.';
+    }
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
       return;
     }
 
+    setErrors({});
     setIsSubmitting(true);
     // Simulate API registration call
     setTimeout(() => {
@@ -333,16 +345,19 @@ export default function SignUp() {
                   <div className="relative">
                     <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline-variant dark:text-slate-500 z-10">person</span>
                     <input
-                      className="float-label-input w-full pl-[48px] pr-stitch-sm py-3 rounded-xl bg-white/50 dark:bg-slate-950/50 border border-outline-variant/50 dark:border-slate-800 focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all font-body-md text-body-md text-on-surface dark:text-white peer placeholder-transparent"
-                      id="fullName"
-                      placeholder="Full Name"
-                      type="text"
-                      value={fullName}
-                      onChange={(e) => setFullName(e.target.value)}
-                      required
-                    />
-                    <label className="float-label absolute left-[48px] top-1/2 -translate-y-1/2 text-outline-variant dark:text-slate-500 font-body-md transition-all duration-200 pointer-events-none peer-focus:text-primary" htmlFor="fullName">Full Name</label>
-                  </div>
+                    id="fullName"
+                    type="text"
+                    placeholder="Full Name"
+                    className={`float-label-input w-full pl-[48px] pr-stitch-sm py-3 h-14 rounded-xl bg-white/50 dark:bg-slate-950/50 border ${errors.fullName ? 'border-red-500 ring-1 ring-red-500' : 'border-outline-variant/50 dark:border-slate-800'} focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all font-body-md text-body-md text-on-surface dark:text-white peer placeholder-transparent`}
+                    value={fullName}
+                    onChange={(e) => { setFullName(e.target.value); setErrors(prev => ({...prev, fullName: ''})); }}
+                    required
+                  />
+                  <label htmlFor="fullName" className="float-label absolute left-[48px] top-1/2 -translate-y-1/2 text-outline-variant dark:text-slate-500 font-body-md transition-all duration-200 pointer-events-none peer-focus:text-primary">
+                    Full Name
+                  </label>
+                  {errors.fullName && <p className="text-red-500 text-xs mt-1 ml-1 font-medium">{errors.fullName}</p>}
+                </div>
 
                   {/* Email */}
                   <div className="relative">
@@ -406,20 +421,25 @@ export default function SignUp() {
                     </button>
                   </div>
 
-                  {/* Terms Checkbox */}
-                  <div className="flex items-start gap-3 mt-2">
-                    <input
-                      className="mt-1 w-4 h-4 rounded border-outline-variant/50 text-primary focus:ring-primary/20 bg-white/50 cursor-pointer"
-                      id="terms"
-                      type="checkbox"
-                      checked={terms}
-                      onChange={(e) => setTerms(e.target.checked)}
-                      required
-                    />
-                    <label className="font-body-md text-[13px] text-on-surface-variant dark:text-slate-400 leading-relaxed cursor-pointer" htmlFor="terms">
-                      I agree to the <a className="text-primary hover:underline font-medium" href="#">Terms of Service</a> and <a className="text-primary hover:underline font-medium" href="#">Privacy Policy</a>.
+                  {/* Terms Agreement */}
+                <div className="flex flex-col gap-1">
+                  <div className="flex items-start gap-3">
+                    <div className="flex items-center h-5 mt-0.5">
+                      <input
+                        id="terms"
+                        type="checkbox"
+                        className="w-4 h-4 rounded border-outline-variant dark:border-slate-700 text-primary focus:ring-primary/20 dark:bg-slate-800 transition-colors"
+                        checked={terms}
+                        onChange={(e) => { setTerms(e.target.checked); setErrors(prev => ({...prev, terms: ''})); }}
+                        required
+                      />
+                    </div>
+                    <label htmlFor="terms" className="text-sm text-on-surface-variant dark:text-slate-400 leading-tight">
+                      I agree to the <a href="#" className="text-primary dark:text-blue-400 hover:underline">Terms of Service</a> and <a href="#" className="text-primary dark:text-blue-400 hover:underline">Privacy Policy</a>
                     </label>
                   </div>
+                  {errors.terms && <p className="text-red-500 text-xs ml-7 font-medium">{errors.terms}</p>}
+                </div>
 
                   {/* Submit Button */}
                   <button
