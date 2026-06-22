@@ -363,27 +363,28 @@ export default function SignUp() {
                   <div className="relative">
                     <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline-variant dark:text-slate-500 z-10">mail</span>
                     <input
-                      className="float-label-input w-full pl-[48px] pr-stitch-sm py-3 rounded-xl bg-white/50 dark:bg-slate-950/50 border border-outline-variant/50 dark:border-slate-800 focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all font-body-md text-body-md text-on-surface dark:text-white peer placeholder-transparent"
+                      className={`float-label-input w-full pl-[48px] pr-stitch-sm py-3 rounded-xl bg-white/50 dark:bg-slate-950/50 border ${errors.email ? 'border-red-500 ring-1 ring-red-500' : 'border-outline-variant/50 dark:border-slate-800'} focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all font-body-md text-body-md text-on-surface dark:text-white peer placeholder-transparent`}
                       id="email"
                       placeholder="Email"
                       type="email"
                       value={email}
-                      onChange={(e) => setEmail(e.target.value)}
+                      onChange={(e) => { setEmail(e.target.value); setErrors(prev => ({...prev, email: ''})); }}
                       required
                     />
                     <label className="float-label absolute left-[48px] top-1/2 -translate-y-1/2 text-outline-variant dark:text-slate-500 font-body-md transition-all duration-200 pointer-events-none peer-focus:text-primary" htmlFor="email">Email</label>
                   </div>
+                  {errors.email && <p className="text-red-500 text-xs mt-1 ml-1 font-medium">{errors.email}</p>}
 
                   {/* Password */}
                   <div className="relative">
                     <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline-variant dark:text-slate-500 z-10">lock</span>
                     <input
-                      className="float-label-input w-full pl-[48px] pr-[48px] py-3 rounded-xl bg-white/50 dark:bg-slate-950/50 border border-outline-variant/50 dark:border-slate-800 focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all font-body-md text-body-md text-on-surface dark:text-white peer placeholder-transparent"
+                      className={`float-label-input w-full pl-[48px] pr-[48px] py-3 rounded-xl bg-white/50 dark:bg-slate-950/50 border ${errors.password ? 'border-red-500 ring-1 ring-red-500' : 'border-outline-variant/50 dark:border-slate-800'} focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all font-body-md text-body-md text-on-surface dark:text-white peer placeholder-transparent`}
                       id="password"
                       placeholder="Password"
                       type={showPassword ? "text" : "password"}
                       value={password}
-                      onChange={(e) => setPassword(e.target.value)}
+                      onChange={(e) => { setPassword(e.target.value); setErrors(prev => ({...prev, password: ''})); }}
                       required
                     />
                     <label className="float-label absolute left-[48px] top-1/2 -translate-y-1/2 text-outline-variant dark:text-slate-500 font-body-md transition-all duration-200 pointer-events-none peer-focus:text-primary" htmlFor="password">Password</label>
@@ -395,6 +396,7 @@ export default function SignUp() {
                       <span className="material-symbols-outlined">{showPassword ? 'visibility_off' : 'visibility'}</span>
                     </button>
                   </div>
+                  {errors.password && <p className="text-red-500 text-xs mt-1 ml-1 font-medium">{errors.password}</p>}
 
                   {/* Password Strength Panel */}
                   <PasswordStrengthPanel password={password} />
@@ -403,12 +405,12 @@ export default function SignUp() {
                   <div className="relative">
                     <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline-variant dark:text-slate-500 z-10">lock</span>
                     <input
-                      className="float-label-input w-full pl-[48px] pr-[48px] py-3 rounded-xl bg-white/50 dark:bg-slate-950/50 border border-outline-variant/50 dark:border-slate-800 focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all font-body-md text-body-md text-on-surface dark:text-white peer placeholder-transparent"
+                      className={`float-label-input w-full pl-[48px] pr-[48px] py-3 rounded-xl bg-white/50 dark:bg-slate-950/50 border ${errors.confirmPassword ? 'border-red-500 ring-1 ring-red-500' : 'border-outline-variant/50 dark:border-slate-800'} focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all font-body-md text-body-md text-on-surface dark:text-white peer placeholder-transparent`}
                       id="confirmPassword"
                       placeholder="Confirm Password"
                       type={showConfirmPassword ? "text" : "password"}
                       value={confirmPassword}
-                      onChange={(e) => setConfirmPassword(e.target.value)}
+                      onChange={(e) => { setConfirmPassword(e.target.value); setErrors(prev => ({...prev, confirmPassword: ''})); }}
                       required
                     />
                     <label className="float-label absolute left-[48px] top-1/2 -translate-y-1/2 text-outline-variant dark:text-slate-500 font-body-md transition-all duration-200 pointer-events-none peer-focus:text-primary" htmlFor="confirmPassword">Confirm Password</label>
@@ -420,6 +422,7 @@ export default function SignUp() {
                       <span className="material-symbols-outlined">{showConfirmPassword ? 'visibility_off' : 'visibility'}</span>
                     </button>
                   </div>
+                  {errors.confirmPassword && <p className="text-red-500 text-xs mt-1 ml-1 font-medium">{errors.confirmPassword}</p>}
 
                   {/* Terms Agreement */}
                 <div className="flex flex-col gap-1">
