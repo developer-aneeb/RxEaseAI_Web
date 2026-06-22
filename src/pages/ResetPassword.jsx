@@ -3,6 +3,7 @@ import useTheme from '../hooks/useTheme';
 import { Sun, Moon, ArrowLeft } from 'lucide-react';
 import Button from '../components/ui/Button';
 import PasswordStrengthPanel from '../components/PasswordStrengthPanel';
+import MaterialIcon from '../components/ui/MaterialIcon';
 
 export default function ResetPassword() {
   const { theme, toggleTheme } = useTheme();
@@ -275,10 +276,16 @@ export default function ResetPassword() {
               </div>
 
               {/* Action Button */}
-              <button disabled={isSubmitting} className="w-full h-14 rounded-xl bg-primary text-white font-label-md text-base font-semibold hover:bg-primary-container transition-all duration-300 transform hover:scale-[1.02] shadow-[0_4px_14px_rgba(0,85,201,0.3)] hover:shadow-[0_6px_20px_rgba(0,85,201,0.4)] flex items-center justify-center gap-2 group mt-10" type="submit">
+              <Button
+                variant="custom"
+                size="none"
+                disabled={isSubmitting}
+                className="w-full h-14 rounded-xl bg-primary text-white font-label-md text-base font-semibold hover:bg-primary-container transition-all duration-300 transform hover:scale-[1.02] shadow-[0_4px_14px_rgba(0,85,201,0.3)] hover:shadow-[0_6px_20px_rgba(0,85,201,0.4)] flex items-center justify-center gap-2 group mt-10"
+                type="submit"
+              >
                 {isSubmitting ? 'Updating...' : 'Update Password'}
-                <span className="material-symbols-outlined group-hover:translate-x-1 transition-transform">arrow_forward</span>
-              </button>
+                <MaterialIcon name="arrow_forward" size="md" className="group-hover:translate-x-1 transition-transform" />
+              </Button>
             </form>
 
             {/* Secondary Actions */}
