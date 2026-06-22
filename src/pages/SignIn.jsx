@@ -382,7 +382,7 @@ export default function SignIn() {
                     className="w-full mt-2 py-3.5 px-stitch-lg rounded-xl bg-gradient-btn text-white font-label-md text-[16px] font-semibold transition-all duration-300 transform hover:-translate-y-1 hover:shadow-[0_10px_25px_-5px_rgba(0,85,201,0.4)] flex justify-center items-center gap-stitch-xs relative overflow-hidden group cursor-pointer"
                   >
                     <div className="absolute inset-0 w-full h-full bg-white/20 -translate-x-full group-hover:animate-shimmer skew-x-12"></div>
-                    {isSubmitting ? 'Signing in...' : 'Sign In'}
+                    {isSubmitting ? 'Accessing Workspace...' : 'Access Workspace'}
                     {!isSubmitting && <MaterialIcon name="arrow_forward" size="xl" className="group-hover:translate-x-1 transition-transform" />}
                   </Button>
                 </form>
