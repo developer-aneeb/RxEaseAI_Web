@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 import useTheme from '../hooks/useTheme';
+import Button from '../components/ui/Button';
+import MaterialIcon from '../components/ui/MaterialIcon';
 
 export default function VerifyEmail() {
   const { theme } = useTheme();
@@ -193,9 +195,13 @@ export default function VerifyEmail() {
 
                 {/* CTA Section */}
                 <div className="w-full pt-6 space-y-4">
-                  <button className="w-full py-3.5 bg-gradient-to-r from-[#0055c9] to-[#006d3e] text-white font-label-md text-[16px] font-semibold rounded-xl shadow-xl shadow-[#0055c9]/20 hover:scale-[1.02] active:scale-95 transition-all">
+                  <Button
+                    variant="custom"
+                    size="none"
+                    className="w-full py-3.5 bg-gradient-to-r from-[#0055c9] to-[#006d3e] text-white font-label-md text-[16px] font-semibold rounded-xl shadow-xl shadow-[#0055c9]/20 hover:scale-[1.02] active:scale-95 transition-all"
+                  >
                     Open Email App
-                  </button>
+                  </Button>
                   <div className="flex flex-col items-center gap-2 mt-2">
                     <button
                       className="font-label-md text-[14px] text-[#0055c9] hover:underline disabled:text-on-surface-variant/40 dark:disabled:text-slate-400 disabled:no-underline font-bold"
