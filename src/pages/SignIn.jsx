@@ -3,6 +3,7 @@ import { Activity, Sun, Moon, ArrowLeft, Mail, Lock, Eye, EyeOff, CheckCircle } 
 import useTheme from '../hooks/useTheme';
 import Button from '../components/ui/Button';
 import PasswordStrengthPanel from '../components/PasswordStrengthPanel';
+import MaterialIcon from '../components/ui/MaterialIcon';
 
 export default function SignIn() {
   const { theme, toggleTheme } = useTheme();
@@ -179,8 +180,8 @@ export default function SignIn() {
             <div className="relative h-48 mb-12 w-full max-w-lg hidden md:block">
               {/* Card 1 */}
               <div className="absolute top-0 left-0 glass-panel p-3 rounded-lg flex items-center gap-3 shadow-lg animate-float border border-secondary/20 bg-surface/5 backdrop-blur-md">
-                <div className="w-8 h-8 rounded-full bg-secondary/20 flex items-center justify-center text-secondary">
-                  <span className="material-symbols-outlined text-[18px]">verified</span>
+                <div className="w-10 h-10 rounded-full bg-surface-container dark:bg-slate-800 flex items-center justify-center text-primary dark:text-blue-400">
+                  <MaterialIcon name="speed" size="xl" />
                 </div>
                 <div>
                   <span className="text-label-sm font-label-sm text-on-surface dark:text-white block font-medium">Prescription Verified</span>
@@ -190,8 +191,8 @@ export default function SignIn() {
 
               {/* Card 2 */}
               <div className="absolute top-16 right-0 glass-panel p-3 rounded-lg flex items-center gap-3 shadow-lg animate-float-delayed border border-primary/20 bg-surface/5 backdrop-blur-md">
-                <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary">
-                  <span className="material-symbols-outlined text-[18px]">medication</span>
+                <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary dark:text-blue-400">
+                  <MaterialIcon name="verified_user" size="xl" />
                 </div>
                 <div>
                   <span className="text-label-sm font-label-sm text-on-surface dark:text-white block font-medium">Alternative Medicine Found</span>
@@ -201,9 +202,9 @@ export default function SignIn() {
 
               {/* Card 3 */}
               <div className="absolute bottom-0 left-8 glass-panel p-3 rounded-lg flex items-center gap-3 shadow-lg animate-float-slow border border-tertiary/20 bg-surface/5 backdrop-blur-md">
-                <div className="w-8 h-8 rounded-full bg-tertiary/20 flex items-center justify-center text-tertiary">
-                  <span className="material-symbols-outlined text-[18px]">notifications_active</span>
-                </div>
+                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-surface to-surface-container-high dark:from-slate-800 dark:to-slate-700 mx-auto mb-6 flex items-center justify-center shadow-sm border border-white dark:border-slate-600 animate-glow">
+                <MaterialIcon name="health_and_safety" className="text-primary dark:text-blue-400 text-[32px] font-variation-fill" />
+              </div>
                 <div>
                   <span className="text-label-sm font-label-sm text-on-surface dark:text-white block font-medium">Reminder Scheduled</span>
                   <span className="text-[10px] text-on-surface-variant dark:text-slate-400">8:00 PM Tonight</span>
@@ -373,15 +374,17 @@ export default function SignIn() {
                   </div>
 
                   {/* Submit CTA */}
-                  <button
-                    className="w-full mt-3 py-3.5 px-stitch-lg rounded-xl bg-gradient-btn text-white font-label-md text-[16px] font-semibold transition-all duration-300 transform hover:-translate-y-1 hover:shadow-[0_10px_25px_-5px_rgba(0,85,201,0.4)] flex justify-center items-center gap-stitch-xs relative overflow-hidden group cursor-pointer"
+                  <Button
+                    variant="custom"
+                    size="none"
                     type="submit"
                     disabled={isSubmitting}
+                    className="w-full mt-2 py-3.5 px-stitch-lg rounded-xl bg-gradient-btn text-white font-label-md text-[16px] font-semibold transition-all duration-300 transform hover:-translate-y-1 hover:shadow-[0_10px_25px_-5px_rgba(0,85,201,0.4)] flex justify-center items-center gap-stitch-xs relative overflow-hidden group cursor-pointer"
                   >
                     <div className="absolute inset-0 w-full h-full bg-white/20 -translate-x-full group-hover:animate-shimmer skew-x-12"></div>
-                    <span>{isSubmitting ? 'Accessing Workspace...' : 'Access Workspace'}</span>
-                    {!isSubmitting && <span className="material-symbols-outlined text-[20px] transition-transform group-hover:translate-x-1">arrow_forward</span>}
-                  </button>
+                    {isSubmitting ? 'Signing in...' : 'Sign In'}
+                    {!isSubmitting && <MaterialIcon name="arrow_forward" size="xl" className="group-hover:translate-x-1 transition-transform" />}
+                  </Button>
                 </form>
               )}
 
