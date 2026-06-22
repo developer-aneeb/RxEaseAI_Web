@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Activity, Sun, Moon, ArrowLeft, Mail, Lock, Shield, CheckCircle, ArrowRight } from 'lucide-react';
 import useTheme from '../hooks/useTheme';
 import Button from '../components/ui/Button';
+import MaterialIcon from '../components/ui/MaterialIcon';
 import { fadeInUp, fadeIn, staggerContainer } from '../animations/variants';
 
 export default function ForgotPassword() {
