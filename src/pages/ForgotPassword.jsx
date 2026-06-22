@@ -12,6 +12,7 @@ export default function ForgotPassword() {
   const [email, setEmail] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [errors, setErrors] = useState({});
 
   // Recovery Flow State (for visual pipeline progress animation)
   const [flowStep, setFlowStep] = useState(0);
@@ -30,18 +31,24 @@ export default function ForgotPassword() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    const newErrors = {};
+
     if (!email) {
-      alert('Please enter your email address.');
+      newErrors.email = 'Please enter your email address.';
+    } else {
+      // Email validation
+      const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+      if (!emailRegex.test(email)) {
+        newErrors.email = 'Please enter a valid email address.';
+      }
+    }
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
       return;
     }
 
-    // Email validation
-    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    if (!emailRegex.test(email)) {
-      alert('Please enter a valid email address.');
-      return;
-    }
-
+    setErrors({});
     setIsSubmitting(true);
 
     // Simulate reset link delivery API call
@@ -247,21 +254,21 @@ export default function ForgotPassword() {
 
                   {/* Form */}
                   <form onSubmit={handleSubmit} className="space-y-6">
-                    <div className="relative">
-                      <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2 block" htmlFor="email">Email Address</label>
-                      <div className="relative flex items-center">
-                        <span className="material-symbols-outlined absolute left-4 text-slate-400 dark:text-slate-500 text-[20px]">mail</span>
-                        <input
-                          className="w-full pl-12 pr-4 py-3 bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-shadow duration-200"
-                          id="email"
-                          placeholder="doctor@hospital.com"
-                          required
-                          type="email"
-                          value={email}
-                          onChange={(e) => setEmail(e.target.value)}
-                        />
+                    <div className="relative group">
+                      <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-on-surface-variant group-focus-within:text-primary transition-colors">
+                        <Mail className="h-5 w-5" />
                       </div>
+                      <input
+                        id="email"
+                        type="email"
+                        placeholder="doctor@hospital.com"
+                        className={`w-full pl-11 pr-4 py-3.5 rounded-xl border ${errors.email ? 'border-red-500 ring-1 ring-red-500' : 'border-outline-variant/50 dark:border-slate-800'} bg-white/50 dark:bg-slate-900/50 focus:bg-white dark:focus:bg-slate-900 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all text-on-surface dark:text-white`}
+                        value={email}
+                        onChange={(e) => { setEmail(e.target.value); setErrors(prev => ({...prev, email: ''})); }}
+                        required
+                      />
                     </div>
+                    {errors.email && <p className="text-red-500 text-xs mt-1 ml-1 font-medium">{errors.email}</p>}
 
                     <button
                       className="w-full py-3.5 px-4 bg-[#046B46] hover:bg-[#035939] rounded-lg text-white font-medium shadow-sm transition-colors duration-200 flex items-center justify-center gap-2 group cursor-pointer"
