@@ -20,6 +20,7 @@ export default function Button({
     glass: 'glassmorphism-light hover:bg-slate-200/50 dark:hover:bg-slate-900/50 text-slate-705 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white',
     outline: 'border border-slate-200 dark:border-slate-800/80 hover:bg-slate-100 dark:hover:bg-slate-900 text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white',
     ghost: 'text-slate-600 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-900/55',
+    custom: '', // Allows passing full custom styles via className without base variant styles
   };
 
   // Styles based on size
@@ -27,10 +28,11 @@ export default function Button({
     sm: 'px-3.5 py-2 text-xs rounded-lg font-medium',
     md: 'px-5 py-2.5 text-sm rounded-xl font-medium',
     lg: 'px-6 py-3.5 text-sm rounded-xl font-medium',
+    none: '', // For buttons that define their own padding/sizing via className
   };
 
   const baseStyles = 'relative inline-flex items-center justify-center gap-1.5 transition-all duration-200 font-sans cursor-pointer focus:outline-none';
-  const combinedClasses = `${baseStyles} ${variants[variant] || variants.primary} ${sizes[size] || sizes.md} ${className}`;
+  const combinedClasses = `${baseStyles} ${variants[variant] !== undefined ? variants[variant] : variants.primary} ${sizes[size] !== undefined ? sizes[size] : sizes.md} ${className}`;
 
   const iconElement = Icon ? (
     <Icon className={`w-4 h-4 shrink-0 transition-transform duration-200 ${
