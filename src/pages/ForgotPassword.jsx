@@ -142,15 +142,15 @@ export default function ForgotPassword() {
               {/* Feature Cards */}
               <motion.div variants={fadeInUp(20, 0.5)} className="space-y-3 mb-6">
                 <div className="glass-panel p-3.5 rounded-xl flex items-center gap-4 animate-float bg-surface/5 backdrop-blur-md border border-outline-variant/20 dark:border-slate-800/50">
-                  <span className="material-symbols-outlined text-primary text-[24px]">lock</span>
+                  <MaterialIcon name="lock" className="text-primary text-[24px]" />
                   <span className="font-label-md text-label-md text-on-surface dark:text-slate-200">End-to-End Secure Recovery</span>
                 </div>
                 <div className="glass-panel p-3.5 rounded-xl flex items-center gap-4 animate-float-delayed bg-surface/5 backdrop-blur-md border border-outline-variant/20 dark:border-slate-800/50">
-                  <span className="material-symbols-outlined text-secondary text-[24px]">bolt</span>
+                  <MaterialIcon name="bolt" className="text-secondary text-[24px]" />
                   <span className="font-label-md text-label-md text-on-surface dark:text-slate-200">Reset Link Delivered Instantly</span>
                 </div>
                 <div className="glass-panel p-3.5 rounded-xl flex items-center gap-4 animate-float bg-surface/5 backdrop-blur-md border border-outline-variant/20 dark:border-slate-800/50" style={{ animationDelay: '2s' }}>
-                  <span className="material-symbols-outlined text-tertiary text-[24px]">shield</span>
+                  <MaterialIcon name="shield" className="text-tertiary text-[24px]" />
                   <span className="font-label-md text-label-md text-on-surface dark:text-slate-200 font-medium">HIPAA-Compliant Authentication</span>
                 </div>
               </motion.div>
@@ -271,14 +271,16 @@ export default function ForgotPassword() {
                     </div>
                     {errors.email && <p className="text-red-500 text-xs mt-1 ml-1 font-medium">{errors.email}</p>}
 
-                    <button
+                    <Button
+                      variant="custom"
+                      size="none"
                       className="w-full py-3.5 px-4 bg-[#046B46] hover:bg-[#035939] rounded-lg text-white font-medium shadow-sm transition-colors duration-200 flex items-center justify-center gap-2 group cursor-pointer"
                       type="submit"
                       disabled={isSubmitting}
                     >
                       <span>{isSubmitting ? 'Sending Reset Link...' : 'Send Reset Link'}</span>
-                      {!isSubmitting && <span className="material-symbols-outlined text-[20px] group-hover:translate-x-1 transition-transform">arrow_forward</span>}
-                    </button>
+                      {!isSubmitting && <MaterialIcon name="arrow_forward" size="xl" className="group-hover:translate-x-1 transition-transform" />}
+                    </Button>
                   </form>
 
                   <div className="mt-6 text-center">
