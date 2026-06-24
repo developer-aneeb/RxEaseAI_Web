@@ -99,7 +99,6 @@ src/
 
 ## Screenshots / Preview (add your own)
 
-<!-- Replace these placeholders with real assets in /public and reference them below.
 
 | Desktop (Hero) | Analytics | Auth Flow |
 |---:|:---:|:---:|
