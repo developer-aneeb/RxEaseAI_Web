@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import { Activity, Sun, Moon, ArrowLeft } from 'lucide-react';
-import useTheme from '../hooks/useTheme';
 import Button from '../components/ui/Button';
 import PasswordStrengthPanel from '../components/PasswordStrengthPanel';
 import MaterialIcon from '../components/ui/MaterialIcon';
+import { validateFullName, validateEmail, validatePassword, validateConfirmPassword, validateTerms } from '../utils/validation/authValidation';
 
 export default function SignUp() {
   const { theme, toggleTheme } = useTheme();
@@ -61,42 +61,20 @@ export default function SignUp() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const newErrors = {};
+    const nameError = validateFullName(fullName);
+    if (nameError) newErrors.fullName = nameError;
 
-    if (!fullName) newErrors.fullName = 'Please enter your full name.';
+    const emailError = validateEmail(email);
+    if (emailError) newErrors.email = emailError;
 
-    if (!email) {
-      newErrors.email = 'Please enter your email address.';
-    } else {
-      const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-      if (!emailRegex.test(email)) {
-        newErrors.email = 'Please enter a valid email address.';
-      }
-    }
+    const passwordError = validatePassword(password);
+    if (passwordError) newErrors.password = passwordError;
 
-    if (!password) {
-      newErrors.password = 'Please enter a password.';
-    } else {
-      const currentStrengthScore = [
-        password.length >= 8,
-        /[a-z]/.test(password),
-        /[A-Z]/.test(password),
-        /[0-9!@#$%^&*(),.?":{}|<>]/.test(password)
-      ].filter(Boolean).length;
-      if (currentStrengthScore < 4) {
-        newErrors.password = 'Please satisfy all password strength requirements.';
-      }
-    }
+    const confirmError = validateConfirmPassword(password, confirmPassword);
+    if (confirmError) newErrors.confirmPassword = confirmError;
 
-    if (!confirmPassword) {
-      newErrors.confirmPassword = 'Please confirm your password.';
-    } else if (password !== confirmPassword) {
-      newErrors.confirmPassword = 'Passwords do not match.';
-    }
-
-    if (!terms) {
-      newErrors.terms = 'You must agree to the terms.';
-    }
+    const termsError = validateTerms(terms);
+    if (termsError) newErrors.terms = termsError;
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
