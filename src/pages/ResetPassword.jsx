@@ -7,6 +7,7 @@ import MaterialIcon from '../components/ui/MaterialIcon';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { resetPasswordSchema } from '../utils/validation/zodSchemas';
+import { authService } from '../services/authService';
 
 export default function ResetPassword() {
   const { theme, toggleTheme } = useTheme();
@@ -20,14 +21,20 @@ export default function ResetPassword() {
     resolver: zodResolver(resetPasswordSchema),
   });
 
+  const [apiError, setApiError] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  const onSubmit = (data) => {
-    // Simulate API update call
-    setTimeout(() => {
-      window.location.hash = '#signin';
-    }, 1500);
+  const onSubmit = async (data) => {
+    try {
+      setApiError('');
+      await authService.updatePassword(data.password);
+      setTimeout(() => {
+        window.location.hash = '#signin';
+      }, 1500);
+    } catch (error) {
+      setApiError(error.message);
+    }
   };
 
   return (
@@ -227,6 +234,11 @@ export default function ResetPassword() {
 
             {/* Form */}
             <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
+              {apiError && (
+                <div className="bg-red-500/10 border border-red-500/50 text-red-600 dark:text-red-400 p-3 rounded-lg text-sm mb-2">
+                  {apiError}
+                </div>
+              )}
               {/* Password Field */}
               <div>
                 <div className="relative">
