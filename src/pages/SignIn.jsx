@@ -7,7 +7,7 @@ import MaterialIcon from '../components/ui/MaterialIcon';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { signInSchema } from '../utils/validation/zodSchemas';
-import { useAuth } from '../contexts/AuthContext';
+import { authService } from '../services/authService';
 
 export default function SignIn() {
   const { theme, toggleTheme } = useTheme();
@@ -22,8 +22,7 @@ export default function SignIn() {
     resolver: zodResolver(signInSchema),
   });
 
-  const { login } = useAuth();
-
+  const [apiError, setApiError] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
@@ -94,14 +93,15 @@ export default function SignIn() {
     };
   }, []);
 
-  const onSubmit = (data) => {
-    // Simulate API Sign In call
-    setTimeout(() => {
+  const onSubmit = async (data) => {
+    try {
+      setApiError('');
+      await authService.login(data.email, data.password);
       setIsSuccess(true);
-      setTimeout(() => {
-        login();
-      }, 2000);
-    }, 1500);
+      // Let AuthContext and ProtectedRoute handle the redirect naturally
+    } catch (error) {
+      setApiError(error.message);
+    }
   };
 
   return (
@@ -289,6 +289,12 @@ export default function SignIn() {
                 </div>
               ) : (
                 <form className="flex flex-col gap-stitch-md relative z-10" onSubmit={handleSubmit(onSubmit)}>
+                  
+                  {apiError && (
+                    <div className="bg-red-500/10 border border-red-500/50 text-red-600 dark:text-red-400 p-3 rounded-lg text-sm mb-2">
+                      {apiError}
+                    </div>
+                  )}
 
                   {/* Email */}
                   <div className="relative">
