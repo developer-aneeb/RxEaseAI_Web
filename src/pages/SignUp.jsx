@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Activity, Sun, Moon, ArrowLeft } from 'lucide-react';
+import useTheme from '../hooks/useTheme';
 import Button from '../components/ui/Button';
 import PasswordStrengthPanel from '../components/PasswordStrengthPanel';
 import MaterialIcon from '../components/ui/MaterialIcon';
@@ -61,6 +62,7 @@ export default function SignUp() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    const newErrors = {};
     const nameError = validateFullName(fullName);
     if (nameError) newErrors.fullName = nameError;
 
