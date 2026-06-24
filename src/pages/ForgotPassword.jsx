@@ -4,17 +4,24 @@ import { Activity, Sun, Moon, ArrowLeft, Mail, Lock, Shield, CheckCircle, ArrowR
 import useTheme from '../hooks/useTheme';
 import Button from '../components/ui/Button';
 import MaterialIcon from '../components/ui/MaterialIcon';
-import { validateEmail } from '../utils/validation/authValidation';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { forgotPasswordSchema } from '../utils/validation/zodSchemas';
 import { fadeInUp, fadeIn, staggerContainer } from '../animations/variants';
 
 export default function ForgotPassword() {
   const { theme, toggleTheme } = useTheme();
 
-  // Form State
-  const [email, setEmail] = useState('');
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  // Form State via React Hook Form
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm({
+    resolver: zodResolver(forgotPasswordSchema),
+  });
+
   const [isSuccess, setIsSuccess] = useState(false);
-  const [errors, setErrors] = useState({});
 
   // Recovery Flow State (for visual pipeline progress animation)
   const [flowStep, setFlowStep] = useState(0);
@@ -31,24 +38,9 @@ export default function ForgotPassword() {
     return () => clearInterval(flowInterval);
   }, []);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const newErrors = {};
-
-    const emailError = validateEmail(email);
-    if (emailError) newErrors.email = emailError;
-
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
-      return;
-    }
-
-    setErrors({});
-    setIsSubmitting(true);
-
+  const onSubmit = (data) => {
     // Simulate reset link delivery API call
     setTimeout(() => {
-      setIsSubmitting(false);
       setIsSuccess(true);
 
       // Auto-redirect to sign-in page after 3.5 seconds
@@ -248,7 +240,7 @@ export default function ForgotPassword() {
                   </div>
 
                   {/* Form */}
-                  <form onSubmit={handleSubmit} className="space-y-6">
+                  <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                     <div className="relative group">
                       <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-on-surface-variant group-focus-within:text-primary transition-colors">
                         <Mail className="h-5 w-5" />
@@ -258,12 +250,10 @@ export default function ForgotPassword() {
                         type="email"
                         placeholder="doctor@hospital.com"
                         className={`w-full pl-11 pr-4 py-3.5 rounded-xl border ${errors.email ? 'border-red-500 ring-1 ring-red-500' : 'border-outline-variant/50 dark:border-slate-800'} bg-white/50 dark:bg-slate-900/50 focus:bg-white dark:focus:bg-slate-900 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all text-on-surface dark:text-white`}
-                        value={email}
-                        onChange={(e) => { setEmail(e.target.value); setErrors(prev => ({...prev, email: ''})); }}
-                        required
+                        {...register('email')}
                       />
                     </div>
-                    {errors.email && <p className="text-red-500 text-xs mt-1 ml-1 font-medium">{errors.email}</p>}
+                    {errors.email && <p className="text-red-500 text-xs mt-1 ml-1 font-medium">{errors.email.message}</p>}
 
                     <Button
                       variant="custom"
