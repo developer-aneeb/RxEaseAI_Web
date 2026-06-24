@@ -4,19 +4,26 @@ import useTheme from '../hooks/useTheme';
 import Button from '../components/ui/Button';
 import PasswordStrengthPanel from '../components/PasswordStrengthPanel';
 import MaterialIcon from '../components/ui/MaterialIcon';
-import { validateEmail } from '../utils/validation/authValidation';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { signInSchema } from '../utils/validation/zodSchemas';
 
 export default function SignIn() {
   const { theme, toggleTheme } = useTheme();
 
-  // Form State
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  // Form State via React Hook Form
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors, isSubmitting },
+  } = useForm({
+    resolver: zodResolver(signInSchema),
+  });
+
   const [rememberMe, setRememberMe] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
-  const [errors, setErrors] = useState({});
 
   // Stats Counter State
   const [prescriptions, setPrescriptions] = useState(0);
@@ -84,26 +91,9 @@ export default function SignIn() {
     };
   }, []);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const newErrors = {};
-    const emailError = validateEmail(email);
-    if (emailError) newErrors.email = emailError;
-
-    if (!password) {
-      newErrors.password = 'Please enter your password.';
-    }
-
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
-      return;
-    }
-
-    setErrors({});
-    setIsSubmitting(true);
+  const onSubmit = (data) => {
     // Simulate API Sign In call
     setTimeout(() => {
-      setIsSubmitting(false);
       setIsSuccess(true);
       setTimeout(() => {
         // Redirect to dashboard (landing page/home)
@@ -296,7 +286,7 @@ export default function SignIn() {
                   </p>
                 </div>
               ) : (
-                <form className="flex flex-col gap-stitch-md relative z-10" onSubmit={handleSubmit}>
+                <form className="flex flex-col gap-stitch-md relative z-10" onSubmit={handleSubmit(onSubmit)}>
 
                   {/* Email */}
                   <div className="relative">
@@ -306,9 +296,7 @@ export default function SignIn() {
                       type="email"
                       placeholder="Email Address"
                       className={`peer w-full pl-11 pr-4 py-4 rounded-xl border ${errors.email ? 'border-red-500 ring-1 ring-red-500' : 'border-outline-variant dark:border-slate-800'} bg-surface/50 dark:bg-slate-900/50 focus:bg-surface dark:focus:bg-slate-900 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all text-on-surface dark:text-white placeholder-transparent`}
-                      value={email}
-                      onChange={(e) => { setEmail(e.target.value); setErrors(prev => ({...prev, email: ''})); }}
-                      required
+                      {...register('email')}
                     />
                     <label
                       htmlFor="email"
@@ -317,7 +305,7 @@ export default function SignIn() {
                       Email Address
                     </label>
                   </div>
-                  {errors.email && <p className="text-red-500 text-xs mt-1 ml-1 font-medium">{errors.email}</p>}
+                  {errors.email && <p className="text-red-500 text-xs mt-1 ml-1 font-medium">{errors.email.message}</p>}
 
                   {/* Password */}
                   <div className="relative">
@@ -327,9 +315,7 @@ export default function SignIn() {
                       type={showPassword ? "text" : "password"}
                       placeholder="Password"
                       className={`peer w-full pl-11 pr-12 py-4 rounded-xl border ${errors.password ? 'border-red-500 ring-1 ring-red-500' : 'border-outline-variant dark:border-slate-800'} bg-surface/50 dark:bg-slate-900/50 focus:bg-surface dark:focus:bg-slate-900 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all text-on-surface dark:text-white placeholder-transparent`}
-                      value={password}
-                      onChange={(e) => { setPassword(e.target.value); setErrors(prev => ({...prev, password: ''})); }}
-                      required
+                      {...register('password')}
                     />
                     <label
                       htmlFor="password"
@@ -345,8 +331,8 @@ export default function SignIn() {
                       {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                     </button>
                   </div>
-                  {errors.password && <p className="text-red-500 text-xs mt-1 ml-1 font-medium">{errors.password}</p>}
-                  <PasswordStrengthPanel password={password} />
+                  {errors.password && <p className="text-red-500 text-xs mt-1 ml-1 font-medium">{errors.password.message}</p>}
+                  <PasswordStrengthPanel password={watch('password') || ''} />
 
                   {/* Remember Me & Forgot Password */}
                   <div className="flex items-center justify-between mt-1">
