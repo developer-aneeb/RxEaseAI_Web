@@ -14,7 +14,7 @@ Transform handwritten prescriptions into structured clinical intelligence. RxEas
 
 ## One-line summary
 
-- RxEaseAI is a modern UI that simulates OCR ingestion, dosage safety checks, and operational analytics for pharmacies and hospital networks.
+- RxEaseAI is a modern UI that simulates OCR ingestion, dosage safety checks, operational analytics, and secure authentication for pharmacies and hospital networks.
 
 ---
 
@@ -24,6 +24,7 @@ Transform handwritten prescriptions into structured clinical intelligence. RxEas
 - YOLO-based segmentation with medical OCR concepts
 - FHIR/HL7-ready structured output
 - React 19, Vite 8, Tailwind CSS v4, Framer Motion
+- Full custom Authentication Flows with interactive form validation
 
 ---
 
@@ -39,25 +40,29 @@ Transform handwritten prescriptions into structured clinical intelligence. RxEas
 - **🔍 YOLO Vision Region Detector:** Automatically detects and isolates text regions, lines, and tokens to reduce handwriting noise.
 - **🩺 Specialized Medical OCR:** Translates challenging doctor handwriting into legible clinical transcripts.
 - **💊 Clinical Dosage Audit Engine:** Flags drug interactions, high-risk quantities, and age-limit warnings.
-- **💾 EHR and FHIR Ingestion:** Produces HL7-aligned JSON for Epic, Cerner, or local database workflows.
+- **🔐 Complete Authentication Flow:** Includes fully validated forms for Sign In, Sign Up, Forgot Password, Reset Password, and Email Verification.
+- **🛡️ Live Password Security:** Interactive password strength indicators ensuring HIPAA-compliant credential creation.
 - **🌗 Adaptive Theme System:** Clean light/dark mode with FOUC-resistant startup logic.
+- **🧩 Reusable UI Architecture:** Component-driven design using highly reusable abstractions (Buttons, Icons, Cards, Badges).
 - **🟢 High-Fidelity Laser Scanning:** HUD-style OCR animations that mimic live server scanning.
 
 ---
 
 ## How it works
 
-1. **Segment:** Vision model isolates handwriting regions and line tokens.
-2. **Transcribe:** Medical OCR converts text into structured, readable data.
-3. **Audit:** Safety engine checks dosage rules and interaction risk.
-4. **Export:** Data is normalized into FHIR/HL7-compatible JSON.
-5. **Observe:** Analytics dashboards surface throughput and accuracy metrics.
+1. **Authenticate:** Securely sign up or log in to the HIPAA-compliant dashboard.
+2. **Segment:** Vision model isolates handwriting regions and line tokens.
+3. **Transcribe:** Medical OCR converts text into structured, readable data.
+4. **Audit:** Safety engine checks dosage rules and interaction risk.
+5. **Export:** Data is normalized into FHIR/HL7-compatible JSON.
+6. **Observe:** Analytics dashboards surface throughput and accuracy metrics.
 
 ---
 
 ## Where to edit content (quick paths)
 
 - Page composition: `src/pages/LandingPage.jsx`
+- Auth Pages: `src/pages/SignIn.jsx`, `src/pages/SignUp.jsx`, `src/pages/ResetPassword.jsx`, `src/pages/ForgotPassword.jsx`, `src/pages/VerifyEmail.jsx`
 - Sections: `src/components/sections/`
 - Layout: `src/components/layout/`
 - UI primitives: `src/components/ui/`
@@ -73,13 +78,20 @@ src/
  ├── components/
  │   ├── layout/        # Navbar and footer
  │   ├── sections/      # Hero, Features, Workflow, Dashboard, Analytics, Faq
- │   └── ui/            # Reusable UI primitives (Button, Card, Badge, etc.)
+ │   ├── ui/            # Reusable UI primitives (Button, Card, Badge, MaterialIcon, etc.)
+ │   └── PasswordStrengthPanel.jsx # Reusable password validator component
  ├── hooks/
  │   └── useTheme.js    # Theme persistence and system sync
  ├── pages/
- │   └── LandingPage.jsx # Page composer
+ │   ├── LandingPage.jsx # Main Page composer
+ │   ├── SignIn.jsx      # Authentication pages
+ │   ├── SignUp.jsx
+ │   ├── ForgotPassword.jsx
+ │   ├── ResetPassword.jsx
+ │   └── VerifyEmail.jsx
  ├── styles/            # Shared style utilities
  ├── index.css          # Tailwind imports and global styles
+ ├── App.jsx            # Routing and Hash-based Navigation
  └── main.jsx           # App entry point
 ```
 
@@ -89,9 +101,9 @@ src/
 
 <!-- Replace these placeholders with real assets in /public and reference them below.
 
-| Desktop (Hero) | Analytics | Mobile |
+| Desktop (Hero) | Analytics | Auth Flow |
 |---:|:---:|:---:|
-| ![Hero](public/preview-hero.png) | ![Analytics](public/preview-analytics.png) | ![Mobile](public/preview-mobile.png) |
+| ![Hero](public/preview-hero.png) | ![Analytics](public/preview-analytics.png) | ![Auth](public/preview-auth.png) |
 
 -->
 
@@ -149,6 +161,7 @@ Tailwind CSS v4 dark mode support is enabled via the CSS-first directive:
 
 - HIPAA-ready ingestion workflow with client-encrypted upload concepts
 - SOC 2-style audit logging visuals for pharmacist verification actions
+- Robust client-side validation and secure password-strength requirements on all Auth forms
 
 ---
 
@@ -163,5 +176,5 @@ Tailwind CSS v4 dark mode support is enabled via the CSS-first directive:
 
 **ANEEB UR REHMAN — Full Stack AI Engineer**  
 Email: dev.aneeb.rehman@gmail.com  
-GitHub:https://github.com/developer-aneeb
+GitHub: https://github.com/developer-aneeb
 LinkedIn: https://www.linkedin.com/in/aneeb-ur-rehman-528a50299/
