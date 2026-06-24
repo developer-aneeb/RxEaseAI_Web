@@ -8,6 +8,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { forgotPasswordSchema } from '../utils/validation/zodSchemas';
 import { fadeInUp, fadeIn, staggerContainer } from '../animations/variants';
+import { authService } from '../services/authService';
 
 export default function ForgotPassword() {
   const { theme, toggleTheme } = useTheme();
@@ -21,6 +22,7 @@ export default function ForgotPassword() {
     resolver: zodResolver(forgotPasswordSchema),
   });
 
+  const [apiError, setApiError] = useState('');
   const [isSuccess, setIsSuccess] = useState(false);
 
   // Recovery Flow State (for visual pipeline progress animation)
@@ -38,16 +40,19 @@ export default function ForgotPassword() {
     return () => clearInterval(flowInterval);
   }, []);
 
-  const onSubmit = (data) => {
-    // Simulate reset link delivery API call
-    setTimeout(() => {
+  const onSubmit = async (data) => {
+    try {
+      setApiError('');
+      await authService.resetPassword(data.email);
       setIsSuccess(true);
 
       // Auto-redirect to sign-in page after 3.5 seconds
       setTimeout(() => {
         window.location.hash = '#signin';
       }, 3500);
-    }, 1500);
+    } catch (error) {
+      setApiError(error.message);
+    }
   };
 
   return (
@@ -241,6 +246,11 @@ export default function ForgotPassword() {
 
                   {/* Form */}
                   <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+                    {apiError && (
+                      <div className="bg-red-500/10 border border-red-500/50 text-red-600 dark:text-red-400 p-3 rounded-lg text-sm mb-2">
+                        {apiError}
+                      </div>
+                    )}
                     <div className="relative group">
                       <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-on-surface-variant group-focus-within:text-primary transition-colors">
                         <Mail className="h-5 w-5" />
