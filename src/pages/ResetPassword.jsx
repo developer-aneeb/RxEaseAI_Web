@@ -4,6 +4,7 @@ import { Sun, Moon, ArrowLeft } from 'lucide-react';
 import Button from '../components/ui/Button';
 import PasswordStrengthPanel from '../components/PasswordStrengthPanel';
 import MaterialIcon from '../components/ui/MaterialIcon';
+import { validatePassword, validateConfirmPassword } from '../utils/validation/authValidation';
 
 export default function ResetPassword() {
   const { theme, toggleTheme } = useTheme();
@@ -18,25 +19,11 @@ export default function ResetPassword() {
     e.preventDefault();
     const newErrors = {};
 
-    if (!password) {
-      newErrors.password = 'Please enter a password.';
-    } else {
-      const currentStrengthScore = [
-        password.length >= 8,
-        /[a-z]/.test(password),
-        /[A-Z]/.test(password),
-        /[0-9!@#$%^&*(),.?":{}|<>]/.test(password)
-      ].filter(Boolean).length;
-      if (currentStrengthScore < 4) {
-        newErrors.password = 'Please satisfy all password strength requirements.';
-      }
-    }
+    const passwordError = validatePassword(password);
+    if (passwordError) newErrors.password = passwordError;
 
-    if (!confirmPassword) {
-      newErrors.confirmPassword = 'Please confirm your password.';
-    } else if (password !== confirmPassword) {
-      newErrors.confirmPassword = 'Passwords do not match.';
-    }
+    const confirmError = validateConfirmPassword(password, confirmPassword);
+    if (confirmError) newErrors.confirmPassword = confirmError;
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
