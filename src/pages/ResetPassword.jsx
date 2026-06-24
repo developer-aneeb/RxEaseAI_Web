@@ -4,37 +4,28 @@ import { Sun, Moon, ArrowLeft } from 'lucide-react';
 import Button from '../components/ui/Button';
 import PasswordStrengthPanel from '../components/PasswordStrengthPanel';
 import MaterialIcon from '../components/ui/MaterialIcon';
-import { validatePassword, validateConfirmPassword } from '../utils/validation/authValidation';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { resetPasswordSchema } from '../utils/validation/zodSchemas';
 
 export default function ResetPassword() {
   const { theme, toggleTheme } = useTheme();
+  // Form State via React Hook Form
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors, isSubmitting },
+  } = useForm({
+    resolver: zodResolver(resetPasswordSchema),
+  });
+
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [errors, setErrors] = useState({});
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const newErrors = {};
-
-    const passwordError = validatePassword(password);
-    if (passwordError) newErrors.password = passwordError;
-
-    const confirmError = validateConfirmPassword(password, confirmPassword);
-    if (confirmError) newErrors.confirmPassword = confirmError;
-
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
-      return;
-    }
-
-    setErrors({});
-    setIsSubmitting(true);
+  const onSubmit = (data) => {
     // Simulate API update call
     setTimeout(() => {
-      setIsSubmitting(false);
       window.location.hash = '#signin';
     }, 1500);
   };
@@ -235,31 +226,31 @@ export default function ResetPassword() {
             </div>
 
             {/* Form */}
-            <form className="space-y-6" onSubmit={handleSubmit}>
+            <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
               {/* Password Field */}
               <div>
                 <div className="relative">
-                  <input className={`float-label-input w-full pl-4 pr-12 py-3 h-14 rounded-xl bg-white dark:bg-slate-900 border ${errors.password ? 'border-red-500 ring-1 ring-red-500' : 'border-outline-variant/50 dark:border-slate-800'} focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all font-body-md text-body-md text-on-surface dark:text-white peer placeholder-transparent`} id="new-password" placeholder="New Password" type={showPassword ? "text" : "password"} value={password} onChange={(e) => { setPassword(e.target.value); setErrors(prev => ({...prev, password: ''})); }} />
+                  <input className={`float-label-input w-full pl-4 pr-12 py-3 h-14 rounded-xl bg-white dark:bg-slate-900 border ${errors.password ? 'border-red-500 ring-1 ring-red-500' : 'border-outline-variant/50 dark:border-slate-800'} focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all font-body-md text-body-md text-on-surface dark:text-white peer placeholder-transparent`} id="new-password" placeholder="New Password" type={showPassword ? "text" : "password"} {...register('password')} />
                   <label className="float-label absolute left-4 top-1/2 -translate-y-1/2 text-outline-variant dark:text-slate-500 font-body-md transition-all duration-200 pointer-events-none peer-focus:text-primary" htmlFor="new-password">New Password</label>
                   <button className="absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant dark:text-slate-400 hover:text-primary dark:hover:text-blue-400 transition-colors focus:outline-none z-10" type="button" onClick={() => setShowPassword(!showPassword)}>
                     <span className="material-symbols-outlined text-[20px]">{showPassword ? 'visibility_off' : 'visibility'}</span>
                   </button>
                 </div>
-                {errors.password && <p className="text-red-500 text-xs mt-1 ml-1 font-medium">{errors.password}</p>}
+                {errors.password && <p className="text-red-500 text-xs mt-1 ml-1 font-medium">{errors.password.message}</p>}
                 
                 <div className="mt-2">
-                  <PasswordStrengthPanel password={password} />
+                  <PasswordStrengthPanel password={watch('password') || ''} />
                 </div>
               </div>
 
               {/* Confirm Password Field */}
               <div className="relative">
-                <input className={`float-label-input w-full pl-4 pr-12 py-3 h-14 rounded-xl bg-white dark:bg-slate-900 border ${errors.confirmPassword ? 'border-red-500 ring-1 ring-red-500' : 'border-outline-variant/50 dark:border-slate-800'} focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all font-body-md text-body-md text-on-surface dark:text-white peer placeholder-transparent`} id="confirm-password" placeholder="Confirm Password" type={showConfirmPassword ? "text" : "password"} value={confirmPassword} onChange={(e) => { setConfirmPassword(e.target.value); setErrors(prev => ({...prev, confirmPassword: ''})); }} />
+                <input className={`float-label-input w-full pl-4 pr-12 py-3 h-14 rounded-xl bg-white dark:bg-slate-900 border ${errors.confirmPassword ? 'border-red-500 ring-1 ring-red-500' : 'border-outline-variant/50 dark:border-slate-800'} focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all font-body-md text-body-md text-on-surface dark:text-white peer placeholder-transparent`} id="confirm-password" placeholder="Confirm Password" type={showConfirmPassword ? "text" : "password"} {...register('confirmPassword')} />
                 <label className="float-label absolute left-4 top-1/2 -translate-y-1/2 text-outline-variant dark:text-slate-500 font-body-md transition-all duration-200 pointer-events-none peer-focus:text-primary" htmlFor="confirm-password">Confirm Password</label>
                 <button className="absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant dark:text-slate-400 hover:text-primary dark:hover:text-blue-400 transition-colors focus:outline-none z-10" type="button" onClick={() => setShowConfirmPassword(!showConfirmPassword)}>
                   <span className="material-symbols-outlined text-[20px]">{showConfirmPassword ? 'visibility_off' : 'visibility'}</span>
                 </button>
-                {errors.confirmPassword && <p className="text-red-500 text-xs mt-1 ml-1 font-medium">{errors.confirmPassword}</p>}
+                {errors.confirmPassword && <p className="text-red-500 text-xs mt-1 ml-1 font-medium">{errors.confirmPassword.message}</p>}
               </div>
 
               {/* Action Button */}
