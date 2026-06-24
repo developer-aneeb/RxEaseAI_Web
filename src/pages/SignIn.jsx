@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import { Activity, Sun, Moon, ArrowLeft, Mail, Lock, Eye, EyeOff, CheckCircle } from 'lucide-react';
-import useTheme from '../hooks/useTheme';
 import Button from '../components/ui/Button';
 import PasswordStrengthPanel from '../components/PasswordStrengthPanel';
 import MaterialIcon from '../components/ui/MaterialIcon';
+import { validateEmail } from '../utils/validation/authValidation';
 
 export default function SignIn() {
   const { theme, toggleTheme } = useTheme();
@@ -85,16 +85,8 @@ export default function SignIn() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const newErrors = {};
-
-    if (!email) {
-      newErrors.email = 'Please enter your email.';
-    } else {
-      const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-      if (!emailRegex.test(email)) {
-        newErrors.email = 'Please enter a valid email address.';
-      }
-    }
+    const emailError = validateEmail(email);
+    if (emailError) newErrors.email = emailError;
 
     if (!password) {
       newErrors.password = 'Please enter your password.';
