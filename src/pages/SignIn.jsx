@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Activity, Sun, Moon, ArrowLeft, Mail, Lock, Eye, EyeOff, CheckCircle } from 'lucide-react';
+import useTheme from '../hooks/useTheme';
 import Button from '../components/ui/Button';
 import PasswordStrengthPanel from '../components/PasswordStrengthPanel';
 import MaterialIcon from '../components/ui/MaterialIcon';
@@ -85,6 +86,7 @@ export default function SignIn() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    const newErrors = {};
     const emailError = validateEmail(email);
     if (emailError) newErrors.email = emailError;
 
