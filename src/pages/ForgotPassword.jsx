@@ -4,6 +4,7 @@ import { Activity, Sun, Moon, ArrowLeft, Mail, Lock, Shield, CheckCircle, ArrowR
 import useTheme from '../hooks/useTheme';
 import Button from '../components/ui/Button';
 import MaterialIcon from '../components/ui/MaterialIcon';
+import { validateEmail } from '../utils/validation/authValidation';
 import { fadeInUp, fadeIn, staggerContainer } from '../animations/variants';
 
 export default function ForgotPassword() {
@@ -34,15 +35,8 @@ export default function ForgotPassword() {
     e.preventDefault();
     const newErrors = {};
 
-    if (!email) {
-      newErrors.email = 'Please enter your email address.';
-    } else {
-      // Email validation
-      const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-      if (!emailRegex.test(email)) {
-        newErrors.email = 'Please enter a valid email address.';
-      }
-    }
+    const emailError = validateEmail(email);
+    if (emailError) newErrors.email = emailError;
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
