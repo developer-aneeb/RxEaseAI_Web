@@ -4,22 +4,26 @@ import useTheme from '../hooks/useTheme';
 import Button from '../components/ui/Button';
 import PasswordStrengthPanel from '../components/PasswordStrengthPanel';
 import MaterialIcon from '../components/ui/MaterialIcon';
-import { validateFullName, validateEmail, validatePassword, validateConfirmPassword, validateTerms } from '../utils/validation/authValidation';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { signUpSchema } from '../utils/validation/zodSchemas';
 
 export default function SignUp() {
   const { theme, toggleTheme } = useTheme();
 
-  // Form State
-  const [fullName, setFullName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [terms, setTerms] = useState(false);
+  // Form State via React Hook Form
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors, isSubmitting },
+  } = useForm({
+    resolver: zodResolver(signUpSchema),
+  });
+
   const [showPassword, setShowPassword] = useState(false);
-  const [confirmPassword, setConfirmPassword] = useState('');
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
-  const [errors, setErrors] = useState({});
 
 
   // Stats Counter state
@@ -60,34 +64,9 @@ export default function SignUp() {
     };
   }, []);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const newErrors = {};
-    const nameError = validateFullName(fullName);
-    if (nameError) newErrors.fullName = nameError;
-
-    const emailError = validateEmail(email);
-    if (emailError) newErrors.email = emailError;
-
-    const passwordError = validatePassword(password);
-    if (passwordError) newErrors.password = passwordError;
-
-    const confirmError = validateConfirmPassword(password, confirmPassword);
-    if (confirmError) newErrors.confirmPassword = confirmError;
-
-    const termsError = validateTerms(terms);
-    if (termsError) newErrors.terms = termsError;
-
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
-      return;
-    }
-
-    setErrors({});
-    setIsSubmitting(true);
+  const onSubmit = (data) => {
     // Simulate API registration call
     setTimeout(() => {
-      setIsSubmitting(false);
       setIsSuccess(true);
       setTimeout(() => {
         // Redirect to dashboard or landing page
@@ -320,25 +299,21 @@ export default function SignUp() {
                   </p>
                 </div>
               ) : (
-                <form className="flex flex-col gap-stitch-md relative z-10" onSubmit={handleSubmit}>
+                <form className="flex flex-col gap-stitch-md relative z-10" onSubmit={handleSubmit(onSubmit)}>
 
                   {/* Full Name */}
                   <div className="relative">
                     <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline-variant dark:text-slate-500 z-10">person</span>
                     <input
-                    id="fullName"
-                    type="text"
-                    placeholder="Full Name"
-                    className={`float-label-input w-full pl-[48px] pr-stitch-sm py-3 h-14 rounded-xl bg-white/50 dark:bg-slate-950/50 border ${errors.fullName ? 'border-red-500 ring-1 ring-red-500' : 'border-outline-variant/50 dark:border-slate-800'} focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all font-body-md text-body-md text-on-surface dark:text-white peer placeholder-transparent`}
-                    value={fullName}
-                    onChange={(e) => { setFullName(e.target.value); setErrors(prev => ({...prev, fullName: ''})); }}
-                    required
-                  />
-                  <label htmlFor="fullName" className="float-label absolute left-[48px] top-1/2 -translate-y-1/2 text-outline-variant dark:text-slate-500 font-body-md transition-all duration-200 pointer-events-none peer-focus:text-primary">
-                    Full Name
-                  </label>
-                  {errors.fullName && <p className="text-red-500 text-xs mt-1 ml-1 font-medium">{errors.fullName}</p>}
-                </div>
+                      className={`float-label-input w-full pl-[48px] pr-stitch-sm py-3 rounded-xl bg-white/50 dark:bg-slate-950/50 border ${errors.fullName ? 'border-red-500 ring-1 ring-red-500' : 'border-outline-variant/50 dark:border-slate-800'} focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all font-body-md text-body-md text-on-surface dark:text-white peer placeholder-transparent`}
+                      id="fullName"
+                      placeholder="Full Name"
+                      type="text"
+                      {...register('fullName')}
+                    />
+                    <label className="float-label absolute left-[48px] top-1/2 -translate-y-1/2 text-outline-variant dark:text-slate-500 font-body-md transition-all duration-200 pointer-events-none peer-focus:text-primary" htmlFor="fullName">Full Name</label>
+                  </div>
+                  {errors.fullName && <p className="text-red-500 text-xs mt-1 ml-1 font-medium">{errors.fullName.message}</p>}
 
                   {/* Email */}
                   <div className="relative">
@@ -348,13 +323,11 @@ export default function SignUp() {
                       id="email"
                       placeholder="Email"
                       type="email"
-                      value={email}
-                      onChange={(e) => { setEmail(e.target.value); setErrors(prev => ({...prev, email: ''})); }}
-                      required
+                      {...register('email')}
                     />
                     <label className="float-label absolute left-[48px] top-1/2 -translate-y-1/2 text-outline-variant dark:text-slate-500 font-body-md transition-all duration-200 pointer-events-none peer-focus:text-primary" htmlFor="email">Email</label>
                   </div>
-                  {errors.email && <p className="text-red-500 text-xs mt-1 ml-1 font-medium">{errors.email}</p>}
+                  {errors.email && <p className="text-red-500 text-xs mt-1 ml-1 font-medium">{errors.email.message}</p>}
 
                   {/* Password */}
                   <div className="relative">
@@ -364,9 +337,7 @@ export default function SignUp() {
                       id="password"
                       placeholder="Password"
                       type={showPassword ? "text" : "password"}
-                      value={password}
-                      onChange={(e) => { setPassword(e.target.value); setErrors(prev => ({...prev, password: ''})); }}
-                      required
+                      {...register('password')}
                     />
                     <label className="float-label absolute left-[48px] top-1/2 -translate-y-1/2 text-outline-variant dark:text-slate-500 font-body-md transition-all duration-200 pointer-events-none peer-focus:text-primary" htmlFor="password">Password</label>
                     <button
@@ -377,10 +348,10 @@ export default function SignUp() {
                       <span className="material-symbols-outlined">{showPassword ? 'visibility_off' : 'visibility'}</span>
                     </button>
                   </div>
-                  {errors.password && <p className="text-red-500 text-xs mt-1 ml-1 font-medium">{errors.password}</p>}
+                  {errors.password && <p className="text-red-500 text-xs mt-1 ml-1 font-medium">{errors.password.message}</p>}
 
                   {/* Password Strength Panel */}
-                  <PasswordStrengthPanel password={password} />
+                  <PasswordStrengthPanel password={watch('password') || ''} />
 
                   {/* Confirm Password */}
                   <div className="relative">
@@ -390,9 +361,7 @@ export default function SignUp() {
                       id="confirmPassword"
                       placeholder="Confirm Password"
                       type={showConfirmPassword ? "text" : "password"}
-                      value={confirmPassword}
-                      onChange={(e) => { setConfirmPassword(e.target.value); setErrors(prev => ({...prev, confirmPassword: ''})); }}
-                      required
+                      {...register('confirmPassword')}
                     />
                     <label className="float-label absolute left-[48px] top-1/2 -translate-y-1/2 text-outline-variant dark:text-slate-500 font-body-md transition-all duration-200 pointer-events-none peer-focus:text-primary" htmlFor="confirmPassword">Confirm Password</label>
                     <button
@@ -403,7 +372,7 @@ export default function SignUp() {
                       <span className="material-symbols-outlined">{showConfirmPassword ? 'visibility_off' : 'visibility'}</span>
                     </button>
                   </div>
-                  {errors.confirmPassword && <p className="text-red-500 text-xs mt-1 ml-1 font-medium">{errors.confirmPassword}</p>}
+                  {errors.confirmPassword && <p className="text-red-500 text-xs mt-1 ml-1 font-medium">{errors.confirmPassword.message}</p>}
 
                   {/* Terms Agreement */}
                 <div className="flex flex-col gap-1">
@@ -413,16 +382,14 @@ export default function SignUp() {
                         id="terms"
                         type="checkbox"
                         className="w-4 h-4 rounded border-outline-variant dark:border-slate-700 text-primary focus:ring-primary/20 dark:bg-slate-800 transition-colors"
-                        checked={terms}
-                        onChange={(e) => { setTerms(e.target.checked); setErrors(prev => ({...prev, terms: ''})); }}
-                        required
+                        {...register('terms')}
                       />
                     </div>
                     <label htmlFor="terms" className="text-sm text-on-surface-variant dark:text-slate-400 leading-tight">
                       I agree to the <a href="#" className="text-primary dark:text-blue-400 hover:underline">Terms of Service</a> and <a href="#" className="text-primary dark:text-blue-400 hover:underline">Privacy Policy</a>
                     </label>
                   </div>
-                  {errors.terms && <p className="text-red-500 text-xs ml-7 font-medium">{errors.terms}</p>}
+                  {errors.terms && <p className="text-red-500 text-xs ml-7 font-medium">{errors.terms.message}</p>}
                 </div>
 
                   {/* Submit Button */}
