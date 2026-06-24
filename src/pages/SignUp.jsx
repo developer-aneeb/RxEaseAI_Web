@@ -7,7 +7,7 @@ import MaterialIcon from '../components/ui/MaterialIcon';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { signUpSchema } from '../utils/validation/zodSchemas';
-import { useAuth } from '../contexts/AuthContext';
+import { authService } from '../services/authService';
 
 export default function SignUp() {
   const { theme, toggleTheme } = useTheme();
@@ -22,8 +22,7 @@ export default function SignUp() {
     resolver: zodResolver(signUpSchema),
   });
 
-  const { login } = useAuth();
-
+  const [apiError, setApiError] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
@@ -67,14 +66,17 @@ export default function SignUp() {
     };
   }, []);
 
-  const onSubmit = (data) => {
-    // Simulate API registration call
-    setTimeout(() => {
+  const onSubmit = async (data) => {
+    try {
+      setApiError('');
+      await authService.signup(data.email, data.password, data.fullName);
       setIsSuccess(true);
       setTimeout(() => {
-        login();
-      }, 2000);
-    }, 1500);
+        window.location.hash = '#verify-email';
+      }, 1500);
+    } catch (error) {
+      setApiError(error.message);
+    }
   };
 
   return (
@@ -302,6 +304,12 @@ export default function SignUp() {
                 </div>
               ) : (
                 <form className="flex flex-col gap-stitch-md relative z-10" onSubmit={handleSubmit(onSubmit)}>
+
+                  {apiError && (
+                    <div className="bg-red-500/10 border border-red-500/50 text-red-600 dark:text-red-400 p-3 rounded-lg text-sm mb-2">
+                      {apiError}
+                    </div>
+                  )}
 
                   {/* Full Name */}
                   <div className="relative">
