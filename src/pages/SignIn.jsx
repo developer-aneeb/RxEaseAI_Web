@@ -7,6 +7,7 @@ import MaterialIcon from '../components/ui/MaterialIcon';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { signInSchema } from '../utils/validation/zodSchemas';
+import { useAuth } from '../contexts/AuthContext';
 
 export default function SignIn() {
   const { theme, toggleTheme } = useTheme();
@@ -20,6 +21,8 @@ export default function SignIn() {
   } = useForm({
     resolver: zodResolver(signInSchema),
   });
+
+  const { login } = useAuth();
 
   const [rememberMe, setRememberMe] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -96,8 +99,7 @@ export default function SignIn() {
     setTimeout(() => {
       setIsSuccess(true);
       setTimeout(() => {
-        // Redirect to dashboard (landing page/home)
-        window.location.hash = '#';
+        login();
       }, 2000);
     }, 1500);
   };
