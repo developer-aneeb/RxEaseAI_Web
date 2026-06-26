@@ -28,18 +28,20 @@ src/
 └── main.jsx           # React mount point
 ```
 
-## Routing Strategy
-Currently, the application employs a **Hash-based Routing System** managed inside `App.jsx`. 
+### Routing Strategy
+Currently, the application employs a **Hash-based Routing System** managed inside `App.jsx`. Access to specific routes is enforced using Higher-Order Components (Guards):
+
+- **`ProtectedRoute`**: Ensures the user is authenticated via `AuthContext`. If not, they are redirected to `/#signin`.
+- **`PublicRoute`**: Ensures logged-in users cannot access auth pages. They are redirected to `/#dashboard`.
 
 ```javascript
 // App.jsx snippet
 const [currentHash, setCurrentHash] = useState(window.location.hash);
 
-useEffect(() => {
-    const handleHashChange = () => setCurrentHash(window.location.hash);
-    window.addEventListener('hashchange', handleHashChange);
-    return () => window.removeEventListener('hashchange', handleHashChange);
-}, []);
+// Example Guarded Route
+if (currentHash === '#dashboard') {
+    return <ProtectedRoute><DashboardPlaceholder /></ProtectedRoute>;
+}
 ```
 
 ### Supported Routes:
@@ -53,6 +55,8 @@ useEffect(() => {
 > **Note for Future Scaling**: As the application grows to include protected dashboard routes, it is recommended to replace this hash-based system with `react-router-dom` to support nested routing, layout wrappers, and robust route guarding.
 
 ## State Management
-- **Local State**: Managed via React's `useState` and `useReducer` for isolated component behaviors (e.g., form inputs, dropdown toggles).
-- **Global State**: Currently, global state requirements are minimal. The theme state is managed via the `useTheme` custom hook.
-- **Future Backend State**: When integrated with a real backend, consider introducing a data-fetching library like `React Query` or `RTK Query` to handle caching, background updates, and complex loading states rather than building manual `useEffect` chains.
+- **Local State**: Managed via React's `useState` for UI toggles, while form states are handled efficiently by **React Hook Form**.
+- **Global State**: 
+  - **Authentication**: Managed via `AuthContext.jsx`, which stores mock session data and exposes `login()`/`logout()` functions globally.
+  - **Theming**: Managed via the `useTheme` custom hook.
+- **Future Backend State**: When integrated with a real backend, consider introducing a data-fetching library like `React Query` or `RTK Query` to handle API caching and loading states rather than manual `useEffect` chains.

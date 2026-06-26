@@ -41,16 +41,13 @@ All authentication forms (`SignIn`, `SignUp`, `ForgotPassword`, `ResetPassword`)
 
 **Current Stub (`SignIn.jsx`):**
 ```javascript
-const handleSubmit = async (e) => {
-  e.preventDefault();
-  // ... validation logic ...
-  
-  setIsSubmitting(true);
-  
-  // TO DO: Replace with API Call
+const onSubmit = (data) => {
+  // data contains { email, password } provided by React Hook Form
   setTimeout(() => {
-    setIsSubmitting(false);
-    window.location.hash = '#dashboard';
+    setIsSuccess(true);
+    setTimeout(() => {
+      login(); // AuthContext method sets mock token
+    }, 2000);
   }, 1500);
 };
 ```
@@ -58,25 +55,25 @@ const handleSubmit = async (e) => {
 **Required Update (`SignIn.jsx`):**
 ```javascript
 import api from '../utils/apiClient';
+import { useAuth } from '../contexts/AuthContext';
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
-  // ... validation logic ...
-  
-  setIsSubmitting(true);
+// Assuming you add setToken() to your AuthContext
+const { login } = useAuth(); 
+
+const onSubmit = async (data) => {
   try {
-    const response = await api.post('/auth/login', { email, password });
+    const response = await api.post('/auth/login', { 
+      email: data.email, 
+      password: data.password 
+    });
     
-    // 1. Store Token (Consider HttpOnly cookies for better security)
-    localStorage.setItem('token', response.data.token);
+    // 1. Store Token via Context
+    login(response.data.token);
     
-    // 2. Redirect User
-    window.location.hash = '#dashboard';
+    // 2. Redirect User (handled by login() or Route Guards)
   } catch (error) {
-    // 3. Handle Server Errors (e.g., Invalid Credentials)
-    setErrors({ server: error.response?.data?.message || 'Login failed.' });
-  } finally {
-    setIsSubmitting(false);
+    // 3. Handle Server Errors
+    setApiError(error.response?.data?.message || 'Login failed.');
   }
 };
 ```

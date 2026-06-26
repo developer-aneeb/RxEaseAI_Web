@@ -1,6 +1,6 @@
-# Authentication Flow & Validation
+# Authentication Flow & Session Management
 
-RxEaseAI incorporates a complete, secure authentication flow designed with HIPAA compliance and rigorous client-side validation in mind. The UI handles complex validation rules instantly, providing immediate feedback before any backend request is triggered.
+RxEaseAI incorporates a complete, secure authentication flow designed with HIPAA compliance and rigorous client-side validation in mind. The UI handles complex validation rules instantly via **React Hook Form** and **Zod**, providing immediate feedback before any backend request is triggered.
 
 ## Auth Pages Overview
 
@@ -12,59 +12,19 @@ All authentication pages are located in `src/pages/` and include:
 4. **`ResetPassword.jsx`**: Handles the final step of recovery, enforcing the same rigorous password rules as the SignUp flow.
 5. **`VerifyEmail.jsx`**: A dedicated landing page instructing the user to check their inbox, complete with a resend timer.
 
-## Form State & Validation Logic
+## Global Session State: AuthContext
 
-The project uses a standard React state pattern for managing form inputs and errors.
+To manage authentication persistence without a real backend, the application utilizes a centralized Context Provider:
+- **`src/contexts/AuthContext.jsx`**
+- Manages an `isAuthenticated` boolean state.
+- Stores a mock token (`rxease_token`) in `localStorage` to simulate session persistence across browser refreshes.
+- Exposes `login()` and `logout()` functions that seamlessly update the global state and trigger route redirects.
 
-### 1. State Management
-Each page maintains state for inputs, a boolean for loading, and an `errors` object.
+## Route Guards
 
-```javascript
-const [email, setEmail] = useState('');
-const [password, setPassword] = useState('');
-const [isSubmitting, setIsSubmitting] = useState(false);
-const [errors, setErrors] = useState({});
-```
-
-### 2. Validation Pattern
-Validation occurs inside the `handleSubmit` function. If validation fails, the `errors` state is populated, preventing the submission.
-
-```javascript
-const handleSubmit = async (e) => {
-  e.preventDefault();
-  const newErrors = {};
-
-  // Email Validation
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailRegex.test(email)) {
-    newErrors.email = "Please enter a valid email address.";
-  }
-
-  // Password Requirements (Example)
-  if (password.length < 8 || !/[A-Z]/.test(password) || !/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
-    newErrors.password = "Password must be at least 8 characters with 1 uppercase and 1 special character.";
-  }
-
-  if (Object.keys(newErrors).length > 0) {
-    setErrors(newErrors);
-    return;
-  }
-
-  // Proceed with backend API Call
-  setIsSubmitting(true);
-  // ... API Call Logic ...
-}
-```
-
-### 3. Inline Error Clearing
-To ensure a smooth user experience, the error state is cleared the moment a user begins typing in the corresponding field:
-
-```javascript
-onChange={(e) => { 
-  setEmail(e.target.value); 
-  setErrors(prev => ({...prev, email: ''})); // Clears error instantly
-}}
-```
+The application enforces access control using wrapper components:
+1. **`ProtectedRoute.jsx`**: Wraps secure views (like the Dashboard). If `isAuthenticated` is false, it instantly bounces the user to `/#signin`.
+2. **`PublicRoute.jsx`**: Wraps the Auth pages. If an already authenticated user tries to visit Sign In or Sign Up, they are instantly redirected back to their workspace (`/#dashboard`).
 
 ## Security Visuals: `PasswordStrengthPanel`
 
