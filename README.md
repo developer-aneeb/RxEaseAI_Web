@@ -24,7 +24,8 @@ Transform handwritten prescriptions into structured clinical intelligence. RxEas
 - YOLO-based segmentation with medical OCR concepts
 - FHIR/HL7-ready structured output
 - React 19, Vite 8, Tailwind CSS v4, Framer Motion
-- Full custom Authentication Flows with interactive form validation
+- Full custom Authentication Flows with interactive form validation (React Hook Form + Zod)
+- Protected Routing and global mock session state (AuthContext)
 
 ---
 
@@ -41,7 +42,9 @@ Transform handwritten prescriptions into structured clinical intelligence. RxEas
 - **🩺 Specialized Medical OCR:** Translates challenging doctor handwriting into legible clinical transcripts.
 - **💊 Clinical Dosage Audit Engine:** Flags drug interactions, high-risk quantities, and age-limit warnings.
 - **🔐 Complete Authentication Flow:** Includes fully validated forms for Sign In, Sign Up, Forgot Password, Reset Password, and Email Verification.
+- **⚡ Form Validation:** Powered by React Hook Form + Zod for centralized, strict schema-based error handling.
 - **🛡️ Live Password Security:** Interactive password strength indicators ensuring HIPAA-compliant credential creation.
+- **🔒 Protected Routes:** Role-based guard components to block unauthenticated access to the dashboard.
 - **🌗 Adaptive Theme System:** Clean light/dark mode with FOUC-resistant startup logic.
 - **🧩 Reusable UI Architecture:** Component-driven design using highly reusable abstractions (Buttons, Icons, Cards, Badges).
 - **🟢 High-Fidelity Laser Scanning:** HUD-style OCR animations that mimic live server scanning.
