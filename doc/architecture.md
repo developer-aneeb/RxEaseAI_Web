@@ -23,7 +23,9 @@ src/
 │   └── ui/            # Micro-level primitives (Button, Card, Badge, MaterialIcon)
 ├── hooks/             # Custom React hooks (e.g., useTheme, useAuth)
 ├── pages/             # Top-level route components (LandingPage, auth/)
+├── services/          # API layer (apiClient.js, authService.js)
 ├── styles/            # Shared style utilities or specific complex CSS modules
+├── utils/             # Helpers (errorMessages.js, zodSchemas.js)
 ├── App.jsx            # Main router and state container
 ├── index.css          # Tailwind entry point and global styles
 └── main.jsx           # React mount point
@@ -59,5 +61,6 @@ if (currentHash === '#dashboard') {
 - **Local State**: Managed via React's `useState` for UI toggles, while form states are handled efficiently by **React Hook Form**.
 - **Global State**: 
   - **Authentication**: Managed via `AuthContext.jsx`, which stores mock session data and exposes `login()`/`logout()` functions globally.
+  - **Notifications**: Managed via `ToastContext.jsx` for rendering temporary toast messages.
   - **Theming**: Managed via the `useTheme` custom hook.
 - **Future Backend State**: When integrated with a real backend, consider introducing a data-fetching library like `React Query` or `RTK Query` to handle API caching and loading states rather than manual `useEffect` chains.
