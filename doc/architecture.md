@@ -17,11 +17,12 @@ The application's source code is contained within the `src/` directory. The stru
 src/
 ├── animations/        # Reusable Framer Motion variants (staggerContainer, fadeInUp, etc.)
 ├── components/        # Reusable React components
+│   ├── auth/          # Authentication-specific components and route guards
 │   ├── layout/        # Macro-level layout components (Navbar, Footer)
 │   ├── sections/      # Large page sections (Hero, Features, Analytics)
 │   └── ui/            # Micro-level primitives (Button, Card, Badge, MaterialIcon)
-├── hooks/             # Custom React hooks (e.g., useTheme)
-├── pages/             # Top-level route components (LandingPage, SignIn, etc.)
+├── hooks/             # Custom React hooks (e.g., useTheme, useAuth)
+├── pages/             # Top-level route components (LandingPage, auth/)
 ├── styles/            # Shared style utilities or specific complex CSS modules
 ├── App.jsx            # Main router and state container
 ├── index.css          # Tailwind entry point and global styles
