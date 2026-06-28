@@ -5,28 +5,17 @@ This document provides a roadmap for integrating the static RxEaseAI frontend wi
 ## General Integration Principles
 
 ### 1. API Client Setup
-Do not use raw `fetch()` calls scattered across components. Instead, create a centralized `src/utils/apiClient.js` (using a library like `axios` or standard `fetch`) that automatically attaches authorization headers and handles global errors.
+The project already includes a centralized API client powered by `axios`.
+- **Location**: `src/services/apiClient.js`
+- **Features**: Automatically attaches the JWT `Bearer` token to outbound requests and handles global `401 Unauthorized` responses by clearing local storage and redirecting to the sign-in page.
 
-```javascript
-// src/utils/apiClient.js
-import axios from 'axios';
+### 2. The Service Layer
+Rather than putting API calls directly into React components, the project uses the service pattern.
+- **Location**: `src/services/authService.js`
+- **Current State**: Contains fully pre-built asynchronous functions for `login`, `signup`, `resetPassword`, `getProfile`, etc.
 
-const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:8000/api',
-});
-
-// Automatically attach JWT
-api.interceptors.request.use((config) => {
-  const token = localStorage.getItem('token');
-  if (token) config.headers.Authorization = `Bearer ${token}`;
-  return config;
-});
-
-export default api;
-```
-
-### 2. Environment Variables
-API Base URLs should be managed via Vite environment variables. Create a `.env` file at the root of the frontend folder:
+### 3. Environment Variables
+API Base URLs are managed via Vite environment variables. Create a `.env` file at the root of the frontend folder:
 ```
 VITE_API_URL=http://localhost:8000/api/v1
 ```
