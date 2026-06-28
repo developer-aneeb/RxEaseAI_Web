@@ -19,11 +19,10 @@ The entire application logic resides here.
 - `variants.js`: Centralized Framer Motion variants for consistent UI animations.
 
 ### `components/`
+- `auth/`: Authentication-specific components like `PasswordStrengthPanel.jsx`, and route guarding wrappers (`ProtectedRoute.jsx`, `PublicRoute.jsx`).
 - `layout/`: Macro components like `Navbar.jsx` and `Footer.jsx`.
 - `sections/`: High-level page segments used to compose the Landing Page (e.g., `Hero.jsx`, `Analytics.jsx`).
-- `routing/`: Route guarding wrappers (`ProtectedRoute.jsx`, `PublicRoute.jsx`).
 - `ui/`: Reusable, atomic design primitives (`Button.jsx`, `Card.jsx`, `MaterialIcon.jsx`, etc.).
-- `PasswordStrengthPanel.jsx`: Logic for interactive password security visualization.
 
 ### `contexts/`
 - `AuthContext.jsx`: Global state provider managing the user's session (currently using a mock localStorage token).
@@ -33,8 +32,9 @@ The entire application logic resides here.
 
 ### `pages/`
 - `LandingPage.jsx`: The primary marketing and feature demonstration view.
-- `SignIn.jsx`, `SignUp.jsx`, `ForgotPassword.jsx`, `ResetPassword.jsx`: Forms powered by React Hook Form.
-- `VerifyEmail.jsx`: Post-registration instructional page.
+- `auth/`: Directory containing all authentication flows.
+  - `SignIn.jsx`, `SignUp.jsx`, `ForgotPassword.jsx`, `ResetPassword.jsx`: Forms powered by React Hook Form.
+  - `VerifyEmail.jsx`: Post-registration instructional page.
 
 ### `styles/`
 - Contains any complex, highly specific CSS outside of standard Tailwind utilities.
