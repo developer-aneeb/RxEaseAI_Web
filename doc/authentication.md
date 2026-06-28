@@ -4,7 +4,7 @@ RxEaseAI incorporates a complete, secure authentication flow designed with HIPAA
 
 ## Auth Pages Overview
 
-All authentication pages are located in `src/pages/` and include:
+All authentication pages are located in `src/pages/auth/` and include:
 
 1. **`SignIn.jsx`**: Handles returning users with email/password and OAuth (Google/Apple) stubs.
 2. **`SignUp.jsx`**: Captures new user registrations, including robust password creation rules and a mandatory Terms of Service checkbox.
