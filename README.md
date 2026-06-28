@@ -65,9 +65,10 @@ Transform handwritten prescriptions into structured clinical intelligence. RxEas
 ## Where to edit content (quick paths)
 
 - Page composition: `src/pages/LandingPage.jsx`
-- Auth Pages: `src/pages/SignIn.jsx`, `src/pages/SignUp.jsx`, `src/pages/ResetPassword.jsx`, `src/pages/ForgotPassword.jsx`, `src/pages/VerifyEmail.jsx`
+- Auth Pages: `src/pages/auth/SignIn.jsx`, `src/pages/auth/SignUp.jsx`, `src/pages/auth/ResetPassword.jsx`, `src/pages/auth/ForgotPassword.jsx`, `src/pages/auth/VerifyEmail.jsx`
 - Sections: `src/components/sections/`
 - Layout: `src/components/layout/`
+- Auth Components: `src/components/auth/`
 - UI primitives: `src/components/ui/`
 - Theme hook: `src/hooks/useTheme.js`
 - Global styles: `src/index.css`
@@ -79,19 +80,21 @@ Transform handwritten prescriptions into structured clinical intelligence. RxEas
 ```bash
 src/
  ├── components/
+ │   ├── auth/          # Auth components & Route guards (PasswordStrengthPanel, ProtectedRoute)
  │   ├── layout/        # Navbar and footer
  │   ├── sections/      # Hero, Features, Workflow, Dashboard, Analytics, Faq
- │   ├── ui/            # Reusable UI primitives (Button, Card, Badge, MaterialIcon, etc.)
- │   └── PasswordStrengthPanel.jsx # Reusable password validator component
+ │   └── ui/            # Reusable UI primitives (Button, Card, Badge, MaterialIcon, etc.)
  ├── hooks/
- │   └── useTheme.js    # Theme persistence and system sync
+ │   ├── useTheme.js    # Theme persistence and system sync
+ │   └── useAuth.js     # Custom hook for auth context
  ├── pages/
  │   ├── LandingPage.jsx # Main Page composer
- │   ├── SignIn.jsx      # Authentication pages
- │   ├── SignUp.jsx
- │   ├── ForgotPassword.jsx
- │   ├── ResetPassword.jsx
- │   └── VerifyEmail.jsx
+ │   └── auth/           # Authentication pages
+ │       ├── SignIn.jsx      
+ │       ├── SignUp.jsx
+ │       ├── ForgotPassword.jsx
+ │       ├── ResetPassword.jsx
+ │       └── VerifyEmail.jsx
  ├── styles/            # Shared style utilities
  ├── index.css          # Tailwind imports and global styles
  ├── App.jsx            # Routing and Hash-based Navigation
