@@ -26,6 +26,7 @@ The entire application logic resides here.
 
 ### `contexts/`
 - `AuthContext.jsx`: Global state provider managing the user's session (currently using a mock localStorage token).
+- `ToastContext.jsx`: Global provider for managing and rendering temporary toast notifications across the application.
 
 ### `hooks/`
 - `useTheme.js`: Custom hook controlling the light/dark mode state.
@@ -39,8 +40,13 @@ The entire application logic resides here.
 ### `styles/`
 - Contains any complex, highly specific CSS outside of standard Tailwind utilities.
 
-### `utils/validation/`
-- `zodSchemas.js`: The single source of truth for all form validation rules and error messages.
+### `services/`
+- `apiClient.js`: Centralized Axios instance with request/response interceptors to attach tokens and handle 401s.
+- `authService.js`: Pre-built API endpoints for all authentication actions (login, signup, reset, etc.).
+
+### `utils/`
+- `errorMessages.js`: A dictionary utility mapping raw backend error strings into friendly UI copy.
+- `validation/zodSchemas.js`: The single source of truth for all form validation rules and error messages.
 
 ### Core Entry Files
 - `App.jsx`: The main React Router (Hash-based) orchestrating all pages and route guards.
