@@ -1,8 +1,9 @@
 import { useEffect } from 'react';
-import { useAuth } from '../../hooks/useAuth';
+import { useAuthStore } from '../../store/useAuthStore';
 
 export default function ProtectedRoute({ children }) {
-  const { isAuthenticated, user } = useAuth();
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+  const user = useAuthStore((state) => state.user);
 
   useEffect(() => {
     if (!isAuthenticated) {
