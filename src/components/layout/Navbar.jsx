@@ -1,13 +1,14 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, Activity, ChevronRight, Sun, Moon } from 'lucide-react';
-import useTheme from '../../hooks/useTheme';
+import { useThemeStore } from '../../store/useThemeStore';
 import Button from '../ui/Button';
 
 export default function Navbar() {
     const [isOpen, setIsOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
-    const { theme, toggleTheme } = useTheme();
+    const theme = useThemeStore((state) => state.theme);
+    const toggleTheme = useThemeStore((state) => state.toggleTheme);
 
     useEffect(() => {
         const handleScroll = () => {
