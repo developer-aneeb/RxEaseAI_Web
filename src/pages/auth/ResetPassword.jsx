@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import useTheme from '../../hooks/useTheme';
+import { useThemeStore } from '../../store/useThemeStore';
+import { useAppStore } from '../../store/useAppStore';
 import { Sun, Moon, ArrowLeft } from 'lucide-react';
 import Button from '../../components/ui/Button';
 import PasswordStrengthPanel from '../../components/PasswordStrengthPanel';
@@ -8,11 +9,11 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { resetPasswordSchema } from '../../utils/validation/zodSchemas';
 import { authService } from '../../services/authService';
-import { useToast } from '../../contexts/ToastContext';
 import { getFriendlyErrorMessage } from '../../utils/errorMessages';
 
 export default function ResetPassword() {
-  const { theme, toggleTheme } = useTheme();
+  const theme = useThemeStore((state) => state.theme);
+  const toggleTheme = useThemeStore((state) => state.toggleTheme);
   // Form State via React Hook Form
   const {
     register,
@@ -23,7 +24,7 @@ export default function ResetPassword() {
     resolver: zodResolver(resetPasswordSchema),
   });
 
-  const { showToast } = useToast();
+  const showToast = useAppStore((state) => state.showToast);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [accessToken, setAccessToken] = useState('');

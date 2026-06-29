@@ -1,9 +1,2 @@
-import { useThemeStore } from '../store/useThemeStore';
-
-export default function useTheme() {
-  const theme = useThemeStore((state) => state.theme);
-  const toggleTheme = useThemeStore((state) => state.toggleTheme);
-  const setTheme = useThemeStore((state) => state.setTheme);
-
-  return { theme, toggleTheme, setTheme };
-}
+// Deprecated: Theme state is now managed directly via Zustand in src/store/useThemeStore.js
+export {};
