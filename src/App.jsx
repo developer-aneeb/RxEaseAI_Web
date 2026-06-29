@@ -6,7 +6,7 @@ import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
 import VerifyEmail from './pages/VerifyEmail';
 
-import { useAuth } from './hooks/useAuth';
+import { useAuthStore } from './store/useAuthStore';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 import PublicRoute from './components/auth/PublicRoute';
 import { ToastProvider } from './contexts/ToastContext';
@@ -14,7 +14,7 @@ import Spinner from './components/ui/Spinner';
 
 // Temporary Dashboard Placeholder
 function DashboardPlaceholder() {
-    const { logout } = useAuth();
+    const logout = useAuthStore((state) => state.logout);
     
     return (
         <div className="min-h-screen flex flex-col items-center justify-center bg-surface dark:bg-slate-950 text-slate-900 dark:text-white p-6">
@@ -36,7 +36,8 @@ function DashboardPlaceholder() {
 
 function MainRouter() {
     const [currentHash, setCurrentHash] = useState(window.location.hash || '#');
-    const { isLoading, initializeAuth } = useAuth();
+    const isLoading = useAuthStore((state) => state.isLoading);
+    const initializeAuth = useAuthStore((state) => state.initializeAuth);
 
     const pathname = window.location.pathname;
     const isRedirectPath = pathname === '/reset-password' || 
