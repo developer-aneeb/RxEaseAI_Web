@@ -9,6 +9,15 @@ export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
+  const normalizeUser = (profileUser) => {
+    if (!profileUser) return null;
+    return {
+      ...profileUser,
+      email_confirmed_at: profileUser.email_confirmed_at || 
+                          (profileUser.email_verified ? (profileUser.last_sign_in_at || new Date().toISOString()) : null)
+    };
+  };
+
   const logout = useCallback(async () => {
     try {
       // Clear backend session
@@ -37,7 +46,7 @@ export function AuthProvider({ children }) {
 
       try {
         const response = await authService.getProfile();
-        setUser(response.data.user);
+        setUser(normalizeUser(response.data.user));
         setIsAuthenticated(true);
       } catch (error) {
         // If expired, try refreshing
@@ -50,7 +59,7 @@ export function AuthProvider({ children }) {
             localStorage.setItem('rxease_refresh_token', refresh_token);
             
             const profileResponse = await authService.getProfile();
-            setUser(profileResponse.data.user);
+            setUser(normalizeUser(profileResponse.data.user));
             setIsAuthenticated(true);
           } catch (refreshErr) {
             console.error('Failed to refresh session:', refreshErr);
@@ -69,12 +78,18 @@ export function AuthProvider({ children }) {
   }, [logout]);
 
   const login = (userData, accessToken, refreshToken) => {
+    const normalizedUser = normalizeUser(userData);
     localStorage.setItem('rxease_token', accessToken);
     localStorage.setItem('rxease_refresh_token', refreshToken);
-    localStorage.setItem('rxease_user', JSON.stringify(userData));
-    setUser(userData);
+    localStorage.setItem('rxease_user', JSON.stringify(normalizedUser));
+    setUser(normalizedUser);
     setIsAuthenticated(true);
-    window.location.hash = '#dashboard';
+    
+    if (normalizedUser && !normalizedUser.email_confirmed_at) {
+      window.location.hash = '#verify-email';
+    } else {
+      window.location.hash = '#dashboard';
+    }
   };
 
   return (
