@@ -1,17 +1,17 @@
 import { useState, useEffect } from 'react';
-import useTheme from '../../hooks/useTheme';
+import { useThemeStore } from '../../store/useThemeStore';
+import { useAppStore } from '../../store/useAppStore';
 import Button from '../../components/ui/Button';
 import MaterialIcon from '../../components/ui/MaterialIcon';
 import { authService } from '../../services/authService';
-import { useToast } from '../../contexts/ToastContext';
 import { getFriendlyErrorMessage } from '../../utils/errorMessages';
 
 export default function VerifyEmail() {
-  const { theme } = useTheme();
+  const theme = useThemeStore((state) => state.theme);
   const [timeLeft, setTimeLeft] = useState(42);
   const [particles, setParticles] = useState([]);
   const [email, setEmail] = useState('doctor@hospital.com');
-  const { showToast } = useToast();
+  const showToast = useAppStore((state) => state.showToast);
 
   useEffect(() => {
     // Try reading registered email from localStorage
