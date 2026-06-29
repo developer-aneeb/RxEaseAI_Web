@@ -6,7 +6,6 @@ import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
 import VerifyEmail from './pages/VerifyEmail';
 
-import { AuthProvider } from './contexts/AuthContext';
 import { useAuth } from './hooks/useAuth';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 import PublicRoute from './components/auth/PublicRoute';
@@ -37,12 +36,18 @@ function DashboardPlaceholder() {
 
 function MainRouter() {
     const [currentHash, setCurrentHash] = useState(window.location.hash || '#');
+    const { isLoading, initializeAuth } = useAuth();
 
     const pathname = window.location.pathname;
     const isRedirectPath = pathname === '/reset-password' || 
                            pathname === '/verify-email' ||
                            pathname.startsWith('/auth/oauth/success') || 
                            pathname.startsWith('/auth/oauth/error');
+
+    // Restore session on mount
+    useEffect(() => {
+        initializeAuth();
+    }, [initializeAuth]);
 
     useEffect(() => {
         if (pathname === '/reset-password') {
@@ -100,7 +105,7 @@ function MainRouter() {
         return () => window.removeEventListener('hashchange', handleHashChange);
     }, []);
 
-    if (isRedirectPath) {
+    if (isLoading || isRedirectPath) {
         return <Spinner fullPage={true} />;
     }
 
@@ -137,9 +142,7 @@ function MainRouter() {
 function App() {
     return (
         <ToastProvider>
-            <AuthProvider>
-                <MainRouter />
-            </AuthProvider>
+            <MainRouter />
         </ToastProvider>
     );
 }
