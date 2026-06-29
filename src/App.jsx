@@ -8,8 +8,8 @@ import VerifyEmail from './pages/VerifyEmail';
 
 import { AuthProvider } from './contexts/AuthContext';
 import { useAuth } from './hooks/useAuth';
-import ProtectedRoute from './components/routing/ProtectedRoute';
-import PublicRoute from './components/routing/PublicRoute';
+import ProtectedRoute from './components/auth/ProtectedRoute';
+import PublicRoute from './components/auth/PublicRoute';
 import { ToastProvider } from './contexts/ToastContext';
 import Spinner from './components/ui/Spinner';
 
@@ -40,6 +40,7 @@ function MainRouter() {
 
     const pathname = window.location.pathname;
     const isRedirectPath = pathname === '/reset-password' || 
+                           pathname === '/verify-email' ||
                            pathname.startsWith('/auth/oauth/success') || 
                            pathname.startsWith('/auth/oauth/error');
 
@@ -56,6 +57,19 @@ function MainRouter() {
                 window.location.href = `${window.location.origin}/#reset-password`;
             } else {
                 window.location.href = `${window.location.origin}/#signin`;
+            }
+        } else if (pathname === '/verify-email') {
+            const params = new URLSearchParams(window.location.hash.substring(1));
+            const accessToken = params.get('access_token');
+            const refreshToken = params.get('refresh_token');
+            if (accessToken) {
+                localStorage.setItem('rxease_token', accessToken);
+                if (refreshToken) {
+                    localStorage.setItem('rxease_refresh_token', refreshToken);
+                }
+                window.location.href = `${window.location.origin}/#dashboard`;
+            } else {
+                window.location.href = `${window.location.origin}/#verify-email`;
             }
         } else if (pathname.startsWith('/auth/oauth/success')) {
             const params = new URLSearchParams(window.location.search);
