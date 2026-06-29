@@ -1,19 +1,20 @@
 import { useState, useEffect } from 'react';
 import { Activity, Sun, Moon, ArrowLeft, Mail, Lock, Eye, EyeOff, CheckCircle } from 'lucide-react';
-import useTheme from '../../hooks/useTheme';
+import { useAuthStore } from '../../store/useAuthStore';
+import { useThemeStore } from '../../store/useThemeStore';
+import { useAppStore } from '../../store/useAppStore';
 import Button from '../../components/ui/Button';
 import PasswordStrengthPanel from '../../components/PasswordStrengthPanel';
 import MaterialIcon from '../../components/ui/MaterialIcon';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { signInSchema } from '../../utils/validation/zodSchemas';
-import { useAuth } from '../../hooks/useAuth';
 import { authService } from '../../services/authService';
-import { useToast } from '../../contexts/ToastContext';
 import { getFriendlyErrorMessage } from '../../utils/errorMessages';
 
 export default function SignIn() {
-  const { theme, toggleTheme } = useTheme();
+  const theme = useThemeStore((state) => state.theme);
+  const toggleTheme = useThemeStore((state) => state.toggleTheme);
 
   // Form State via React Hook Form
   const {
@@ -25,8 +26,8 @@ export default function SignIn() {
     resolver: zodResolver(signInSchema),
   });
 
-  const { login } = useAuth();
-  const { showToast } = useToast();
+  const login = useAuthStore((state) => state.login);
+  const showToast = useAppStore((state) => state.showToast);
 
   const [rememberMe, setRememberMe] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
