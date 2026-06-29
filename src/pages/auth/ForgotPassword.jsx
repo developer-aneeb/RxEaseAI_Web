@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Activity, Sun, Moon, ArrowLeft, Mail, Lock, Shield, CheckCircle, ArrowRight } from 'lucide-react';
-import useTheme from '../../hooks/useTheme';
+import { useThemeStore } from '../../store/useThemeStore';
+import { useAppStore } from '../../store/useAppStore';
 import Button from '../../components/ui/Button';
 import MaterialIcon from '../../components/ui/MaterialIcon';
 import { useForm } from 'react-hook-form';
@@ -9,11 +10,11 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { forgotPasswordSchema } from '../../utils/validation/zodSchemas';
 import { fadeInUp, fadeIn, staggerContainer } from '../../animations/variants';
 import { authService } from '../../services/authService';
-import { useToast } from '../../contexts/ToastContext';
 import { getFriendlyErrorMessage } from '../../utils/errorMessages';
 
 export default function ForgotPassword() {
-  const { theme, toggleTheme } = useTheme();
+  const theme = useThemeStore((state) => state.theme);
+  const toggleTheme = useThemeStore((state) => state.toggleTheme);
 
   // Form State via React Hook Form
   const {
@@ -24,7 +25,7 @@ export default function ForgotPassword() {
     resolver: zodResolver(forgotPasswordSchema),
   });
 
-  const { showToast } = useToast();
+  const showToast = useAppStore((state) => state.showToast);
   const [isSuccess, setIsSuccess] = useState(false);
   const [resetEmail, setResetEmail] = useState('');
 
