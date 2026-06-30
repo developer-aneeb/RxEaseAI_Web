@@ -11,35 +11,33 @@ In `index.html`, a synchronous blocking `<script>` runs before React mounts. It 
 
 This ensures that the page background is rendered with the correct color before any JavaScript bundles are parsed.
 
-### 2. The `useTheme` Hook
-Located at `src/hooks/useTheme.js`, this React hook allows components to read and toggle the current theme.
+### 2. The `useThemeStore` Zustand Store
+Located at `src/store/useThemeStore.js`, this global store allows components to read and toggle the current theme.
 
 ```javascript
-import { useState, useEffect } from 'react';
+import { create } from 'zustand';
 
-export default function useTheme() {
-  const [theme, setTheme] = useState(() => {
-    // Initialization logic matches the FOUC script
-    return document.documentElement.classList.contains('dark') ? 'dark' : 'light';
-  });
-
-  const toggleTheme = () => {
-    setTheme(prev => prev === 'dark' ? 'light' : 'dark');
-  };
-
-  useEffect(() => {
+export const useThemeStore = create((set) => ({
+  theme: localStorage.getItem('theme') || 
+         (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'),
+  toggleTheme: () => set((state) => {
+    const nextTheme = state.theme === 'dark' ? 'light' : 'dark';
     const root = document.documentElement;
-    if (theme === 'dark') {
+    if (nextTheme === 'dark') {
       root.classList.add('dark');
-      localStorage.setItem('theme', 'dark');
     } else {
       root.classList.remove('dark');
-      localStorage.setItem('theme', 'light');
     }
-  }, [theme]);
+    localStorage.setItem('theme', nextTheme);
+    return { theme: nextTheme };
+  }),
+}));
+```
 
-  return { theme, toggleTheme };
-}
+Using it in components:
+```javascript
+const theme = useThemeStore((state) => state.theme);
+const toggleTheme = useThemeStore((state) => state.toggleTheme);
 ```
 
 ## Styling for Dark Mode
