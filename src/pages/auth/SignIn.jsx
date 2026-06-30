@@ -255,38 +255,37 @@ export default function SignIn() {
                 </div>
               </div>
 
-              {/* Minimalist AI Pipeline */}
               <div className="flex items-center justify-between px-2 text-on-surface-variant dark:text-slate-400 select-none">
                 <div className="flex flex-col items-center gap-1">
-                  <span className="material-symbols-outlined text-sm">upload</span>
+                  <MaterialIcon name="upload" size="sm" />
                   <span className="text-[10px] font-medium">Upload</span>
                 </div>
                 <div className="flex-grow h-[1px] bg-outline-variant/30 dark:bg-slate-800 mx-2 relative overflow-hidden">
                   <div className="absolute top-0 left-0 h-full w-full bg-gradient-to-r from-transparent via-primary to-transparent opacity-50 animate-flow"></div>
                 </div>
                 <div className="flex flex-col items-center gap-1">
-                  <span className="material-symbols-outlined text-sm text-primary dark:text-indigo-400">view_in_ar</span>
+                  <MaterialIcon name="view_in_ar" className="text-primary dark:text-indigo-400" size="sm" />
                   <span className="text-[10px] font-medium">YOLO</span>
                 </div>
                 <div className="flex-grow h-[1px] bg-outline-variant/30 dark:bg-slate-800 mx-2 relative overflow-hidden">
                   <div className="absolute top-0 left-0 h-full w-full bg-gradient-to-r from-transparent via-primary to-transparent opacity-50 animate-flow" style={{ animationDelay: '0.5s' }}></div>
                 </div>
                 <div className="flex flex-col items-center gap-1">
-                  <span className="material-symbols-outlined text-sm">document_scanner</span>
+                  <MaterialIcon name="document_scanner" size="sm" />
                   <span className="text-[10px] font-medium">OCR</span>
                 </div>
                 <div className="flex-grow h-[1px] bg-outline-variant/30 dark:bg-slate-800 mx-2 relative overflow-hidden">
                   <div className="absolute top-0 left-0 h-full w-full bg-gradient-to-r from-transparent via-tertiary to-transparent opacity-50 animate-flow" style={{ animationDelay: '1s' }}></div>
                 </div>
                 <div className="flex flex-col items-center gap-1">
-                  <span className="material-symbols-outlined text-sm text-secondary dark:text-emerald-400">verified_user</span>
+                  <MaterialIcon name="verified_user" className="text-secondary dark:text-emerald-400" size="sm" />
                   <span className="text-[10px] font-medium">Verify</span>
                 </div>
                 <div className="flex-grow h-[1px] bg-outline-variant/30 dark:bg-slate-800 mx-2 relative overflow-hidden">
                   <div className="absolute top-0 left-0 h-full w-full bg-gradient-to-r from-transparent via-secondary to-transparent opacity-50 animate-flow" style={{ animationDelay: '1.5s' }}></div>
                 </div>
                 <div className="flex flex-col items-center gap-1">
-                  <span className="material-symbols-outlined text-sm text-tertiary dark:text-purple-400">auto_awesome</span>
+                  <MaterialIcon name="auto_awesome" className="text-tertiary dark:text-purple-400" size="sm" />
                   <span className="text-[10px] font-medium">Recommend</span>
                 </div>
               </div>
@@ -304,7 +303,7 @@ export default function SignIn() {
 
               <div className="text-center mb-stitch-sm relative z-10">
                 <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br from-primary/25 to-tertiary/25 border border-primary/30 mb-5 shadow-[0_0_20px_rgba(0,85,201,0.2)]">
-                  <span className="material-symbols-outlined text-3xl text-primary">health_and_safety</span>
+                  <MaterialIcon name="health_and_safety" className="text-primary" size="3xl" />
                 </div>
                 <h2 className="font-headline-md text-[26px] text-on-surface dark:text-white font-semibold mb-2">Sign In</h2>
                 <p className="font-body-md text-body-md text-on-surface-variant dark:text-slate-400">Secure access to your intelligent healthcare workspace.</p>
@@ -410,8 +409,9 @@ export default function SignIn() {
                 <div className="h-px bg-outline-variant/30 dark:bg-slate-800 flex-grow"></div>
               </div>
 
-              {/* OAuth Google button */}
-              <button
+              <Button
+                variant="custom"
+                size="none"
                 className="w-full py-3 px-stitch-lg rounded-xl bg-white/80 dark:bg-slate-900 border border-outline-variant/40 dark:border-slate-800 hover:bg-white dark:hover:bg-slate-850 text-on-surface dark:text-slate-200 font-label-md text-label-md transition-all duration-200 flex justify-center items-center gap-3 shadow-sm hover:shadow-md relative z-10 cursor-pointer"
                 type="button"
                 onClick={async () => {
@@ -429,7 +429,7 @@ export default function SignIn() {
                   <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"></path>
                 </svg>
                 Google
-              </button>
+              </Button>
 
               {/* Bottom Navigation Redirect */}
               <p className="text-center font-body-md text-[14px] text-on-surface-variant dark:text-slate-400 mt-2 relative z-10">
@@ -440,19 +440,19 @@ export default function SignIn() {
               <div className="mt-4 pt-4 border-t border-outline-variant/30 dark:border-slate-800 relative z-10">
                 <div className="grid grid-cols-4 gap-2 mb-4">
                   <div className="flex flex-col items-center text-center gap-1 text-on-surface-variant dark:text-slate-500 hover:text-primary dark:hover:text-indigo-400 transition-colors">
-                    <span className="material-symbols-outlined text-[20px]">enhanced_encryption</span>
+                    <MaterialIcon name="enhanced_encryption" size="xl" />
                     <span className="text-[10px] leading-tight font-medium">Encrypted Auth</span>
                   </div>
                   <div className="flex flex-col items-center text-center gap-1 text-on-surface-variant dark:text-slate-500 hover:text-primary dark:hover:text-indigo-400 transition-colors">
-                    <span className="material-symbols-outlined text-[20px]">policy</span>
+                    <MaterialIcon name="policy" size="xl" />
                     <span className="text-[10px] leading-tight font-medium">HIPAA Ready</span>
                   </div>
                   <div className="flex flex-col items-center text-center gap-1 text-on-surface-variant dark:text-slate-500 hover:text-primary dark:hover:text-indigo-400 transition-colors">
-                    <span className="material-symbols-outlined text-[20px]">bolt</span>
+                    <MaterialIcon name="bolt" size="xl" />
                     <span className="text-[10px] leading-tight font-medium">Fast Access</span>
                   </div>
                   <div className="flex flex-col items-center text-center gap-1 text-on-surface-variant dark:text-slate-500 hover:text-primary dark:hover:text-indigo-400 transition-colors">
-                    <span className="material-symbols-outlined text-[20px]">gpp_good</span>
+                    <MaterialIcon name="gpp_good" size="xl" />
                     <span className="text-[10px] leading-tight font-medium">Data Protected</span>
                   </div>
                 </div>
