@@ -218,7 +218,7 @@ export default function ResetPassword() {
             <div className="flex flex-col gap-4 relative">
               <div className="glass-panel p-6 rounded-2xl flex items-center gap-6 animate-float max-w-sm">
                 <div className="w-10 h-10 rounded-full bg-surface-container dark:bg-slate-800 flex items-center justify-center text-primary dark:text-blue-400">
-                  <span className="material-symbols-outlined">security</span>
+                  <MaterialIcon name="security" size="md" />
                 </div>
                 <div>
                   <h3 className="font-headline-md text-base font-semibold text-on-surface dark:text-slate-200 mb-1">Advanced Account Security</h3>
@@ -227,7 +227,7 @@ export default function ResetPassword() {
               </div>
               <div className="glass-panel p-6 rounded-2xl flex items-center gap-6 animate-float-delayed max-w-sm ml-10 border-primary/20 shadow-[0_4px_20px_rgba(0,85,201,0.05)] dark:shadow-[0_4px_20px_rgba(0,85,201,0.1)]">
                 <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary dark:text-blue-400">
-                  <span className="material-symbols-outlined">verified_user</span>
+                  <MaterialIcon name="verified_user" size="md" />
                 </div>
                 <div>
                   <h3 className="font-headline-md text-base font-semibold text-on-surface dark:text-slate-200 mb-1">HIPAA-Compliant Protection</h3>
@@ -264,7 +264,7 @@ export default function ResetPassword() {
             {/* Header */}
             <div className="text-center mb-10">
               <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-surface to-surface-container-high dark:from-slate-800 dark:to-slate-700 mx-auto mb-6 flex items-center justify-center shadow-sm border border-white dark:border-slate-600 animate-glow">
-                <span className="material-symbols-outlined text-primary dark:text-blue-400" style={{ fontSize: '32px', fontVariationSettings: "'FILL' 0" }}>lock_reset</span>
+                <MaterialIcon name="lock_reset" className="text-primary dark:text-blue-400 text-[32px]" size="none" style={{ fontVariationSettings: "'FILL' 0" }} />
               </div>
               <h2 className="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface dark:text-white mb-4">Reset Password</h2>
               <p className="font-body-md text-body-md text-on-surface-variant dark:text-slate-400">Create a strong password to secure your RxEaseAI workspace.</p>
@@ -277,8 +277,8 @@ export default function ResetPassword() {
                 <div className="relative">
                   <input className={`float-label-input w-full pl-4 pr-12 py-3 h-14 rounded-xl bg-white dark:bg-slate-900 border ${errors.password ? 'border-red-500 ring-1 ring-red-500' : 'border-outline-variant/50 dark:border-slate-800'} focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all font-body-md text-body-md text-on-surface dark:text-white peer placeholder-transparent`} id="new-password" placeholder="New Password" type={showPassword ? "text" : "password"} {...register('password')} />
                   <label className="float-label absolute left-4 top-1/2 -translate-y-1/2 text-outline-variant dark:text-slate-500 font-body-md transition-all duration-200 pointer-events-none peer-focus:text-primary" htmlFor="new-password">New Password</label>
-                  <button className="absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant dark:text-slate-400 hover:text-primary dark:hover:text-blue-400 transition-colors focus:outline-none z-10" type="button" onClick={() => setShowPassword(!showPassword)}>
-                    <span className="material-symbols-outlined text-[20px]">{showPassword ? 'visibility_off' : 'visibility'}</span>
+                  <button className="absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant dark:text-slate-400 hover:text-primary dark:hover:text-blue-400 transition-colors focus:outline-none z-10 cursor-pointer" type="button" onClick={() => setShowPassword(!showPassword)}>
+                    <MaterialIcon name={showPassword ? 'visibility_off' : 'visibility'} className="text-[20px]" size="none" />
                   </button>
                 </div>
                 {errors.password && <p className="text-red-500 text-xs mt-1 ml-1 font-medium">{errors.password.message}</p>}
@@ -292,8 +292,8 @@ export default function ResetPassword() {
               <div className="relative">
                 <input className={`float-label-input w-full pl-4 pr-12 py-3 h-14 rounded-xl bg-white dark:bg-slate-900 border ${errors.confirmPassword ? 'border-red-500 ring-1 ring-red-500' : 'border-outline-variant/50 dark:border-slate-800'} focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all font-body-md text-body-md text-on-surface dark:text-white peer placeholder-transparent`} id="confirm-password" placeholder="Confirm Password" type={showConfirmPassword ? "text" : "password"} {...register('confirmPassword')} />
                 <label className="float-label absolute left-4 top-1/2 -translate-y-1/2 text-outline-variant dark:text-slate-500 font-body-md transition-all duration-200 pointer-events-none peer-focus:text-primary" htmlFor="confirm-password">Confirm Password</label>
-                <button className="absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant dark:text-slate-400 hover:text-primary dark:hover:text-blue-400 transition-colors focus:outline-none z-10" type="button" onClick={() => setShowConfirmPassword(!showConfirmPassword)}>
-                  <span className="material-symbols-outlined text-[20px]">{showConfirmPassword ? 'visibility_off' : 'visibility'}</span>
+                <button className="absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant dark:text-slate-400 hover:text-primary dark:hover:text-blue-400 transition-colors focus:outline-none z-10 cursor-pointer" type="button" onClick={() => setShowConfirmPassword(!showConfirmPassword)}>
+                  <MaterialIcon name={showConfirmPassword ? 'visibility_off' : 'visibility'} className="text-[20px]" size="none" />
                 </button>
                 {errors.confirmPassword && <p className="text-red-500 text-xs mt-1 ml-1 font-medium">{errors.confirmPassword.message}</p>}
               </div>
