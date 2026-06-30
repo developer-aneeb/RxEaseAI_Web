@@ -115,21 +115,21 @@ export default function VerifyEmail() {
               <div className="flex flex-col gap-4">
                 <div className="flex items-center gap-4">
                   <div className="w-8 h-8 rounded-full bg-[#006d3e] flex items-center justify-center text-white shrink-0">
-                    <span className="material-symbols-outlined text-[18px]">check</span>
+                    <MaterialIcon name="check" size="lg" />
                   </div>
                   <span className="font-label-md text-[14px] text-on-surface dark:text-white opacity-60 whitespace-nowrap">Create Account</span>
                   <div className="h-[2px] w-full max-w-[200px] bg-[#006d3e]/30 hidden md:block ml-2"></div>
                 </div>
                 <div className="flex items-center gap-4">
                   <div className="w-8 h-8 rounded-full bg-[#0055c9] animate-pulse-glow flex items-center justify-center text-white shadow-lg shadow-primary/20 shrink-0">
-                    <span className="material-symbols-outlined text-[18px]">mail</span>
+                    <MaterialIcon name="mail" size="lg" />
                   </div>
                   <span className="font-label-md text-[14px] text-[#0055c9] font-bold whitespace-nowrap">Email Sent</span>
                   <div className="h-[2px] w-full max-w-[200px] bg-outline-variant/30 dark:bg-slate-700 hidden md:block ml-2"></div>
                 </div>
                 <div className="flex items-center gap-4 opacity-40">
                   <div className="w-8 h-8 rounded-full bg-outline-variant dark:bg-slate-700 flex items-center justify-center text-on-surface-variant dark:text-slate-400 shrink-0">
-                    <span className="material-symbols-outlined text-[18px]">fingerprint</span>
+                    <MaterialIcon name="fingerprint" size="lg" />
                   </div>
                   <span className="font-label-md text-[14px] text-on-surface dark:text-white whitespace-nowrap">Verify Identity</span>
                 </div>
@@ -162,7 +162,7 @@ export default function VerifyEmail() {
             <div className="animate-float" style={{ animationDelay: '0s' }}>
               <div className="bg-white dark:bg-slate-800 p-4 rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-white/60 dark:border-slate-700 mb-6 -translate-x-20">
                 <div className="flex items-center gap-4">
-                  <div className="p-2 bg-primary/10 rounded-lg"><span className="material-symbols-outlined text-primary text-[20px]">send</span></div>
+                  <div className="p-2 bg-primary/10 rounded-lg"><MaterialIcon name="send" className="text-primary" size="xl" /></div>
                   <span className="font-label-md text-[13px] font-semibold text-on-surface dark:text-white">Verification Email Sent</span>
                 </div>
               </div>
@@ -170,7 +170,7 @@ export default function VerifyEmail() {
             <div className="animate-float" style={{ animationDelay: '1s' }}>
               <div className="bg-white dark:bg-slate-800 p-4 rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-white/60 dark:border-slate-700 mb-6 translate-x-4">
                 <div className="flex items-center gap-4">
-                  <div className="p-2 bg-secondary/10 rounded-lg"><span className="material-symbols-outlined text-secondary text-[20px]">security</span></div>
+                  <div className="p-2 bg-secondary/10 rounded-lg"><MaterialIcon name="security" className="text-secondary" size="xl" /></div>
                   <span className="font-label-md text-[13px] font-semibold text-on-surface dark:text-white">Identity Protection Enabled</span>
                 </div>
               </div>
@@ -178,7 +178,7 @@ export default function VerifyEmail() {
             <div className="animate-float" style={{ animationDelay: '2s' }}>
               <div className="bg-white dark:bg-slate-800 p-4 rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-white/60 dark:border-slate-700 translate-x-12">
                 <div className="flex items-center gap-4">
-                  <div className="p-2 bg-tertiary/10 rounded-lg"><span className="material-symbols-outlined text-tertiary dark:text-purple-400 text-[20px]">pending</span></div>
+                  <div className="p-2 bg-tertiary/10 rounded-lg"><MaterialIcon name="pending" className="text-tertiary dark:text-purple-400" size="xl" /></div>
                   <span className="font-label-md text-[13px] font-semibold text-on-surface dark:text-white">Activation Pending</span>
                 </div>
               </div>
@@ -205,7 +205,7 @@ export default function VerifyEmail() {
                 <div className="relative group">
                   <div className="absolute inset-0 bg-[#0055c9]/20 blur-xl group-hover:bg-[#0055c9]/30 transition-all rounded-full animate-pulse-glow"></div>
                   <div className="relative w-20 h-20 bg-gradient-to-br from-[#0055c9] to-[#006d3e] rounded-2xl flex items-center justify-center shadow-lg transform group-hover:rotate-6 transition-transform">
-                    <span className="material-symbols-outlined text-white text-[40px]">mark_email_read</span>
+                    <MaterialIcon name="mark_email_read" className="text-white text-[40px]" size="none" />
                   </div>
                   {/* Success Pulse */}
                   <div className="absolute -inset-2 border-2 border-[#0055c9]/20 rounded-2xl animate-ping opacity-25"></div>
@@ -229,13 +229,15 @@ export default function VerifyEmail() {
                     Open Email App
                   </Button>
                   <div className="flex flex-col items-center gap-2 mt-2">
-                    <button
-                      className="font-label-md text-[14px] text-[#0055c9] hover:underline disabled:text-on-surface-variant/40 dark:disabled:text-slate-400 disabled:no-underline font-bold"
+                    <Button
+                      variant="custom"
+                      size="none"
+                      className="font-label-md text-[14px] text-[#0055c9] hover:underline disabled:text-on-surface-variant/40 dark:disabled:text-slate-400 disabled:no-underline font-bold bg-transparent cursor-pointer"
                       disabled={timeLeft > 0}
                       onClick={handleResend}
                     >
                       Resend Verification Email
-                    </button>
+                    </Button>
                     <span className={`font-label-sm text-[12px] ${timeLeft > 0 ? 'text-on-surface-variant dark:text-slate-400 opacity-60' : 'text-[#006d3e] font-semibold'}`}>
                       {timeLeft > 0 ? `Wait ${timeLeft}s before resending` : 'Ready to resend link'}
                     </span>
@@ -247,21 +249,21 @@ export default function VerifyEmail() {
                   <div className="flex flex-col gap-4">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
-                        <span className="material-symbols-outlined text-[#006d3e] text-[20px]">check_circle</span>
+                        <MaterialIcon name="check_circle" className="text-[#006d3e]" size="xl" />
                         <span className="font-label-md text-[14px] font-bold text-on-surface dark:text-slate-200">Email Sent</span>
                       </div>
                       <span className="font-label-sm text-[12px] font-medium text-on-surface-variant dark:text-slate-400">12:04 PM</span>
                     </div>
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
-                        <span className="material-symbols-outlined text-[#006d3e] text-[20px]">task_alt</span>
+                        <MaterialIcon name="task_alt" className="text-[#006d3e]" size="xl" />
                         <span className="font-label-md text-[14px] font-bold text-on-surface dark:text-slate-200">Delivery Confirmed</span>
                       </div>
                       <span className="font-label-sm text-[12px] font-medium text-on-surface-variant dark:text-slate-400">12:05 PM</span>
                     </div>
                     <div className="flex items-center justify-between animate-pulse">
                       <div className="flex items-center gap-3">
-                        <span className="material-symbols-outlined text-[#0055c9] text-[20px]">sync</span>
+                        <MaterialIcon name="sync" className="text-[#0055c9]" size="xl" />
                         <span className="font-label-md text-[14px] font-bold text-[#0055c9]">Awaiting Verification</span>
                       </div>
                       <span className="font-label-sm text-[12px] text-[#0055c9] font-bold">Live...</span>
@@ -275,7 +277,7 @@ export default function VerifyEmail() {
                     <div className="w-2 h-2 bg-primary rounded-full animate-bounce"></div>
                     <span className="font-label-sm text-[12px] font-medium text-on-surface-variant dark:text-slate-400">Automatically detecting verification...</span>
                   </div>
-                  <span className="material-symbols-outlined text-[16px] text-primary animate-spin">refresh</span>
+                  <MaterialIcon name="refresh" className="text-primary animate-spin" size="md" />
                 </div>
 
                 {/* Action Links */}
@@ -290,19 +292,19 @@ export default function VerifyEmail() {
             {/* Security Badges Block */}
             <div className="grid grid-cols-4 gap-4 mt-10 px-6">
               <div className="flex flex-col items-center text-center space-y-2 opacity-60 hover:opacity-100 transition-opacity">
-                <span className="material-symbols-outlined text-on-surface-variant dark:text-slate-400 text-[20px]">verified_user</span>
+                <MaterialIcon name="verified_user" className="text-on-surface-variant dark:text-slate-400" size="xl" />
                 <span className="font-label-sm text-[10px] leading-tight text-on-surface-variant dark:text-slate-400">Secure Verification</span>
               </div>
               <div className="flex flex-col items-center text-center space-y-2 opacity-60 hover:opacity-100 transition-opacity">
-                <span className="material-symbols-outlined text-on-surface-variant dark:text-slate-400 text-[20px]">medical_services</span>
+                <MaterialIcon name="medical_services" className="text-on-surface-variant dark:text-slate-400" size="xl" />
                 <span className="font-label-sm text-[10px] leading-tight text-on-surface-variant dark:text-slate-400">HIPAA Ready</span>
               </div>
               <div className="flex flex-col items-center text-center space-y-2 opacity-60 hover:opacity-100 transition-opacity">
-                <span className="material-symbols-outlined text-on-surface-variant dark:text-slate-400 text-[20px]">bolt</span>
+                <MaterialIcon name="bolt" className="text-on-surface-variant dark:text-slate-400" size="xl" />
                 <span className="font-label-sm text-[10px] leading-tight text-on-surface-variant dark:text-slate-400">Fast Activation</span>
               </div>
               <div className="flex flex-col items-center text-center space-y-2 opacity-60 hover:opacity-100 transition-opacity">
-                <span className="material-symbols-outlined text-on-surface-variant dark:text-slate-400 text-[20px]">lock</span>
+                <MaterialIcon name="lock" className="text-on-surface-variant dark:text-slate-400" size="xl" />
                 <span className="font-label-sm text-[10px] leading-tight text-on-surface-variant dark:text-slate-400">Data Protected</span>
               </div>
             </div>
