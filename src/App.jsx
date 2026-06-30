@@ -11,6 +11,8 @@ import ProtectedRoute from './components/auth/ProtectedRoute';
 import PublicRoute from './components/auth/PublicRoute';
 import { ToastProvider } from './contexts/ToastContext';
 import Spinner from './components/ui/Spinner';
+import Button from './components/ui/Button';
+import MaterialIcon from './components/ui/MaterialIcon';
 
 // Temporary Dashboard Placeholder
 function DashboardPlaceholder() {
@@ -19,16 +21,18 @@ function DashboardPlaceholder() {
     return (
         <div className="min-h-screen flex flex-col items-center justify-center bg-surface dark:bg-slate-950 text-slate-900 dark:text-white p-6">
             <div className="glass-panel p-10 rounded-2xl max-w-md w-full text-center shadow-lg border border-outline-variant/30 dark:border-slate-800">
-                <span className="material-symbols-outlined text-5xl text-primary mb-4">dashboard</span>
+                <MaterialIcon name="dashboard" size="none" className="text-5xl text-primary mb-4" />
                 <h1 className="text-3xl font-bold mb-2">Workspace Dashboard</h1>
                 <p className="text-slate-500 dark:text-slate-400 mb-8">Welcome back! Your secure healthcare workspace is ready.</p>
-                <button 
+                <Button 
                     onClick={logout} 
-                    className="w-full py-3 bg-red-500/10 hover:bg-red-500/20 text-red-600 dark:text-red-400 font-medium rounded-xl transition-colors flex justify-center items-center gap-2"
+                    variant="custom"
+                    size="none"
+                    className="w-full py-3 bg-red-500/10 hover:bg-red-500/20 text-red-600 dark:text-red-400 font-medium rounded-xl transition-colors flex justify-center items-center gap-2 cursor-pointer"
                 >
-                    <span className="material-symbols-outlined text-[18px]">logout</span>
+                    <MaterialIcon name="logout" size="sm" />
                     Sign Out
-                </button>
+                </Button>
             </div>
         </div>
     );
