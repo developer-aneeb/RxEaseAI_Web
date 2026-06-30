@@ -25,11 +25,16 @@ The entire application logic resides here.
 - `ui/`: Reusable, atomic design primitives (`Button.jsx`, `Card.jsx`, `MaterialIcon.jsx`, etc.).
 
 ### `contexts/`
-- `AuthContext.jsx`: Global state provider managing the user's session (currently using a mock localStorage token).
-- `ToastContext.jsx`: Global provider for managing and rendering temporary toast notifications across the application.
+- `ToastContext.jsx`: Global context provider wrapping the app and rendering the active toasts queue populated by `useAppStore`.
 
-### `hooks/`
-- `useTheme.js`: Custom hook controlling the light/dark mode state.
+### `store/` (Zustand Global State Stores)
+- `useAuthStore.js`: Global store for auth credentials, JWT keys, and registration actions.
+- `useThemeStore.js`: Global store for dark/light state and DOM node class updates.
+- `usePrescriptionStore.js`: Global store tracking prescription uploads, AI progress, and clinical checks.
+- `useAppStore.js`: Global store for sidebar, layout settings, and notification toasts.
+
+### `hooks/` (Deprecated)
+- `useAuth.js` & `useTheme.js`: Emptied and deprecated facade hooks. Direct Zustand store imports should be used instead.
 
 ### `pages/`
 - `LandingPage.jsx`: The primary marketing and feature demonstration view.
