@@ -70,7 +70,7 @@ Transform handwritten prescriptions into structured clinical intelligence. RxEas
 - Layout: `src/components/layout/`
 - Auth Components: `src/components/auth/`
 - UI primitives: `src/components/ui/`
-- Theme hook: `src/hooks/useTheme.js`
+- State stores: `src/store/`
 - Global styles: `src/index.css`
 
 ---
@@ -84,9 +84,11 @@ src/
  │   ├── layout/        # Navbar and footer
  │   ├── sections/      # Hero, Features, Workflow, Dashboard, Analytics, Faq
  │   └── ui/            # Reusable UI primitives (Button, Card, Badge, MaterialIcon, etc.)
- ├── hooks/
- │   ├── useTheme.js    # Theme persistence and system sync
- │   └── useAuth.js     # Custom hook for auth context
+ ├── store/
+ │   ├── useAuthStore.js # Session, login, logout, and token validation
+ │   ├── useThemeStore.js # Theme management and DOM dark-mode syncing
+ │   ├── usePrescriptionStore.js # Ingestion cycles, YOLO, OCR tracking
+ │   └── useAppStore.js # Layout sidebar and toast notifications queues
  ├── pages/
  │   ├── LandingPage.jsx # Main Page composer
  │   └── auth/           # Authentication pages
