@@ -168,25 +168,25 @@ export default function ForgotPassword() {
                 {/* Step 1: Mail */}
                 <div className={`flex flex-col items-center bg-white dark:bg-slate-950 w-9 h-9 rounded-full justify-center shadow-sm border z-10 transition-colors duration-300 ${flowStep >= 0 ? 'border-primary text-primary' : 'border-outline-variant/20 text-outline'
                   }`}>
-                  <span className="material-symbols-outlined text-[18px]">mail</span>
+                  <MaterialIcon name="mail" size="lg" />
                 </div>
 
                 {/* Step 2: Verification */}
                 <div className={`flex flex-col items-center bg-white dark:bg-slate-950 w-9 h-9 rounded-full justify-center shadow-sm border z-10 transition-colors duration-300 ${flowStep >= 1 ? 'border-primary text-primary animate-pulse' : 'border-outline-variant/20 text-outline'
                   }`}>
-                  <span className="material-symbols-outlined text-[18px]">verified_user</span>
+                  <MaterialIcon name="verified_user" size="lg" />
                 </div>
 
                 {/* Step 3: Link Generation */}
                 <div className={`flex flex-col items-center bg-white dark:bg-slate-950 w-9 h-9 rounded-full justify-center shadow-sm border z-10 transition-colors duration-300 ${flowStep >= 2 ? 'border-primary text-primary' : 'border-outline-variant/20 text-outline'
                   }`}>
-                  <span className="material-symbols-outlined text-[18px]">link</span>
+                  <MaterialIcon name="link" size="lg" />
                 </div>
 
                 {/* Step 4: Key reset */}
                 <div className={`flex flex-col items-center bg-white dark:bg-slate-950 w-9 h-9 rounded-full justify-center shadow-sm border z-10 transition-colors duration-300 ${flowStep >= 3 ? 'border-primary text-primary' : 'border-outline-variant/20 text-outline'
                   }`}>
-                  <span className="material-symbols-outlined text-[18px]">key</span>
+                  <MaterialIcon name="key" size="lg" />
                 </div>
               </motion.div>
 
@@ -241,7 +241,7 @@ export default function ForgotPassword() {
                 <div className="relative z-10 flex flex-col gap-6">
                   {/* Top Icon */}
                   <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-500 flex items-center justify-center shadow-md shadow-blue-500/20 mb-2">
-                    <span className="material-symbols-outlined text-white text-[32px]" style={{ fontVariationSettings: "'FILL' 1" }}>lock_reset</span>
+                    <MaterialIcon name="lock_reset" className="text-white text-[32px]" size="none" style={{ fontVariationSettings: "'FILL' 1" }} />
                   </div>
 
                   <div>
