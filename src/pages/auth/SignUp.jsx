@@ -163,7 +163,7 @@ export default function SignUp() {
               </div>
               <div className="flex flex-col">
                 <span className="text-[28px] font-bold text-on-surface dark:text-white font-headline-lg flex items-center gap-1">
-                  <span className="material-symbols-outlined text-secondary text-[24px]">verified</span>
+                  <MaterialIcon name="verified" className="text-secondary" size="2xl" />
                 </span>
                 <span className="font-label-sm text-[11px] text-on-surface-variant dark:text-slate-400 uppercase tracking-wider">HIPAA Ready</span>
               </div>
@@ -187,37 +187,37 @@ export default function SignUp() {
                 {/* Nodes */}
                 <div className="relative z-10 flex flex-col items-center gap-stitch-xs">
                   <div className="w-12 h-12 rounded-xl bg-surface-container-lowest dark:bg-slate-900 border-2 border-primary/20 dark:border-primary/40 flex items-center justify-center text-primary pipeline-node-1 transition-all">
-                    <span className="material-symbols-outlined">upload_file</span>
+                    <MaterialIcon name="upload_file" size="2xl" />
                   </div>
                   <span className="font-label-sm text-[11px] text-on-surface dark:text-slate-300 font-medium">Upload</span>
                 </div>
                 <div className="relative z-10 flex flex-col items-center gap-stitch-xs">
                   <div className="w-12 h-12 rounded-xl bg-surface-container-lowest dark:bg-slate-900 border-2 border-primary/20 dark:border-primary/40 flex items-center justify-center text-primary pipeline-node-2 transition-all">
-                    <span className="material-symbols-outlined">troubleshoot</span>
+                    <MaterialIcon name="troubleshoot" size="2xl" />
                   </div>
                   <span className="font-label-sm text-[11px] text-on-surface dark:text-slate-300 font-medium">YOLO</span>
                 </div>
                 <div className="relative z-10 flex flex-col items-center gap-stitch-xs">
                   <div className="w-12 h-12 rounded-xl bg-surface-container-lowest dark:bg-slate-900 border-2 border-primary/20 dark:border-primary/40 flex items-center justify-center text-primary pipeline-node-3 transition-all">
-                    <span className="material-symbols-outlined">text_snippet</span>
+                    <MaterialIcon name="text_snippet" size="2xl" />
                   </div>
                   <span className="font-label-sm text-[11px] text-on-surface dark:text-slate-300 font-medium">OCR</span>
                 </div>
                 <div className="relative z-10 flex flex-col items-center gap-stitch-xs">
                   <div className="w-12 h-12 rounded-xl bg-surface-container-lowest dark:bg-slate-900 border-2 border-primary/20 dark:border-primary/40 flex items-center justify-center text-secondary pipeline-node-4 transition-all">
-                    <span className="material-symbols-outlined">verified_user</span>
+                    <MaterialIcon name="verified_user" size="2xl" />
                   </div>
                   <span className="font-label-sm text-[11px] text-on-surface dark:text-slate-300 font-medium">Verify</span>
                 </div>
                 <div className="relative z-10 flex flex-col items-center gap-stitch-xs">
                   <div className="w-12 h-12 rounded-xl bg-surface-container-lowest dark:bg-slate-900 border-2 border-primary/20 dark:border-primary/40 flex items-center justify-center text-tertiary pipeline-node-5 transition-all">
-                    <span className="material-symbols-outlined">medication</span>
+                    <MaterialIcon name="medication" size="2xl" />
                   </div>
                   <span className="font-label-sm text-[11px] text-on-surface dark:text-slate-300 font-medium">Recommend</span>
                 </div>
                 <div className="relative z-10 flex flex-col items-center gap-stitch-xs">
                   <div className="w-12 h-12 rounded-xl bg-surface-container-lowest dark:bg-slate-900 border-2 border-primary/20 dark:border-primary/40 flex items-center justify-center text-primary pipeline-node-6 transition-all">
-                    <span className="material-symbols-outlined">analytics</span>
+                    <MaterialIcon name="analytics" size="2xl" />
                   </div>
                   <span className="font-label-sm text-[11px] text-on-surface dark:text-slate-300 font-medium">Analytics</span>
                 </div>
@@ -238,7 +238,7 @@ export default function SignUp() {
                     <div className="h-4 w-3/4 bg-surface-variant dark:bg-slate-850 rounded"></div>
                     <div className="h-2 w-1/2 bg-surface-container-highest dark:bg-slate-800 rounded mb-4"></div>
                     <div className="h-[100px] w-full bg-surface-container dark:bg-slate-950 rounded-lg border border-outline-variant/20 dark:border-slate-800/50 flex items-center justify-center">
-                      <span className="material-symbols-outlined text-outline-variant/50 dark:text-slate-600 text-[32px]">receipt_long</span>
+                      <MaterialIcon name="receipt_long" className="text-outline-variant/50 dark:text-slate-600 text-[32px]" size="none" />
                     </div>
                   </div>
                   <div className="w-2/3 flex flex-col gap-2">
@@ -248,19 +248,19 @@ export default function SignUp() {
                     </div>
                     <div className="h-[40px] w-full bg-surface-container-lowest dark:bg-slate-900 border border-outline-variant/30 dark:border-slate-800/80 rounded flex items-center px-3 gap-3">
                       <div className="w-6 h-6 rounded bg-primary/10 dark:bg-primary/20 flex items-center justify-center">
-                        <span className="material-symbols-outlined text-[14px] text-primary dark:text-primary-fixed-dim">medication</span>
+                        <MaterialIcon name="medication" className="text-primary dark:text-primary-fixed-dim" size="sm" />
                       </div>
                       <div className="h-2 w-1/2 bg-surface-variant dark:bg-slate-800 rounded"></div>
                     </div>
                     <div className="h-[40px] w-full bg-surface-container-lowest dark:bg-slate-900 border border-outline-variant/30 dark:border-slate-800/80 rounded flex items-center px-3 gap-3">
                       <div className="w-6 h-6 rounded bg-tertiary/10 dark:bg-tertiary/20 flex items-center justify-center">
-                        <span className="material-symbols-outlined text-[14px] text-tertiary dark:text-tertiary-fixed-dim">science</span>
+                        <MaterialIcon name="science" className="text-tertiary dark:text-tertiary-fixed-dim" size="sm" />
                       </div>
                       <div className="h-2 w-1/3 bg-surface-variant dark:bg-slate-800 rounded"></div>
                     </div>
                     <div className="h-[40px] w-full bg-surface-container-lowest dark:bg-slate-900 border border-outline-variant/30 dark:border-slate-800/80 rounded flex items-center px-3 gap-3">
                       <div className="w-6 h-6 rounded bg-secondary/10 dark:bg-secondary/20 flex items-center justify-center">
-                        <span className="material-symbols-outlined text-[14px] text-secondary dark:text-secondary-fixed-dim">savings</span>
+                        <MaterialIcon name="savings" className="text-secondary dark:text-secondary-fixed-dim" size="sm" />
                       </div>
                       <div className="h-2 w-2/3 bg-surface-variant dark:bg-slate-800 rounded"></div>
                     </div>
@@ -271,7 +271,7 @@ export default function SignUp() {
               {/* Floating Cards */}
               <div className="absolute -right-6 top-4 glass-panel dark:glassmorphism rounded-lg p-3 flex items-center gap-3 animate-float shadow-xl z-20 w-[260px]">
                 <div className="w-8 h-8 rounded-full bg-secondary/20 flex items-center justify-center text-secondary">
-                  <span className="material-symbols-outlined text-[18px]">verified</span>
+                  <MaterialIcon name="verified" size="lg" />
                 </div>
                 <div>
                   <p className="font-label-sm text-[11px] text-on-surface-variant dark:text-slate-400 leading-tight">Medicine Detected</p>
@@ -282,7 +282,7 @@ export default function SignUp() {
 
               <div className="absolute -left-4 bottom-8 glass-panel dark:glassmorphism rounded-lg p-3 flex items-center gap-3 animate-float-delayed shadow-xl z-20">
                 <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary">
-                  <span className="material-symbols-outlined text-[18px]">payments</span>
+                  <MaterialIcon name="payments" size="lg" />
                 </div>
                 <div>
                   <p className="font-label-sm text-[11px] text-on-surface-variant dark:text-slate-400 leading-tight">Affordability</p>
@@ -309,7 +309,7 @@ export default function SignUp() {
               {isSuccess ? (
                 <div className="flex flex-col items-center justify-center py-10 text-center relative z-10 animate-fade-in-up">
                   <div className="w-16 h-16 rounded-full bg-secondary/20 flex items-center justify-center text-secondary mb-4">
-                    <span className="material-symbols-outlined text-[40px]">check_circle</span>
+                    <MaterialIcon name="check_circle" className="text-secondary text-[40px]" size="none" />
                   </div>
                   <h3 className="text-xl font-semibold text-on-surface dark:text-white mb-2">Workspace Created!</h3>
                   <p className="text-sm text-on-surface-variant dark:text-slate-400 max-w-[280px]">
@@ -321,7 +321,7 @@ export default function SignUp() {
 
                   {/* Full Name */}
                   <div className="relative">
-                    <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline-variant dark:text-slate-500 z-10">person</span>
+                    <MaterialIcon name="person" className="absolute left-4 top-1/2 -translate-y-1/2 text-outline-variant dark:text-slate-500 z-10" size="none" />
                     <input
                       className={`float-label-input w-full pl-[48px] pr-stitch-sm py-3 rounded-xl bg-white/50 dark:bg-slate-950/50 border ${errors.fullName ? 'border-red-500 ring-1 ring-red-500' : 'border-outline-variant/50 dark:border-slate-800'} focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all font-body-md text-body-md text-on-surface dark:text-white peer placeholder-transparent`}
                       id="fullName"
@@ -335,7 +335,7 @@ export default function SignUp() {
 
                   {/* Email */}
                   <div className="relative">
-                    <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline-variant dark:text-slate-500 z-10">mail</span>
+                    <MaterialIcon name="mail" className="absolute left-4 top-1/2 -translate-y-1/2 text-outline-variant dark:text-slate-500 z-10" size="none" />
                     <input
                       className={`float-label-input w-full pl-[48px] pr-stitch-sm py-3 rounded-xl bg-white/50 dark:bg-slate-950/50 border ${errors.email ? 'border-red-500 ring-1 ring-red-500' : 'border-outline-variant/50 dark:border-slate-800'} focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all font-body-md text-body-md text-on-surface dark:text-white peer placeholder-transparent`}
                       id="email"
@@ -349,7 +349,7 @@ export default function SignUp() {
 
                   {/* Password */}
                   <div className="relative">
-                    <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline-variant dark:text-slate-500 z-10">lock</span>
+                    <MaterialIcon name="lock" className="absolute left-4 top-1/2 -translate-y-1/2 text-outline-variant dark:text-slate-500 z-10" size="none" />
                     <input
                       className={`float-label-input w-full pl-[48px] pr-[48px] py-3 rounded-xl bg-white/50 dark:bg-slate-950/50 border ${errors.password ? 'border-red-500 ring-1 ring-red-500' : 'border-outline-variant/50 dark:border-slate-800'} focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all font-body-md text-body-md text-on-surface dark:text-white peer placeholder-transparent`}
                       id="password"
@@ -359,11 +359,11 @@ export default function SignUp() {
                     />
                     <label className="float-label absolute left-[48px] top-1/2 -translate-y-1/2 text-outline-variant dark:text-slate-500 font-body-md transition-all duration-200 pointer-events-none peer-focus:text-primary" htmlFor="password">Password</label>
                     <button
-                      className="absolute right-4 top-1/2 -translate-y-1/2 text-outline-variant dark:text-slate-500 hover:text-on-surface dark:hover:text-white transition-colors focus:outline-none z-10"
+                      className="absolute right-4 top-1/2 -translate-y-1/2 text-outline-variant dark:text-slate-500 hover:text-on-surface dark:hover:text-white transition-colors focus:outline-none z-10 cursor-pointer"
                       onClick={() => setShowPassword(!showPassword)}
                       type="button"
                     >
-                      <span className="material-symbols-outlined">{showPassword ? 'visibility_off' : 'visibility'}</span>
+                      <MaterialIcon name={showPassword ? 'visibility_off' : 'visibility'} size="none" />
                     </button>
                   </div>
                   {errors.password && <p className="text-red-500 text-xs mt-1 ml-1 font-medium">{errors.password.message}</p>}
@@ -373,7 +373,7 @@ export default function SignUp() {
 
                   {/* Confirm Password */}
                   <div className="relative">
-                    <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline-variant dark:text-slate-500 z-10">lock</span>
+                    <MaterialIcon name="lock" className="absolute left-4 top-1/2 -translate-y-1/2 text-outline-variant dark:text-slate-500 z-10" size="none" />
                     <input
                       className={`float-label-input w-full pl-[48px] pr-[48px] py-3 rounded-xl bg-white/50 dark:bg-slate-950/50 border ${errors.confirmPassword ? 'border-red-500 ring-1 ring-red-500' : 'border-outline-variant/50 dark:border-slate-800'} focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all font-body-md text-body-md text-on-surface dark:text-white peer placeholder-transparent`}
                       id="confirmPassword"
@@ -383,11 +383,11 @@ export default function SignUp() {
                     />
                     <label className="float-label absolute left-[48px] top-1/2 -translate-y-1/2 text-outline-variant dark:text-slate-500 font-body-md transition-all duration-200 pointer-events-none peer-focus:text-primary" htmlFor="confirmPassword">Confirm Password</label>
                     <button
-                      className="absolute right-4 top-1/2 -translate-y-1/2 text-outline-variant dark:text-slate-500 hover:text-on-surface dark:hover:text-white transition-colors focus:outline-none z-10"
+                      className="absolute right-4 top-1/2 -translate-y-1/2 text-outline-variant dark:text-slate-500 hover:text-on-surface dark:hover:text-white transition-colors focus:outline-none z-10 cursor-pointer"
                       onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                       type="button"
                     >
-                      <span className="material-symbols-outlined">{showConfirmPassword ? 'visibility_off' : 'visibility'}</span>
+                      <MaterialIcon name={showConfirmPassword ? 'visibility_off' : 'visibility'} size="none" />
                     </button>
                   </div>
                   {errors.confirmPassword && <p className="text-red-500 text-xs mt-1 ml-1 font-medium">{errors.confirmPassword.message}</p>}
@@ -432,8 +432,9 @@ export default function SignUp() {
                 <div className="h-px bg-outline-variant/30 dark:bg-slate-800 flex-grow"></div>
               </div>
 
-              {/* OAuth Button */}
-              <button
+              <Button
+                variant="custom"
+                size="none"
                 className="w-full py-3 px-stitch-lg rounded-xl bg-white/80 dark:bg-slate-900 border border-outline-variant/40 dark:border-slate-800 hover:bg-white dark:hover:bg-slate-850 text-on-surface dark:text-slate-200 font-label-md text-label-md transition-all duration-200 flex justify-center items-center gap-3 shadow-sm hover:shadow-md relative z-10 cursor-pointer"
                 type="button"
                 onClick={async () => {
@@ -451,16 +452,16 @@ export default function SignUp() {
                   <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"></path>
                 </svg>
                 Google Workspace
-              </button>
+              </Button>
 
               {/* Benefits List */}
               <div className="flex justify-center gap-4 mt-4 relative z-10">
                 <div className="flex items-center gap-1 text-on-surface-variant dark:text-slate-400">
-                  <span className="material-symbols-outlined text-[14px] text-secondary">check_circle</span>
+                  <MaterialIcon name="check_circle" className="text-secondary" size="sm" />
                   <span className="font-label-sm text-[11px]">Free Account</span>
                 </div>
                 <div className="flex items-center gap-1 text-on-surface-variant dark:text-slate-400">
-                  <span className="material-symbols-outlined text-[14px] text-secondary">check_circle</span>
+                  <MaterialIcon name="check_circle" className="text-secondary" size="sm" />
                   <span className="font-label-sm text-[11px]">No Credit Card</span>
                 </div>
               </div>
@@ -476,13 +477,13 @@ export default function SignUp() {
                 <div className="flex justify-center gap-stitch-md opacity-80">
                   <div className="flex items-center gap-[6px] text-on-surface dark:text-slate-300">
                     <div className="w-6 h-6 rounded bg-surface-container-highest dark:bg-slate-800 flex items-center justify-center">
-                      <span className="material-symbols-outlined text-[14px]">health_and_safety</span>
+                      <MaterialIcon name="health_and_safety" size="sm" />
                     </div>
                     <span className="font-label-sm text-[11px] font-medium">HIPAA Compliant</span>
                   </div>
                   <div className="flex items-center gap-[6px] text-on-surface dark:text-slate-300">
                     <div className="w-6 h-6 rounded bg-surface-container-highest dark:bg-slate-800 flex items-center justify-center">
-                      <span className="material-symbols-outlined text-[14px]">lock</span>
+                      <MaterialIcon name="lock" size="sm" />
                     </div>
                     <span className="font-label-sm text-[11px] font-medium">256-bit Encryption</span>
                   </div>
