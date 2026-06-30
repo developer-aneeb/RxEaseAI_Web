@@ -21,7 +21,8 @@ src/
 │   ├── layout/        # Macro-level layout components (Navbar, Footer)
 │   ├── sections/      # Large page sections (Hero, Features, Analytics)
 │   └── ui/            # Micro-level primitives (Button, Card, Badge, MaterialIcon)
-├── hooks/             # Custom React hooks (e.g., useTheme, useAuth)
+├── contexts/          # Context providers (ToastContext)
+├── store/             # Zustand global state stores (useAuthStore, useThemeStore, etc.)
 ├── pages/             # Top-level route components (LandingPage, auth/)
 ├── services/          # API layer (apiClient.js, authService.js)
 ├── styles/            # Shared style utilities or specific complex CSS modules
@@ -32,9 +33,9 @@ src/
 ```
 
 ### Routing Strategy
-Currently, the application employs a **Hash-based Routing System** managed inside `App.jsx`. Access to specific routes is enforced using Higher-Order Components (Guards):
+Currently, the application employs a **Hash-based Routing System** managed inside `App.jsx`. Access to specific routes is enforced using Higher-Order Components (Guards) which query the auth store directly:
 
-- **`ProtectedRoute`**: Ensures the user is authenticated via `AuthContext`. If not, they are redirected to `/#signin`.
+- **`ProtectedRoute`**: Ensures the user is authenticated via `useAuthStore`. If not, they are redirected to `/#signin`.
 - **`PublicRoute`**: Ensures logged-in users cannot access auth pages. They are redirected to `/#dashboard`.
 
 ```javascript
@@ -59,8 +60,7 @@ if (currentHash === '#dashboard') {
 
 ## State Management
 - **Local State**: Managed via React's `useState` for UI toggles, while form states are handled efficiently by **React Hook Form**.
-- **Global State**: 
-  - **Authentication**: Managed via `AuthContext.jsx`, which stores mock session data and exposes `login()`/`logout()` functions globally.
-  - **Notifications**: Managed via `ToastContext.jsx` for rendering temporary toast messages.
-  - **Theming**: Managed via the `useTheme` custom hook.
+- **Global State (Zustand)**: 
+  - All shared state is managed via Zustand stores under `src/store/` (`useAuthStore`, `useThemeStore`, `usePrescriptionStore`, `useAppStore`). See the [State Management Guide](file:///d:/projects/RxEaseAI_Web/frontend/doc/state_management.md) for details.
+  - **Notifications**: Toast queues are populated inside `useAppStore` and consumed by the `ToastContext` wrapper to display floating alerts across the page.
 - **Future Backend State**: When integrated with a real backend, consider introducing a data-fetching library like `React Query` or `RTK Query` to handle API caching and loading states rather than manual `useEffect` chains.
