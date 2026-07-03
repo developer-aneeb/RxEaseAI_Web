@@ -12,18 +12,18 @@ All authentication pages are located in `src/pages/auth/` and include:
 4. **`ResetPassword.jsx`**: Handles the final step of recovery, enforcing the same rigorous password rules as the SignUp flow.
 5. **`VerifyEmail.jsx`**: A dedicated landing page instructing the user to check their inbox, complete with a resend timer.
 
-## Global Session State: AuthContext
+## Global Session State: useAuthStore
 
-To manage authentication persistence without a real backend, the application utilizes a centralized Context Provider:
-- **`src/contexts/AuthContext.jsx`**
-- Manages an `isAuthenticated` boolean state.
-- Stores a mock token (`rxease_token`) in `localStorage` to simulate session persistence across browser refreshes.
-- Exposes `login()` and `logout()` functions that seamlessly update the global state and trigger route redirects.
+To manage authentication credentials and persistence, the application utilizes a centralized Zustand store:
+- **`src/store/useAuthStore.js`**
+- Manages an `isAuthenticated` boolean state and `user` profile data.
+- Stores JWT access and refresh tokens in `localStorage` to simulate or maintain session persistence across browser refreshes.
+- Exposes `login()` and `logout()` actions that update the store state and trigger page updates.
 
 ## Route Guards
 
 The application enforces access control using wrapper components:
-1. **`ProtectedRoute.jsx`**: Wraps secure views (like the Dashboard). If `isAuthenticated` is false, it instantly bounces the user to `/#signin`.
+1. **`ProtectedRoute.jsx`**: Wraps secure views (like the Dashboard). It queries `isAuthenticated` from `useAuthStore`. If false, it instantly bounces the user to `/#signin`.
 2. **`PublicRoute.jsx`**: Wraps the Auth pages. If an already authenticated user tries to visit Sign In or Sign Up, they are instantly redirected back to their workspace (`/#dashboard`).
 
 ## Security Visuals: `PasswordStrengthPanel`
