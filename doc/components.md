@@ -33,8 +33,9 @@ A wrapper for Google's Material Symbols Outlined font. Provides consistent sizin
 
 **Props:**
 - `name` (string): The exact string name of the Material Symbol (e.g., `verified_user`).
-- `size` (string): `xs`, `sm`, `md`, `lg`, `xl`, `2xl`, `3xl`.
+- `size` (string): `xs` (12px), `sm` (14px), `md` (16px), `lg` (18px), `xl` (20px), `2xl` (24px), `3xl` (30px), or `none` (to bypass preset class).
 - `color` (string): Tailwind text color class (e.g., `text-primary`).
+- `className` (string): Custom CSS classes.
 
 **Usage:**
 ```jsx
@@ -45,12 +46,15 @@ A wrapper for Google's Material Symbols Outlined font. Provides consistent sizin
 A container component utilized extensively for dashboards, feature lists, and background panels.
 
 **Props:**
-- `variant` (string): `default`, `glass`, or `outline`. (Defaults to `default`).
-- `animate` (boolean): Applies an entry hover scaling effect if true.
+- `variant` (string): `glass`, `glassLight`, or `flat`. (Defaults to `glass`).
+- `animate` (boolean): Applies entry fade/slide transition.
+- `hoverEffect` (boolean): Enables shadow and border highlights on hover.
+- `onClick` (function): Optional click event callback.
+- `className` (string): Custom CSS class wrapper.
 
 **Usage:**
 ```jsx
-<Card variant="glass" className="p-6">
+<Card variant="glass" hoverEffect={true} className="p-6">
   <h2>Patient Details</h2>
 </Card>
 ```
