@@ -7,8 +7,8 @@ import {
 import { usePrescriptionStore } from '../store/usePrescriptionStore';
 import { useAppStore } from '../store/useAppStore';
 import Button from '../components/ui/Button';
-import Card from '../ui/Card';
-import Badge from '../ui/Badge';
+import Card from '../components/ui/Card';
+import Badge from '../components/ui/Badge';
 import MaterialIcon from '../components/ui/MaterialIcon';
 
 // Mock SVG Prescription generator helper

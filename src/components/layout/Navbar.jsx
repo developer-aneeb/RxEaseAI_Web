@@ -164,7 +164,7 @@ export default function Navbar({ links }) {
                                     {link.name}
                                 </a>
                             ))}
-                            
+
                             {isAuthenticated ? (
                                 <div className="pt-4 pb-2 border-t border-slate-200 dark:border-slate-800/80 px-3 flex flex-col gap-3 text-left">
                                     <div className="flex items-center gap-3 px-3 py-2">
