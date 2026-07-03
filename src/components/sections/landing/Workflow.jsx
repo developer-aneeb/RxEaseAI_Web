@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
-import SectionHeader from '../ui/SectionHeader';
-import MaterialIcon from '../ui/MaterialIcon';
+import SectionHeader from '../../ui/SectionHeader';
+import MaterialIcon from '../../ui/MaterialIcon';
 
 export default function Workflow() {
   const steps = [
@@ -40,12 +40,12 @@ export default function Workflow() {
 
   return (
     <section id="workflow" className="relative py-24 bg-slate-50 dark:bg-slate-950 transition-colors duration-300 overflow-hidden">
-      
+
       {/* Background Glow */}
       <div className="glow-spot top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        
+
         {/* Section Header */}
         <SectionHeader
           title="Intelligent Workflow"
@@ -54,7 +54,7 @@ export default function Workflow() {
 
         {/* Timeline Container */}
         <div className="relative max-w-3xl mx-auto mt-16">
-          
+
           {/* Vertical Line */}
           <div className="absolute left-8 md:left-1/2 top-0 bottom-0 w-[3px] bg-slate-200 dark:bg-slate-800/80 rounded-full transform md:-translate-x-1/2 transition-colors duration-300">
             {/* Animated timeline gradient line */}
@@ -77,9 +77,8 @@ export default function Workflow() {
                   className="flex flex-col md:flex-row items-center gap-6 md:gap-8"
                 >
                   {/* Left Column (Desktop only: Step 1 & 3 show content here) */}
-                  <div className={`md:w-1/2 md:text-right md:pr-8 order-2 md:order-1 ${
-                    isLeft ? 'block' : 'hidden md:block md:invisible pointer-events-none'
-                  }`}>
+                  <div className={`md:w-1/2 md:text-right md:pr-8 order-2 md:order-1 ${isLeft ? 'block' : 'hidden md:block md:invisible pointer-events-none'
+                    }`}>
                     <motion.div
                       initial={{ opacity: 0, x: -30 }}
                       whileInView={{ opacity: 1, x: 0 }}
@@ -107,9 +106,8 @@ export default function Workflow() {
                   </motion.div>
 
                   {/* Right Column (Desktop only: Step 2 & 4 show content here; Mobile: Shows content for all steps) */}
-                  <div className={`w-full md:w-1/2 md:pl-8 order-3 ${
-                    !isLeft ? 'block' : 'block md:hidden md:invisible pointer-events-none'
-                  }`}>
+                  <div className={`w-full md:w-1/2 md:pl-8 order-3 ${!isLeft ? 'block' : 'block md:hidden md:invisible pointer-events-none'
+                    }`}>
                     <motion.div
                       initial={{ opacity: 0, x: 30 }}
                       whileInView={{ opacity: 1, x: 0 }}

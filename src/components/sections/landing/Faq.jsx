@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronDown, HelpCircle } from 'lucide-react';
-import SectionHeader from '../ui/SectionHeader';
-import Card from '../ui/Card';
+import SectionHeader from '../../ui/SectionHeader';
+import Card from '../../ui/Card';
 
 export default function Faq() {
   const [activeIndex, setActiveIndex] = useState(null);
@@ -36,7 +36,7 @@ export default function Faq() {
       <div className="glow-spot bottom-1/4 right-1/4 translate-x-1/2" />
 
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        
+
         {/* Section Header */}
         <SectionHeader
           badgeText="Support"

@@ -1,6 +1,6 @@
 import { Sparkles, Cpu, Link, ShieldCheck, Database, Layers, HeartPulse } from 'lucide-react';
-import SectionHeader from '../ui/SectionHeader';
-import Card from '../ui/Card';
+import SectionHeader from '../../ui/SectionHeader';
+import Card from '../../ui/Card';
 
 export default function Features() {
   const featuresList = [
@@ -48,7 +48,7 @@ export default function Features() {
       <div className="glow-spot top-1/3 left-2/3 -translate-x-1/2 -translate-y-1/2" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        
+
         {/* Section Title */}
         <SectionHeader
           badgeText="Cutting Edge Features"

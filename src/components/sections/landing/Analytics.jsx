@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { TrendingUp, BarChart2, ShieldCheck, Sparkles } from 'lucide-react';
-import SectionHeader from '../ui/SectionHeader';
-import Card from '../ui/Card';
+import SectionHeader from '../../ui/SectionHeader';
+import Card from '../../ui/Card';
 
 export default function Analytics() {
   const [activeTab, setActiveTab] = useState('efficiency');
@@ -36,7 +36,7 @@ export default function Analytics() {
       <div className="glow-spot top-1/4 right-1/4 translate-x-1/2 -translate-y-1/2" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        
+
         {/* Section Header */}
         <SectionHeader
           badgeText="Performance Insights"
@@ -52,11 +52,10 @@ export default function Analytics() {
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`px-5 py-2.5 rounded-xl text-xs font-semibold tracking-wide transition-all duration-200 ${
-                  activeTab === tab.id
+                className={`px-5 py-2.5 rounded-xl text-xs font-semibold tracking-wide transition-all duration-200 ${activeTab === tab.id
                     ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/10'
                     : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-                }`}
+                  }`}
               >
                 {tab.label}
               </button>
@@ -107,7 +106,7 @@ export default function Analytics() {
                 Tracking AI server roundtrip processing time including YOLO instance segmentation and clinical database checks.
               </p>
             </div>
-            
+
             {/* Mock Chart using SVG paths */}
             <div className="w-full md:w-96 h-24 relative">
               <svg className="w-full h-full" viewBox="0 0 300 100" preserveAspectRatio="none">

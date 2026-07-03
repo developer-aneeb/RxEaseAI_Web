@@ -1,12 +1,12 @@
 import { useState } from 'react';
-import { 
-  BarChart3, FileText, CheckCircle2, AlertCircle, 
+import {
+  BarChart3, FileText, CheckCircle2, AlertCircle,
   Clock, Search, Plus, Filter, ArrowUpRight, Check
 } from 'lucide-react';
-import SectionHeader from '../ui/SectionHeader';
-import Card from '../ui/Card';
-import Badge from '../ui/Badge';
-import Button from '../ui/Button';
+import SectionHeader from '../../ui/SectionHeader';
+import Card from '../../ui/Card';
+import Badge from '../../ui/Badge';
+import Button from '../../ui/Button';
 
 export default function Dashboard() {
   const [selectedRow, setSelectedRow] = useState(null);
@@ -47,7 +47,7 @@ export default function Dashboard() {
       <div className="glow-spot bottom-1/3 left-1/4 -translate-x-1/2" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        
+
         {/* Section Header */}
         <SectionHeader
           badgeText="Centralized Hub"
@@ -58,10 +58,10 @@ export default function Dashboard() {
 
         {/* Dashboard Mockup Interface */}
         <Card variant="glass" className="overflow-hidden w-full">
-          
+
           {/* Top Header Bar */}
           <div className="bg-slate-100/50 dark:bg-slate-900/60 border-b border-slate-200 dark:border-slate-900/85 px-6 py-4 flex flex-col sm:flex-row items-center justify-between gap-4 transition-colors duration-300">
-            
+
             {/* Title & Stats */}
             <div className="flex items-center gap-3">
               <span className="text-base font-bold text-slate-900 dark:text-white">Verification Queue</span>
@@ -80,11 +80,11 @@ export default function Dashboard() {
                   className="w-full bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800/80 rounded-xl py-2 pl-9 pr-4 text-xs text-slate-900 dark:text-slate-300 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-indigo-500/60 transition-colors duration-300 font-sans"
                 />
               </div>
-              
+
               <Button variant="outline" className="p-2.5!">
                 <Filter className="w-4 h-4" />
               </Button>
-              
+
               <Button variant="accent" size="sm" icon={Plus}>
                 Upload
               </Button>
@@ -94,7 +94,7 @@ export default function Dashboard() {
 
           {/* Main Workspace */}
           <div className="grid grid-cols-1 lg:grid-cols-12 divide-y lg:divide-y-0 lg:divide-x divide-slate-200 dark:divide-slate-900/85">
-            
+
             {/* Left Queue Table (8 cols) */}
             <div className="lg:col-span-8 overflow-x-auto">
               <table className="w-full text-left border-collapse min-w-[600px]">
@@ -111,12 +111,11 @@ export default function Dashboard() {
                   {prescriptions.map((rx) => {
                     const isSelected = selectedRow === rx.id;
                     return (
-                      <tr 
-                        key={rx.id} 
+                      <tr
+                        key={rx.id}
                         onClick={() => setSelectedRow(rx.id)}
-                        className={`hover:bg-slate-100/40 dark:hover:bg-slate-900/35 transition-colors cursor-pointer ${
-                          isSelected ? 'bg-indigo-50/50 dark:bg-indigo-950/15' : ''
-                        }`}
+                        className={`hover:bg-slate-100/40 dark:hover:bg-slate-900/35 transition-colors cursor-pointer ${isSelected ? 'bg-indigo-50/50 dark:bg-indigo-950/15' : ''
+                          }`}
                       >
                         <td className="py-4 px-6">
                           <div className="flex items-center gap-3">
@@ -183,7 +182,7 @@ export default function Dashboard() {
                       <div className="bg-indigo-600 dark:bg-indigo-500 h-full rounded-full w-[74%]" />
                     </div>
                   </Card>
-                  
+
                   <Button variant="primary" icon={Check} className="w-full">
                     Approve Prescription
                   </Button>

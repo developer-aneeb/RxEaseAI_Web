@@ -1,10 +1,10 @@
 import { motion } from 'framer-motion';
 import { ArrowRight, Sparkles, CheckCircle2, ShieldCheck, Zap } from 'lucide-react';
-import { staggerContainer, fadeInUp, scaleIn } from '../../animations/variants';
-import Button from '../ui/Button';
-import Badge from '../ui/Badge';
-import Card from '../ui/Card';
-import MaterialIcon from '../ui/MaterialIcon';
+import { staggerContainer, fadeInUp, scaleIn } from '../../../animations/variants';
+import Button from '../../ui/Button';
+import Badge from '../../ui/Badge';
+import Card from '../../ui/Card';
+import MaterialIcon from '../../ui/MaterialIcon';
 
 export default function Hero() {
   return (
@@ -29,9 +29,9 @@ export default function Hero() {
           >
             {/* Tagline */}
             <motion.div variants={fadeInUp(20)}>
-              <Badge 
-                variant="primary" 
-                icon={Sparkles} 
+              <Badge
+                variant="primary"
+                icon={Sparkles}
                 className="text-xs px-3 py-1.5 bg-indigo-500/10 font-sans tracking-wide"
               >
                 RxEaseAI - AI-powered Prescription Interpretation
