@@ -33,17 +33,19 @@ export default function HomeCTA() {
               variant="custom"
               size="none"
               className="bg-white hover:bg-slate-100 text-primary font-bold px-8 py-4 rounded-xl shadow-lg transition-all cursor-pointer w-full sm:w-auto"
-              onClick={() => window.location.hash = '#signup'}
+              onClick={() => window.location.hash = '#upload'}
             >
-              Request Early Access
+              Scan Prescription
             </Button>
             <Button
               variant="custom"
               size="none"
               className="bg-transparent border border-white/40 hover:bg-white/10 text-white font-semibold px-8 py-4 rounded-xl transition-all cursor-pointer w-full sm:w-auto"
-              onClick={() => window.location.hash = '#signin'}
+              onClick={() => {
+                document.getElementById('faq')?.scrollIntoView({ behavior: 'smooth' });
+              }}
             >
-              Contact Sales
+              View FAQs
             </Button>
           </div>
         </motion.div>

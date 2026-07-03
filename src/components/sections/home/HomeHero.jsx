@@ -7,16 +7,16 @@ import MaterialIcon from '../../ui/MaterialIcon';
 
 export default function HomeHero() {
   return (
-    <section className="relative min-h-[90vh] flex items-center pt-[100px] pb-16 overflow-hidden bg-slate-50 dark:bg-slate-950 transition-colors duration-300">
+    <section id="home-hero" className="relative min-h-[90vh] flex items-center pt-[100px] pb-16 overflow-hidden bg-slate-50 dark:bg-slate-950 transition-colors duration-300">
       
       {/* Grid Background Overlay */}
       <div className="absolute inset-0 grid-bg z-0 pointer-events-none opacity-50 dark:opacity-30"></div>
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-slate-50/50 to-slate-50 dark:via-slate-950/50 dark:to-slate-950 z-0 pointer-events-none"></div>
-
+ 
       {/* Decorative Glow Spots */}
       <div className="glow-spot top-1/4 left-1/4 -translate-x-1/2 -translate-y-1/2" />
       <div className="glow-spot bottom-1/4 right-1/4 translate-x-1/2 translate-y-1/2" />
-
+ 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           
@@ -37,7 +37,7 @@ export default function HomeHero() {
                 <span>New: Advanced OCR Model v2.0</span>
               </Badge>
             </motion.div>
-
+ 
             {/* Headline */}
             <motion.h1
               variants={fadeInUp(25)}
@@ -48,15 +48,15 @@ export default function HomeHero() {
                 Smart Digital Healthcare
               </span>
             </motion.h1>
-
+ 
             {/* Description */}
             <motion.p
               variants={fadeInUp(25)}
-              className="text-base sm:text-lg text-slate-650 dark:text-slate-350 mb-8 font-light leading-relaxed"
+              className="text-base sm:text-lg text-slate-655 dark:text-slate-350 mb-8 font-light leading-relaxed"
             >
               AI-powered prescription OCR, medicine verification, and affordable recommendations — built to make healthcare clearer, faster, and smarter.
             </motion.p>
-
+ 
             {/* Action Buttons */}
             <motion.div
               variants={fadeInUp(20)}
@@ -66,7 +66,7 @@ export default function HomeHero() {
                 variant="primary"
                 size="lg"
                 className="bg-primary hover:bg-primary-container text-on-primary font-semibold shadow-md flex items-center justify-center gap-2 cursor-pointer w-full sm:w-auto px-6 py-3 rounded-lg"
-                onClick={() => window.location.hash = '#signup'}
+                onClick={() => window.location.hash = '#upload'}
               >
                 <span>Scan Prescription</span>
                 <MaterialIcon name="document_scanner" size="sm" />
