@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
 import LandingPage from './pages/LandingPage';
-import SignUp from './pages/SignUp';
-import SignIn from './pages/SignIn';
-import ForgotPassword from './pages/ForgotPassword';
-import ResetPassword from './pages/ResetPassword';
-import VerifyEmail from './pages/VerifyEmail';
+import SignUp from './pages/auth/SignUp';
+import SignIn from './pages/auth/SignIn';
+import ForgotPassword from './pages/auth/ForgotPassword';
+import ResetPassword from './pages/auth/ResetPassword';
+import VerifyEmail from './pages/auth/VerifyEmail';
 
 import { useAuthStore } from './store/useAuthStore';
 import ProtectedRoute from './components/auth/ProtectedRoute';
