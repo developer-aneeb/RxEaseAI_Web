@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import LandingPage from './pages/LandingPage';
 import HomePage from './pages/HomePage';
+import UploadPage from './pages/UploadPage';
 import SignUp from './pages/auth/SignUp';
 import SignIn from './pages/auth/SignIn';
 import ForgotPassword from './pages/auth/ForgotPassword';
@@ -116,6 +117,10 @@ function MainRouter() {
     // Protected Routes (Redirects to signin if NOT logged in)
     if (currentHash === '#home') {
         return <ProtectedRoute><HomePage /></ProtectedRoute>;
+    }
+
+    if (currentHash === '#upload') {
+        return <ProtectedRoute><UploadPage /></ProtectedRoute>;
     }
 
     // Unprotected Public Routes (e.g., Marketing Landing Page)
