@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
 import LandingPage from './pages/LandingPage';
 import HomePage from './pages/HomePage';
-import SignUp from './pages/SignUp';
-import SignIn from './pages/SignIn';
-import ForgotPassword from './pages/ForgotPassword';
-import ResetPassword from './pages/ResetPassword';
-import VerifyEmail from './pages/VerifyEmail';
+import SignUp from './pages/auth/SignUp';
+import SignIn from './pages/auth/SignIn';
+import ForgotPassword from './pages/auth/ForgotPassword';
+import ResetPassword from './pages/auth/ResetPassword';
+import VerifyEmail from './pages/auth/VerifyEmail';
 
 import { useAuthStore } from './store/useAuthStore';
 import ProtectedRoute from './components/auth/ProtectedRoute';
@@ -15,29 +15,6 @@ import Spinner from './components/ui/Spinner';
 import Button from './components/ui/Button';
 import MaterialIcon from './components/ui/MaterialIcon';
 
-// Temporary Dashboard Placeholder
-function DashboardPlaceholder() {
-    const logout = useAuthStore((state) => state.logout);
-    
-    return (
-        <div className="min-h-screen flex flex-col items-center justify-center bg-surface dark:bg-slate-950 text-slate-900 dark:text-white p-6">
-            <div className="glass-panel p-10 rounded-2xl max-w-md w-full text-center shadow-lg border border-outline-variant/30 dark:border-slate-800">
-                <MaterialIcon name="dashboard" size="none" className="text-5xl text-primary mb-4" />
-                <h1 className="text-3xl font-bold mb-2">Workspace Dashboard</h1>
-                <p className="text-slate-500 dark:text-slate-400 mb-8">Welcome back! Your secure healthcare workspace is ready.</p>
-                <Button 
-                    onClick={logout} 
-                    variant="custom"
-                    size="none"
-                    className="w-full py-3 bg-red-500/10 hover:bg-red-500/20 text-red-600 dark:text-red-400 font-medium rounded-xl transition-colors flex justify-center items-center gap-2 cursor-pointer"
-                >
-                    <MaterialIcon name="logout" size="sm" />
-                    Sign Out
-                </Button>
-            </div>
-        </div>
-    );
-}
 
 function MainRouter() {
     const [currentHash, setCurrentHash] = useState(window.location.hash || '#');
@@ -78,7 +55,7 @@ function MainRouter() {
                 if (refreshToken) {
                     localStorage.setItem('rxease_refresh_token', refreshToken);
                 }
-                window.location.href = `${window.location.origin}/#dashboard`;
+                window.location.href = `${window.location.origin}/#home`;
             } else {
                 window.location.href = `${window.location.origin}/#verify-email`;
             }
@@ -91,7 +68,7 @@ function MainRouter() {
                 if (refreshToken) {
                     localStorage.setItem('rxease_refresh_token', refreshToken);
                 }
-                window.location.href = `${window.location.origin}/#dashboard`;
+                window.location.href = `${window.location.origin}/#home`;
             } else {
                 window.location.href = `${window.location.origin}/#signin`;
             }
@@ -115,7 +92,7 @@ function MainRouter() {
         return <Spinner fullPage={true} />;
     }
 
-    // Public Auth Routes (Redirects to dashboard if already logged in)
+    // Public Auth Routes (Redirects to home if already logged in)
     if (currentHash === '#signup') {
         return <PublicRoute><SignUp /></PublicRoute>;
     }
@@ -137,12 +114,8 @@ function MainRouter() {
     }
 
     // Protected Routes (Redirects to signin if NOT logged in)
-    if (currentHash === '#dashboard') {
-        return <ProtectedRoute><DashboardPlaceholder /></ProtectedRoute>;
-    }
-
     if (currentHash === '#home') {
-        return <HomePage />;
+        return <ProtectedRoute><HomePage /></ProtectedRoute>;
     }
 
     // Unprotected Public Routes (e.g., Marketing Landing Page)

@@ -15,8 +15,8 @@ export default function PublicRoute({ children }) {
           window.location.hash = '#verify-email';
         }
       } else {
-        if (!currentHash.startsWith('#dashboard')) {
-          window.location.hash = '#dashboard';
+        if (!currentHash.startsWith('#home')) {
+          window.location.hash = '#home';
         }
       }
     }

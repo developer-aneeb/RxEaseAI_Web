@@ -34,7 +34,7 @@ export const useAuthStore = create((set, get) => ({
     if (normalizedUser && !normalizedUser.email_confirmed_at) {
       window.location.hash = '#verify-email';
     } else {
-      window.location.hash = '#dashboard';
+      window.location.hash = '#home';
     }
   },
 

@@ -25,7 +25,7 @@ export default function Navbar({ links }) {
     const defaultLinks = [
         { name: 'Features', href: '#features' },
         { name: 'Workflow', href: '#workflow' },
-        { name: 'Dashboard', href: '#dashboard' },
+        { name: 'Home', href: '#home' },
         { name: 'Analytics', href: '#analytics' },
         { name: 'FAQ', href: '#faq' },
     ];

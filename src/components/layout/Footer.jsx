@@ -50,7 +50,7 @@ export default function Footer() {
             <ul className="space-y-2 text-xs font-light">
               <li><a href="#features" className="text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-white transition-colors">Features</a></li>
               <li><a href="#workflow" className="text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-white transition-colors">Pipeline Workflow</a></li>
-              <li><a href="#dashboard" className="text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-white transition-colors">Control Panel</a></li>
+              <li><a href="#home" className="text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-white transition-colors">Home</a></li>
               <li><a href="#analytics" className="text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-white transition-colors">Analytics Stats</a></li>
             </ul>
           </div>
