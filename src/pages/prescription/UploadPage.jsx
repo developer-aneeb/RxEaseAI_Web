@@ -1,16 +1,16 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  Upload, Camera, FileText, CheckCircle2, AlertTriangle, 
+import {
+  Upload, Camera, FileText, CheckCircle2, AlertTriangle,
   ArrowLeft, RefreshCw, Copy, Check, Lightbulb, Play, Eye
 } from 'lucide-react';
-import { usePrescriptionStore } from '../store/usePrescriptionStore';
-import { useAppStore } from '../store/useAppStore';
-import Button from '../components/ui/Button';
-import Card from '../components/ui/Card';
-import Badge from '../components/ui/Badge';
-import MaterialIcon from '../components/ui/MaterialIcon';
-import Navbar from '../components/layout/Navbar';
+import { usePrescriptionStore } from '../../store/usePrescriptionStore';
+import { useAppStore } from '../../store/useAppStore';
+import Button from '../../components/ui/Button';
+import Card from '../../components/ui/Card';
+import Badge from '../../components/ui/Badge';
+import MaterialIcon from '../../components/ui/MaterialIcon';
+import Navbar from '../../components/layout/Navbar';
 
 // Mock SVG Prescription generator helper
 const createMockSvg = (patient, drug, dosage, qty, sig, docName) => {
@@ -222,21 +222,21 @@ const MOCK_SAMPLES = [
 ];
 
 export default function UploadPage() {
-  const { 
-    currentPrescription, 
-    uploadProgress, 
-    ocrState, 
-    aiResult, 
-    setCurrentPrescription, 
-    setUploadProgress, 
-    setOcrState, 
+  const {
+    currentPrescription,
+    uploadProgress,
+    ocrState,
+    aiResult,
+    setCurrentPrescription,
+    setUploadProgress,
+    setOcrState,
     setAiResult,
     clearPrescription,
     resetStore
   } = usePrescriptionStore();
 
   const showToast = useAppStore((state) => state.showToast);
-  
+
   const [activeTab, setActiveTab] = useState('upload'); // 'upload' | 'camera' | 'sample'
   const [cameraState, setCameraState] = useState('idle'); // 'idle' | 'capturing' | 'captured'
   const [selectedSampleId, setSelectedSampleId] = useState(null);
@@ -373,7 +373,7 @@ export default function UploadPage() {
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors duration-300 font-sans relative overflow-x-hidden pt-24 pb-16">
       <Navbar links={uploadLinks} />
-      
+
       {/* Grid background & ambient glow */}
       <div className="absolute inset-0 grid-bg z-0 pointer-events-none opacity-50 dark:opacity-30"></div>
       <div className="fixed inset-0 pointer-events-none z-0">
@@ -382,7 +382,7 @@ export default function UploadPage() {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full font-geist">
-        
+
         {/* Back Link */}
         <div className="mb-6 flex justify-between items-center">
           <Button
@@ -410,7 +410,7 @@ export default function UploadPage() {
               transition={{ duration: 0.4 }}
               className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-start"
             >
-              
+
               {/* Left Column: Storytelling, Metrics, Pipeline (5 Cols) */}
               <div className="lg:col-span-5 flex flex-col gap-6">
                 <div className="text-left">
@@ -430,7 +430,7 @@ export default function UploadPage() {
                   </h1>
 
                   <p className="text-slate-600 dark:text-slate-400 font-light leading-relaxed mb-6">
-                    Our AI models ingest handwritten clinical notes and doctor prescriptions. 
+                    Our AI models ingest handwritten clinical notes and doctor prescriptions.
                     Instantly extract dosage directives, match patient demographics, and safety-audit drug interactions.
                   </p>
                 </div>
@@ -473,7 +473,7 @@ export default function UploadPage() {
                   <h3 className="text-sm font-bold text-slate-950 dark:text-white mb-6">Intelligence Ingestion Pipeline</h3>
                   <div className="flex flex-col gap-6 relative">
                     <div className="absolute left-4 top-4 bottom-4 w-0.5 bg-gradient-to-b from-primary via-indigo-500 to-slate-200 dark:to-slate-800 z-0"></div>
-                    
+
                     <div className="flex items-center gap-4 relative z-10">
                       <div className="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-center shadow-sm">
                         <MaterialIcon name="upload_file" size="xs" />
@@ -504,36 +504,33 @@ export default function UploadPage() {
               <div className="lg:col-span-7 h-full">
                 <Card variant="glass" className="rounded-3xl p-6 md:p-8 border border-slate-200/60 dark:border-slate-800/80 shadow-2xl relative flex flex-col h-full bg-white dark:bg-slate-900">
                   <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary to-tertiary"></div>
-                  
+
                   {/* Custom Tab Selectors */}
                   <div className="flex gap-2 p-1 bg-slate-100 dark:bg-slate-950/80 rounded-xl mb-8 self-start border border-slate-200/50 dark:border-slate-800/55">
-                    <button 
-                      onClick={() => setActiveTab('upload')} 
-                      className={`px-5 py-2.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                        activeTab === 'upload' 
-                          ? 'bg-white dark:bg-slate-900 text-primary dark:text-white shadow-sm' 
+                    <button
+                      onClick={() => setActiveTab('upload')}
+                      className={`px-5 py-2.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${activeTab === 'upload'
+                          ? 'bg-white dark:bg-slate-900 text-primary dark:text-white shadow-sm'
                           : 'text-slate-550 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white'
-                      }`}
+                        }`}
                     >
                       Upload File
                     </button>
-                    <button 
-                      onClick={() => setActiveTab('camera')} 
-                      className={`px-5 py-2.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                        activeTab === 'camera' 
-                          ? 'bg-white dark:bg-slate-900 text-primary dark:text-white shadow-sm' 
+                    <button
+                      onClick={() => setActiveTab('camera')}
+                      className={`px-5 py-2.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${activeTab === 'camera'
+                          ? 'bg-white dark:bg-slate-900 text-primary dark:text-white shadow-sm'
                           : 'text-slate-550 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white'
-                      }`}
+                        }`}
                     >
                       Capture Camera
                     </button>
-                    <button 
-                      onClick={() => setActiveTab('sample')} 
-                      className={`px-5 py-2.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                        activeTab === 'sample' 
-                          ? 'bg-white dark:bg-slate-900 text-primary dark:text-white shadow-sm' 
+                    <button
+                      onClick={() => setActiveTab('sample')}
+                      className={`px-5 py-2.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${activeTab === 'sample'
+                          ? 'bg-white dark:bg-slate-900 text-primary dark:text-white shadow-sm'
                           : 'text-slate-550 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white'
-                      }`}
+                        }`}
                     >
                       Select Sample
                     </button>
@@ -541,18 +538,18 @@ export default function UploadPage() {
 
                   {/* TAB 1: FILE UPLOAD ZONE */}
                   {activeTab === 'upload' && (
-                    <div 
+                    <div
                       onDragOver={handleDragOver}
                       onDrop={handleDrop}
                       onClick={triggerBrowse}
                       className="flex-1 min-h-[300px] border-2 border-dashed border-slate-200 dark:border-slate-800 hover:border-primary/50 dark:hover:border-primary/50 rounded-2xl bg-slate-50/50 dark:bg-slate-950/20 hover:bg-primary/5 dark:hover:bg-primary/5/10 flex flex-col items-center justify-center p-8 text-center transition-all cursor-pointer group relative overflow-hidden"
                     >
-                      <input 
-                        type="file" 
-                        ref={fileInputRef} 
-                        onChange={handleFileChange} 
+                      <input
+                        type="file"
+                        ref={fileInputRef}
+                        onChange={handleFileChange}
                         accept="image/*,application/pdf"
-                        className="hidden" 
+                        className="hidden"
                       />
 
                       {currentPrescription ? (
@@ -625,28 +622,26 @@ export default function UploadPage() {
                   {activeTab === 'sample' && (
                     <div className="flex-1 min-h-[300px] flex flex-col gap-4">
                       <p className="text-xs text-slate-500 mb-2 text-left font-sans">Select a diagnostic mock script to test the OCR engine pipelines:</p>
-                      
+
                       <div className="flex flex-col gap-3">
                         {MOCK_SAMPLES.map((sample) => (
-                          <div 
+                          <div
                             key={sample.id}
                             onClick={() => handleSampleSelect(sample)}
-                            className={`p-4 rounded-xl border text-left cursor-pointer transition-all ${
-                              selectedSampleId === sample.id 
-                                ? 'bg-indigo-50/50 dark:bg-indigo-950/20 border-primary shadow-sm' 
+                            className={`p-4 rounded-xl border text-left cursor-pointer transition-all ${selectedSampleId === sample.id
+                                ? 'bg-indigo-50/50 dark:bg-indigo-950/20 border-primary shadow-sm'
                                 : 'bg-slate-50 dark:bg-slate-950/30 border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-900/40'
-                            }`}
+                              }`}
                           >
                             <div className="flex justify-between items-start mb-2">
                               <div>
                                 <h4 className="text-xs font-bold text-slate-900 dark:text-white">{sample.patient}</h4>
                                 <p className="text-[10px] text-slate-500 font-mono mt-0.5">{sample.type}</p>
                               </div>
-                              <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
-                                sample.status === 'Verified' 
-                                  ? 'bg-emerald-500/10 text-emerald-500' 
+                              <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${sample.status === 'Verified'
+                                  ? 'bg-emerald-500/10 text-emerald-500'
                                   : 'bg-amber-500/10 text-amber-500'
-                              }`}>
+                                }`}>
                                 {sample.status}
                               </span>
                             </div>
@@ -671,8 +666,8 @@ export default function UploadPage() {
 
                   {/* Analysis Trigger Action */}
                   <div className="mt-8 pt-6 border-t border-slate-200 dark:border-slate-800/85 flex justify-end">
-                    <Button 
-                      variant="primary" 
+                    <Button
+                      variant="primary"
                       onClick={startAnalysis}
                       disabled={!currentPrescription}
                       className="w-full md:w-auto px-8 py-3.5 bg-primary text-white rounded-xl font-bold shadow-lg shadow-primary/25 hover:bg-primary-container transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
@@ -702,18 +697,18 @@ export default function UploadPage() {
                 <div className="w-16 h-16 rounded-full bg-primary/10 text-primary flex items-center justify-center mx-auto mb-6">
                   <Upload className="w-8 h-8 animate-bounce" />
                 </div>
-                
+
                 <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-2">Ingesting File</h2>
                 <p className="text-xs text-slate-500 mb-8">Encrypting patient metadata and loading data nodes...</p>
 
                 {/* Progress Bar */}
                 <div className="w-full bg-slate-100 dark:bg-slate-950 h-2.5 rounded-full overflow-hidden mb-3 border border-slate-200/50 dark:border-slate-800">
-                  <div 
-                    className="bg-primary h-full rounded-full transition-all duration-150" 
+                  <div
+                    className="bg-primary h-full rounded-full transition-all duration-150"
                     style={{ width: `${uploadProgress}%` }}
                   />
                 </div>
-                
+
                 <div className="flex justify-between items-center text-xs font-mono text-slate-500">
                   <span>PROGRESS</span>
                   <span className="font-bold text-primary">{uploadProgress}%</span>
@@ -733,7 +728,7 @@ export default function UploadPage() {
               className="max-w-lg mx-auto py-8"
             >
               <Card variant="glass" className="p-6 text-center rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-2xl overflow-hidden relative">
-                
+
                 <div className="mb-6">
                   <h2 className="text-lg font-bold text-slate-900 dark:text-white">AI Diagnostics Extraction</h2>
                   <p className="text-xs text-indigo-650 dark:text-indigo-400 font-mono mt-1">RUNNING CLINICAL OCR & SEGMENTATION...</p>
@@ -741,11 +736,11 @@ export default function UploadPage() {
 
                 {/* Scanning HUD Screen Container */}
                 <div className="w-full aspect-[4/5] max-w-[340px] mx-auto bg-slate-100 dark:bg-slate-950 rounded-2xl border border-slate-200 dark:border-slate-800 relative overflow-hidden shadow-inner flex items-center justify-center p-4">
-                  
+
                   {/* Laser & Overlay elements */}
                   <div className="laser-line animate-scan"></div>
                   <div className="scan-overlay animate-scan-fade"></div>
-                  
+
                   {/* Loaded Image Content */}
                   <div className="w-full h-full relative z-0 flex items-center justify-center">
                     {currentPrescription.startsWith('data:image/svg+xml') ? (
@@ -754,7 +749,7 @@ export default function UploadPage() {
                       <img src={currentPrescription} alt="scanning prescription" className="w-full h-full object-contain filter grayscale" />
                     )}
                   </div>
-                  
+
                   {/* Digital HUD box corners */}
                   <div className="absolute top-3 left-3 w-4 h-4 border-t-2 border-l-2 border-primary"></div>
                   <div className="absolute top-3 right-3 w-4 h-4 border-t-2 border-r-2 border-primary"></div>
@@ -781,339 +776,331 @@ export default function UploadPage() {
             >
               
               {/* Header Title Section */}
-              <header className="flex flex-col gap-2">
-                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800/80 w-fit">
-                  <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse-slow"></div>
-                  <span className="text-[10px] font-bold tracking-wider uppercase text-slate-505">AI Processing Complete</span>
-                </div>
-                <h1 className="text-3xl font-extrabold text-slate-900 dark:text-white leading-tight">
-                  Prescription <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-emerald-500">Analysis Result</span>
-                </h1>
-                <p className="text-xs text-slate-500 dark:text-slate-400 max-w-2xl font-sans">
-                  RxEaseAI has processed your prescription and extracted the medicine details, dosage instructions, and verification results.
-                </p>
-              </header>
+          <header className="flex flex-col gap-2">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800/80 w-fit">
+              <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse-slow"></div>
+              <span className="text-[10px] font-bold tracking-wider uppercase text-slate-505">AI Processing Complete</span>
+            </div>
+            <h1 className="text-3xl font-extrabold text-slate-900 dark:text-white leading-tight">
+              Prescription <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-emerald-500">Analysis Result</span>
+            </h1>
+            <p className="text-xs text-slate-500 dark:text-slate-400 max-w-2xl font-sans">
+              RxEaseAI has processed your prescription and extracted the medicine details, dosage instructions, and verification results.
+            </p>
+          </header>
 
-              {/* Two Column Grid */}
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-                
-                {/* Left Column: Context & Trust (40% / 5 Cols) */}
-                <div className="lg:col-span-5 flex flex-col gap-6">
-                  
-                  {/* Prescription Preview Card */}
-                  <Card variant="glass" className="p-5 rounded-3xl border border-slate-200 dark:border-slate-800 bg-white/70 dark:bg-slate-900/60 flex flex-col gap-4 relative overflow-hidden group">
-                    <div className="flex justify-between items-center">
-                      <div>
-                        <h3 className="text-sm font-bold text-slate-900 dark:text-white">Original Document</h3>
-                        <p className="text-[10px] text-slate-500 dark:text-slate-400 font-mono">RX_2026_07_04.jpg • Uploaded 10:42 AM</p>
-                      </div>
-                      <button 
-                        onClick={() => {
-                          const win = window.open("", "_blank");
-                          win.document.write(`<body style="margin:0;display:flex;justify-content:center;align-items:center;background:#111;"><img src="${encodeURI(currentPrescription)}" style="max-width:100%;max-height:100%;object-fit:contain;"/></body>`);
-                        }}
-                        className="text-primary hover:bg-slate-100 dark:hover:bg-slate-850 p-2 rounded-lg transition-colors flex items-center justify-center cursor-pointer border-0 bg-transparent"
-                        title="View Original"
-                      >
-                        <Eye className="w-4 h-4" />
-                      </button>
-                    </div>
+          {/* Two Column Grid */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
 
-                    <div className="w-full aspect-[4/5] rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-850 relative bg-slate-950 flex items-center justify-center p-2">
-                      {currentPrescription.startsWith('data:image/svg+xml') ? (
-                        <div dangerouslySetInnerHTML={{ __html: decodeURIComponent(currentPrescription.split(',')[1]) }} className="w-full h-full object-cover scale-95" />
-                      ) : (
-                        <img className="w-full h-full object-contain" src={currentPrescription} alt="Original Prescription Document" />
-                      )}
-                    </div>
-                  </Card>
+            {/* Left Column: Context & Trust (40% / 5 Cols) */}
+            <div className="lg:col-span-5 flex flex-col gap-6">
 
-                  {/* Processing Summary Cards */}
-                  <Card variant="glass" className="p-5 rounded-3xl border border-slate-200 dark:border-slate-800 bg-white/70 dark:bg-slate-900/60 flex flex-col gap-6">
-                    <div className="grid grid-cols-3 gap-2">
-                      <div className="flex flex-col items-center justify-center p-3 rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-200/50 dark:border-slate-800">
-                        <span className="text-base font-extrabold text-primary">{aiResult.confidence}</span>
-                        <span className="text-[9px] font-bold text-slate-505 text-center uppercase tracking-wider mt-1">OCR Conf.</span>
-                      </div>
-                      <div className="flex flex-col items-center justify-center p-3 rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-200/50 dark:border-slate-800">
-                        <span className="text-base font-extrabold text-emerald-500">{aiResult.accuracy}</span>
-                        <span className="text-[9px] font-bold text-slate-505 text-center uppercase tracking-wider mt-1 font-sans">Accuracy</span>
-                      </div>
-                      <div className="flex flex-col items-center justify-center p-3 rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-200/50 dark:border-slate-800">
-                        <span className={`text-base font-extrabold ${aiResult.verification === 'High' ? 'text-indigo-550' : 'text-amber-500'}`}>{aiResult.verification}</span>
-                        <span className="text-[9px] font-bold text-slate-505 text-center uppercase tracking-wider mt-1 font-sans">Audit Status</span>
-                      </div>
-                    </div>
-
-                    {/* Extraction Pipeline */}
-                    <div className="flex flex-col gap-3">
-                      <h3 className="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider">Extraction Pipeline</h3>
-                      <div className="relative pl-6 flex flex-col gap-4 mt-2">
-                        <div className="absolute left-[11px] top-2 bottom-2 w-0.5 bg-slate-200 dark:bg-slate-800"></div>
-                        
-                        {/* Step 1 */}
-                        <div className="flex items-center gap-3 relative z-10">
-                          <div className="w-5 h-5 rounded-full bg-emerald-500 text-white flex items-center justify-center border-2 border-white dark:border-slate-900 shadow-sm">
-                            <CheckCircle2 className="w-3.5 h-3.5" />
-                          </div>
-                          <span className="text-xs text-slate-600 dark:text-slate-350">Image Pre-processing</span>
-                        </div>
-                        
-                        {/* Step 2 */}
-                        <div className="flex items-center gap-3 relative z-10">
-                          <div className="w-5 h-5 rounded-full bg-emerald-500 text-white flex items-center justify-center border-2 border-white dark:border-slate-900 shadow-sm">
-                            <CheckCircle2 className="w-3.5 h-3.5" />
-                          </div>
-                          <span className="text-xs text-slate-600 dark:text-slate-350">Handwriting OCR (YOLO)</span>
-                        </div>
-                        
-                        {/* Step 3 */}
-                        <div className="flex items-center gap-3 relative z-10">
-                          <div className={`w-5 h-5 rounded-full flex items-center justify-center border-2 border-white dark:border-slate-900 shadow-sm ${
-                            aiResult.verification === 'High' ? 'bg-indigo-500 text-white' : 'bg-amber-505 text-white'
-                          }`}>
-                            <div className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
-                          </div>
-                          <span className="text-xs text-slate-800 dark:text-slate-200 font-bold">Clinical Safety Auditing</span>
-                        </div>
-                      </div>
-                    </div>
-                  </Card>
-
-                </div>
-
-                {/* Right Column: Clinical Results (60% / 7 Cols) */}
-                <div className="lg:col-span-7 flex flex-col gap-6">
-                  
-                  {/* Results Subheader */}
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                    <div className="flex items-center gap-3">
-                      <h2 className="text-xl font-bold text-slate-900 dark:text-white">Extracted Medications</h2>
-                      <div className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${
-                        aiResult.verification === 'High'
-                          ? 'bg-emerald-500/10 text-emerald-600 border border-emerald-500/20'
-                          : 'bg-amber-500/10 text-amber-605 border border-amber-500/20'
-                      }`}>
-                        <MaterialIcon name={aiResult.verification === 'High' ? "verified" : "warning"} size="sm" className="text-[12px] mr-0.5" />
-                        <span>{aiResult.verification === 'High' ? "Verification Successful" : "Audit Flagged"}</span>
-                      </div>
-                    </div>
-
-                    {/* Tab Selectors */}
-                    <div className="flex gap-1.5 p-1 bg-slate-100 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-805 rounded-lg self-start">
-                      <button 
-                        onClick={() => setActiveJsonTab(false)}
-                        className={`px-3 py-1.5 rounded-md text-[10px] font-bold transition-all cursor-pointer border-0 ${
-                          !activeJsonTab 
-                            ? 'bg-white dark:bg-slate-900 text-primary dark:text-white shadow-sm' 
-                            : 'bg-transparent text-slate-500 hover:text-slate-800 dark:hover:text-slate-300'
-                        }`}
-                      >
-                        Clinical Details
-                      </button>
-                      <button 
-                        onClick={() => setActiveJsonTab(true)}
-                        className={`px-3 py-1.5 rounded-md text-[10px] font-bold transition-all cursor-pointer border-0 ${
-                          activeJsonTab 
-                            ? 'bg-white dark:bg-slate-900 text-primary dark:text-white shadow-sm' 
-                            : 'bg-transparent text-slate-500 hover:text-slate-800 dark:hover:text-slate-300'
-                        }`}
-                      >
-                        FHIR JSON
-                      </button>
-                    </div>
+              {/* Prescription Preview Card */}
+              <Card variant="glass" className="p-5 rounded-3xl border border-slate-200 dark:border-slate-800 bg-white/70 dark:bg-slate-900/60 flex flex-col gap-4 relative overflow-hidden group">
+                <div className="flex justify-between items-center">
+                  <div>
+                    <h3 className="text-sm font-bold text-slate-900 dark:text-white">Original Document</h3>
+                    <p className="text-[10px] text-slate-500 dark:text-slate-400 font-mono">RX_2026_07_04.jpg • Uploaded 10:42 AM</p>
                   </div>
+                  <button
+                    onClick={() => {
+                      const win = window.open("", "_blank");
+                      win.document.write(`<body style="margin:0;display:flex;justify-content:center;align-items:center;background:#111;"><img src="${encodeURI(currentPrescription)}" style="max-width:100%;max-height:100%;object-fit:contain;"/></body>`);
+                    }}
+                    className="text-primary hover:bg-slate-100 dark:hover:bg-slate-850 p-2 rounded-lg transition-colors flex items-center justify-center cursor-pointer border-0 bg-transparent"
+                    title="View Original"
+                  >
+                    <Eye className="w-4 h-4" />
+                  </button>
+                </div>
 
-                  {!activeJsonTab ? (
-                    <div className="flex flex-col gap-6">
-                      
-                      {/* Medication Cards List */}
-                      <div className="flex flex-col gap-4">
-                        {aiResult.medications?.map((med, index) => (
-                          <Card 
-                            key={index} 
-                            variant="glass" 
-                            className={`p-5 rounded-3xl border text-left ${
-                              index === 0 
-                                ? 'border-indigo-500/20 shadow-lg shadow-indigo-500/5 bg-white/80 dark:bg-slate-900/80' 
-                                : 'border-slate-200 dark:border-slate-805 bg-white/60 dark:bg-slate-900/50'
-                            } flex flex-col gap-4`}
-                          >
-                            <div className="flex justify-between items-start">
-                              <div className="flex gap-4 items-center">
-                                <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${
-                                  index === 0 
-                                    ? 'bg-indigo-500/10 text-indigo-600 dark:text-indigo-400' 
-                                    : 'bg-slate-100 dark:bg-slate-800 text-slate-505 dark:text-slate-400'
-                                }`}>
-                                  <MaterialIcon name={med.icon} />
-                                </div>
-                                <div>
-                                  <h3 className="text-base font-extrabold text-slate-900 dark:text-white flex items-center gap-1.5">
-                                    {med.name}
-                                    <span className="material-symbols-outlined text-emerald-500 text-[18px]" title="Database Verified">check_circle</span>
-                                  </h3>
-                                  <p className="text-xs text-slate-505 mt-0.5">{med.type}</p>
-                                </div>
-                              </div>
-                              
-                              <Badge variant={index === 0 ? "primary" : "outline"} className="text-[10px] font-bold px-2 py-0.5">
-                                Match: {med.match}
-                              </Badge>
-                            </div>
-
-                            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-4 border-t border-slate-100 dark:border-slate-850">
-                              <div className="flex flex-col">
-                                <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider font-sans">Dosage</span>
-                                <span className="text-xs font-bold text-slate-805 dark:text-slate-200 mt-0.5">{med.dosage}</span>
-                              </div>
-                              <div className="flex flex-col">
-                                <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider font-sans">Frequency</span>
-                                <span className="text-xs font-bold text-slate-805 dark:text-slate-200 mt-0.5">{med.frequency}</span>
-                              </div>
-                              <div className="flex flex-col">
-                                <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider font-sans">Duration</span>
-                                <span className="text-xs font-bold text-slate-805 dark:text-slate-200 mt-0.5">{med.duration}</span>
-                              </div>
-                              <div className="flex flex-col">
-                                <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider font-sans">Instructions</span>
-                                <span className="text-xs font-bold text-slate-805 dark:text-slate-200 mt-0.5">{med.instructions}</span>
-                              </div>
-                            </div>
-
-                          </Card>
-                        ))}
-                      </div>
-
-                      {/* Bento Style Recommendations */}
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        
-                        {/* Bento Card 1: Generic Alternatives */}
-                        <div className="p-5 rounded-3xl border border-indigo-500/10 bg-gradient-to-br from-white/70 to-slate-50 dark:from-slate-900/60 dark:to-slate-950/40 relative overflow-hidden flex flex-col justify-between min-h-[160px]">
-                          <div className="absolute top-0 right-0 p-4 opacity-5 pointer-events-none">
-                            <span className="material-symbols-outlined text-[72px] text-primary">psychology</span>
-                          </div>
-                          
-                          <div>
-                            <div className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-indigo-500/10 text-indigo-650 dark:text-indigo-400 mb-3 text-[9px] font-bold uppercase tracking-wider border border-indigo-500/15">
-                              <span className="material-symbols-outlined text-[12px] mr-0.5">lightbulb</span>
-                              <span>AI Insight</span>
-                            </div>
-                            <h4 className="text-xs font-bold text-slate-900 dark:text-white">{aiResult.bento?.generic.title}</h4>
-                            <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1.5 leading-relaxed font-sans">{aiResult.bento?.generic.desc}</p>
-                          </div>
-
-                          <div className="flex items-center justify-between bg-slate-100/50 dark:bg-slate-950/50 rounded-xl p-2.5 border border-slate-200 dark:border-slate-800 mt-4">
-                            <span className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400">{aiResult.bento?.generic.savings}</span>
-                            <button 
-                              onClick={() => showToast(`Calculating alternative generic brands for ${aiResult.drug}...`, 'info')}
-                              className="text-[10px] font-bold text-primary hover:underline cursor-pointer border-0 bg-transparent"
-                            >
-                              View Options
-                            </button>
-                          </div>
-                        </div>
-
-                        {/* Bento Card 2: Safety Audit Check */}
-                        <div className={`p-5 rounded-3xl border flex flex-col gap-3 min-h-[160px] ${
-                          aiResult.bento?.safety.status === 'passed'
-                            ? 'border-emerald-500/10 bg-white/70 dark:bg-slate-900/60'
-                            : 'border-amber-500/15 bg-white/70 dark:bg-slate-900/60'
-                        }`}>
-                          <div className="flex items-center gap-2">
-                            <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                              aiResult.bento?.safety.status === 'passed' 
-                                ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400' 
-                                : 'bg-amber-550/10 text-amber-600 dark:text-amber-400'
-                            }`}>
-                              <span className="material-symbols-outlined text-[20px]">{aiResult.bento?.safety.status === 'passed' ? 'health_and_safety' : 'warning'}</span>
-                            </div>
-                            <h4 className="text-xs font-bold text-slate-900 dark:text-white">
-                              {aiResult.bento?.safety.status === 'passed' ? 'Safety Checks Cleared' : 'Safety Alerts Raised'}
-                            </h4>
-                          </div>
-
-                          <ul className="text-[11px] text-slate-500 dark:text-slate-400 space-y-2 mt-2 leading-normal font-sans">
-                            {aiResult.bento?.safety.rules.map((rule, rIdx) => (
-                              <li key={rIdx} className="flex items-start gap-2">
-                                <span className={`material-symbols-outlined text-[14px] shrink-0 mt-0.5 ${
-                                  aiResult.bento?.safety.status === 'passed' ? 'text-emerald-500' : 'text-amber-500'
-                                }`}>
-                                  {aiResult.bento?.safety.status === 'passed' ? 'check' : 'warning'}
-                                </span>
-                                <span>{rule}</span>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-
-                      </div>
-
-                    </div>
+                <div className="w-full aspect-[4/5] rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-850 relative bg-slate-950 flex items-center justify-center p-2">
+                  {currentPrescription.startsWith('data:image/svg+xml') ? (
+                    <div dangerouslySetInnerHTML={{ __html: decodeURIComponent(currentPrescription.split(',')[1]) }} className="w-full h-full object-cover scale-95" />
                   ) : (
-                    <div className="flex flex-col gap-4 font-mono text-[11px]">
-                      
-                      {/* JSON panel */}
-                      <Card variant="glass" className="p-6 rounded-3xl border border-slate-200 dark:border-slate-800 bg-slate-900 text-slate-300 shadow-xl relative overflow-hidden leading-relaxed">
-                        
-                        <div className="absolute top-4 right-4 flex gap-2">
-                          <button 
-                            onClick={copyFhirJson}
-                            className="p-2 bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white rounded-lg transition-colors border border-slate-700 cursor-pointer"
-                            title="Copy JSON"
-                          >
-                            {copied ? <Check className="w-3.5 h-3.5 text-emerald-500" /> : <Copy className="w-3.5 h-3.5" />}
-                          </button>
-                        </div>
-
-                        <pre className="max-h-[400px] overflow-y-auto pr-8">
-                          {JSON.stringify(aiResult.fhir, null, 2)}
-                        </pre>
-
-                      </Card>
-
-                      <p className="text-[10px] text-slate-500 dark:text-slate-400 italic font-sans">
-                        * This output format follows the HL7 FHIR (Fast Healthcare Interoperability Resources) MedicationRequest schema.
-                      </p>
-                    </div>
+                    <img className="w-full h-full object-contain" src={currentPrescription} alt="Original Prescription Document" />
                   )}
+                </div>
+              </Card>
 
-                  {/* Actions Area */}
-                  <div className="flex flex-col sm:flex-row gap-4 mt-6 pt-6 border-t border-slate-200 dark:border-slate-850">
-                    <Button 
-                      variant="primary"
-                      onClick={handleApprove}
-                      className="flex-1 bg-primary text-white font-bold py-3.5 px-6 rounded-xl hover:bg-primary-container transition-colors shadow-lg shadow-primary/20 flex items-center justify-center gap-2 cursor-pointer"
-                    >
-                      <span>Continue to Reminders</span>
-                      <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
-                    </Button>
-                    
-                    <button 
-                      onClick={() => showToast('Prescription saved to clinical history registry.', 'success')}
-                      className="flex-1 sm:flex-none py-3.5 px-6 rounded-xl bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-950 text-slate-700 dark:text-slate-305 font-bold border border-slate-200 dark:border-slate-800 transition-colors flex items-center justify-center gap-2 cursor-pointer"
-                    >
-                      <span>Save to History</span>
-                    </button>
-                    
-                    <button 
-                      onClick={() => showToast('Generating medical audit PDF report download...', 'info')}
-                      className="flex-1 sm:flex-none py-3.5 px-3.5 rounded-xl bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-950 text-slate-700 dark:text-slate-305 font-bold border border-slate-200 dark:border-slate-800 transition-colors flex items-center justify-center cursor-pointer"
-                      title="Download PDF Audit"
-                    >
-                      <span className="material-symbols-outlined text-[18px]">download</span>
-                    </button>
+              {/* Processing Summary Cards */}
+              <Card variant="glass" className="p-5 rounded-3xl border border-slate-200 dark:border-slate-800 bg-white/70 dark:bg-slate-900/60 flex flex-col gap-6">
+                <div className="grid grid-cols-3 gap-2">
+                  <div className="flex flex-col items-center justify-center p-3 rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-200/50 dark:border-slate-800">
+                    <span className="text-base font-extrabold text-primary">{aiResult.confidence}</span>
+                    <span className="text-[9px] font-bold text-slate-505 text-center uppercase tracking-wider mt-1">OCR Conf.</span>
                   </div>
-
+                  <div className="flex flex-col items-center justify-center p-3 rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-200/50 dark:border-slate-800">
+                    <span className="text-base font-extrabold text-emerald-500">{aiResult.accuracy}</span>
+                    <span className="text-[9px] font-bold text-slate-505 text-center uppercase tracking-wider mt-1 font-sans">Accuracy</span>
+                  </div>
+                  <div className="flex flex-col items-center justify-center p-3 rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-200/50 dark:border-slate-800">
+                    <span className={`text-base font-extrabold ${aiResult.verification === 'High' ? 'text-indigo-550' : 'text-amber-500'}`}>{aiResult.verification}</span>
+                    <span className="text-[9px] font-bold text-slate-505 text-center uppercase tracking-wider mt-1 font-sans">Audit Status</span>
+                  </div>
                 </div>
 
+                {/* Extraction Pipeline */}
+                <div className="flex flex-col gap-3">
+                  <h3 className="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider">Extraction Pipeline</h3>
+                  <div className="relative pl-6 flex flex-col gap-4 mt-2">
+                    <div className="absolute left-[11px] top-2 bottom-2 w-0.5 bg-slate-200 dark:bg-slate-800"></div>
+
+                    {/* Step 1 */}
+                    <div className="flex items-center gap-3 relative z-10">
+                      <div className="w-5 h-5 rounded-full bg-emerald-500 text-white flex items-center justify-center border-2 border-white dark:border-slate-900 shadow-sm">
+                        <CheckCircle2 className="w-3.5 h-3.5" />
+                      </div>
+                      <span className="text-xs text-slate-600 dark:text-slate-350">Image Pre-processing</span>
+                    </div>
+
+                    {/* Step 2 */}
+                    <div className="flex items-center gap-3 relative z-10">
+                      <div className="w-5 h-5 rounded-full bg-emerald-500 text-white flex items-center justify-center border-2 border-white dark:border-slate-900 shadow-sm">
+                        <CheckCircle2 className="w-3.5 h-3.5" />
+                      </div>
+                      <span className="text-xs text-slate-600 dark:text-slate-350">Handwriting OCR (YOLO)</span>
+                    </div>
+
+                    {/* Step 3 */}
+                    <div className="flex items-center gap-3 relative z-10">
+                      <div className={`w-5 h-5 rounded-full flex items-center justify-center border-2 border-white dark:border-slate-900 shadow-sm ${aiResult.verification === 'High' ? 'bg-indigo-500 text-white' : 'bg-amber-505 text-white'
+                        }`}>
+                        <div className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
+                      </div>
+                      <span className="text-xs text-slate-800 dark:text-slate-200 font-bold">Clinical Safety Auditing</span>
+                    </div>
+                  </div>
+                </div>
+              </Card>
+
+            </div>
+
+            {/* Right Column: Clinical Results (60% / 7 Cols) */}
+            <div className="lg:col-span-7 flex flex-col gap-6">
+
+              {/* Results Subheader */}
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div className="flex items-center gap-3">
+                  <h2 className="text-xl font-bold text-slate-900 dark:text-white">Extracted Medications</h2>
+                  <div className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${aiResult.verification === 'High'
+                      ? 'bg-emerald-500/10 text-emerald-600 border border-emerald-500/20'
+                      : 'bg-amber-500/10 text-amber-605 border border-amber-500/20'
+                    }`}>
+                    <MaterialIcon name={aiResult.verification === 'High' ? "verified" : "warning"} size="sm" className="text-[12px] mr-0.5" />
+                    <span>{aiResult.verification === 'High' ? "Verification Successful" : "Audit Flagged"}</span>
+                  </div>
+                </div>
+
+                {/* Tab Selectors */}
+                <div className="flex gap-1.5 p-1 bg-slate-100 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-805 rounded-lg self-start">
+                  <button
+                    onClick={() => setActiveJsonTab(false)}
+                    className={`px-3 py-1.5 rounded-md text-[10px] font-bold transition-all cursor-pointer border-0 ${!activeJsonTab
+                        ? 'bg-white dark:bg-slate-900 text-primary dark:text-white shadow-sm'
+                        : 'bg-transparent text-slate-500 hover:text-slate-800 dark:hover:text-slate-300'
+                      }`}
+                  >
+                    Clinical Details
+                  </button>
+                  <button
+                    onClick={() => setActiveJsonTab(true)}
+                    className={`px-3 py-1.5 rounded-md text-[10px] font-bold transition-all cursor-pointer border-0 ${activeJsonTab
+                        ? 'bg-white dark:bg-slate-900 text-primary dark:text-white shadow-sm'
+                        : 'bg-transparent text-slate-500 hover:text-slate-800 dark:hover:text-slate-300'
+                      }`}
+                  >
+                    FHIR JSON
+                  </button>
+                </div>
               </div>
 
-            </motion.div>
-          )}
-        </AnimatePresence>
+              {!activeJsonTab ? (
+                <div className="flex flex-col gap-6">
 
-      </div>
+                  {/* Medication Cards List */}
+                  <div className="flex flex-col gap-4">
+                    {aiResult.medications?.map((med, index) => (
+                      <Card
+                        key={index}
+                        variant="glass"
+                        className={`p-5 rounded-3xl border text-left ${index === 0
+                            ? 'border-indigo-500/20 shadow-lg shadow-indigo-500/5 bg-white/80 dark:bg-slate-900/80'
+                            : 'border-slate-200 dark:border-slate-805 bg-white/60 dark:bg-slate-900/50'
+                          } flex flex-col gap-4`}
+                      >
+                        <div className="flex justify-between items-start">
+                          <div className="flex gap-4 items-center">
+                            <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${index === 0
+                                ? 'bg-indigo-500/10 text-indigo-600 dark:text-indigo-400'
+                                : 'bg-slate-100 dark:bg-slate-800 text-slate-505 dark:text-slate-400'
+                              }`}>
+                              <MaterialIcon name={med.icon} />
+                            </div>
+                            <div>
+                              <h3 className="text-base font-extrabold text-slate-900 dark:text-white flex items-center gap-1.5">
+                                {med.name}
+                                <span className="material-symbols-outlined text-emerald-500 text-[18px]" title="Database Verified">check_circle</span>
+                              </h3>
+                              <p className="text-xs text-slate-505 mt-0.5">{med.type}</p>
+                            </div>
+                          </div>
+
+                          <Badge variant={index === 0 ? "primary" : "outline"} className="text-[10px] font-bold px-2 py-0.5">
+                            Match: {med.match}
+                          </Badge>
+                        </div>
+
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-4 border-t border-slate-100 dark:border-slate-850">
+                          <div className="flex flex-col">
+                            <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider font-sans">Dosage</span>
+                            <span className="text-xs font-bold text-slate-805 dark:text-slate-200 mt-0.5">{med.dosage}</span>
+                          </div>
+                          <div className="flex flex-col">
+                            <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider font-sans">Frequency</span>
+                            <span className="text-xs font-bold text-slate-805 dark:text-slate-200 mt-0.5">{med.frequency}</span>
+                          </div>
+                          <div className="flex flex-col">
+                            <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider font-sans">Duration</span>
+                            <span className="text-xs font-bold text-slate-805 dark:text-slate-200 mt-0.5">{med.duration}</span>
+                          </div>
+                          <div className="flex flex-col">
+                            <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider font-sans">Instructions</span>
+                            <span className="text-xs font-bold text-slate-805 dark:text-slate-200 mt-0.5">{med.instructions}</span>
+                          </div>
+                        </div>
+
+                      </Card>
+                    ))}
+                  </div>
+
+                  {/* Bento Style Recommendations */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+                    {/* Bento Card 1: Generic Alternatives */}
+                    <div className="p-5 rounded-3xl border border-indigo-500/10 bg-gradient-to-br from-white/70 to-slate-50 dark:from-slate-900/60 dark:to-slate-950/40 relative overflow-hidden flex flex-col justify-between min-h-[160px]">
+                      <div className="absolute top-0 right-0 p-4 opacity-5 pointer-events-none">
+                        <span className="material-symbols-outlined text-[72px] text-primary">psychology</span>
+                      </div>
+
+                      <div>
+                        <div className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-indigo-500/10 text-indigo-650 dark:text-indigo-400 mb-3 text-[9px] font-bold uppercase tracking-wider border border-indigo-500/15">
+                          <span className="material-symbols-outlined text-[12px] mr-0.5">lightbulb</span>
+                          <span>AI Insight</span>
+                        </div>
+                        <h4 className="text-xs font-bold text-slate-900 dark:text-white">{aiResult.bento?.generic.title}</h4>
+                        <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1.5 leading-relaxed font-sans">{aiResult.bento?.generic.desc}</p>
+                      </div>
+
+                      <div className="flex items-center justify-between bg-slate-100/50 dark:bg-slate-950/50 rounded-xl p-2.5 border border-slate-200 dark:border-slate-800 mt-4">
+                        <span className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400">{aiResult.bento?.generic.savings}</span>
+                        <button
+                          onClick={() => showToast(`Calculating alternative generic brands for ${aiResult.drug}...`, 'info')}
+                          className="text-[10px] font-bold text-primary hover:underline cursor-pointer border-0 bg-transparent"
+                        >
+                          View Options
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Bento Card 2: Safety Audit Check */}
+                    <div className={`p-5 rounded-3xl border flex flex-col gap-3 min-h-[160px] ${aiResult.bento?.safety.status === 'passed'
+                        ? 'border-emerald-500/10 bg-white/70 dark:bg-slate-900/60'
+                        : 'border-amber-500/15 bg-white/70 dark:bg-slate-900/60'
+                      }`}>
+                      <div className="flex items-center gap-2">
+                        <div className={`w-8 h-8 rounded-full flex items-center justify-center ${aiResult.bento?.safety.status === 'passed'
+                            ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400'
+                            : 'bg-amber-550/10 text-amber-600 dark:text-amber-400'
+                          }`}>
+                          <span className="material-symbols-outlined text-[20px]">{aiResult.bento?.safety.status === 'passed' ? 'health_and_safety' : 'warning'}</span>
+                        </div>
+                        <h4 className="text-xs font-bold text-slate-900 dark:text-white">
+                          {aiResult.bento?.safety.status === 'passed' ? 'Safety Checks Cleared' : 'Safety Alerts Raised'}
+                        </h4>
+                      </div>
+
+                      <ul className="text-[11px] text-slate-500 dark:text-slate-400 space-y-2 mt-2 leading-normal font-sans">
+                        {aiResult.bento?.safety.rules.map((rule, rIdx) => (
+                          <li key={rIdx} className="flex items-start gap-2">
+                            <span className={`material-symbols-outlined text-[14px] shrink-0 mt-0.5 ${aiResult.bento?.safety.status === 'passed' ? 'text-emerald-500' : 'text-amber-500'
+                              }`}>
+                              {aiResult.bento?.safety.status === 'passed' ? 'check' : 'warning'}
+                            </span>
+                            <span>{rule}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+
+                  </div>
+
+                </div>
+              ) : (
+                <div className="flex flex-col gap-4 font-mono text-[11px]">
+
+                  {/* JSON panel */}
+                  <Card variant="glass" className="p-6 rounded-3xl border border-slate-200 dark:border-slate-800 bg-slate-900 text-slate-300 shadow-xl relative overflow-hidden leading-relaxed">
+
+                    <div className="absolute top-4 right-4 flex gap-2">
+                      <button
+                        onClick={copyFhirJson}
+                        className="p-2 bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white rounded-lg transition-colors border border-slate-700 cursor-pointer"
+                        title="Copy JSON"
+                      >
+                        {copied ? <Check className="w-3.5 h-3.5 text-emerald-500" /> : <Copy className="w-3.5 h-3.5" />}
+                      </button>
+                    </div>
+
+                    <pre className="max-h-[400px] overflow-y-auto pr-8">
+                      {JSON.stringify(aiResult.fhir, null, 2)}
+                    </pre>
+
+                  </Card>
+
+                  <p className="text-[10px] text-slate-500 dark:text-slate-400 italic font-sans">
+                    * This output format follows the HL7 FHIR (Fast Healthcare Interoperability Resources) MedicationRequest schema.
+                  </p>
+                </div>
+              )}
+
+              {/* Actions Area */}
+              <div className="flex flex-col sm:flex-row gap-4 mt-6 pt-6 border-t border-slate-200 dark:border-slate-850">
+                <Button
+                  variant="primary"
+                  onClick={handleApprove}
+                  className="flex-1 bg-primary text-white font-bold py-3.5 px-6 rounded-xl hover:bg-primary-container transition-colors shadow-lg shadow-primary/20 flex items-center justify-center gap-2 cursor-pointer"
+                >
+                  <span>Continue to Reminders</span>
+                  <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
+                </Button>
+
+                <button
+                  onClick={() => showToast('Prescription saved to clinical history registry.', 'success')}
+                  className="flex-1 sm:flex-none py-3.5 px-6 rounded-xl bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-950 text-slate-700 dark:text-slate-305 font-bold border border-slate-200 dark:border-slate-800 transition-colors flex items-center justify-center gap-2 cursor-pointer"
+                >
+                  <span>Save to History</span>
+                </button>
+
+                <button
+                  onClick={() => showToast('Generating medical audit PDF report download...', 'info')}
+                  className="flex-1 sm:flex-none py-3.5 px-3.5 rounded-xl bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-950 text-slate-700 dark:text-slate-305 font-bold border border-slate-200 dark:border-slate-800 transition-colors flex items-center justify-center cursor-pointer"
+                  title="Download PDF Audit"
+                >
+                  <span className="material-symbols-outlined text-[18px]">download</span>
+                </button>
+              </div>
+
+            </div>
+                )}
+
+          </div>
+
+        </motion.div>
+          )}
+      </AnimatePresence>
+
     </div>
+    </div >
   );
 }
