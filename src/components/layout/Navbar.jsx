@@ -27,8 +27,7 @@ export default function Navbar() {
         { name: 'Workflow', href: '#workflow' },
         { name: 'Dashboard', href: '#dashboard' },
         { name: 'Analytics', href: '#analytics' },
-        { name: 'Security', href: '#security' },
-        { name: 'FAQs', href: '#faq' },
+        { name: 'FAQ', href: '#faq' },
     ];
 
     return (

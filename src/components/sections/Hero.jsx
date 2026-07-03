@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { Sparkles, PlayCircle, Scan, ShieldCheck, CheckCircle2, Zap } from 'lucide-react';
+import { ArrowRight, Sparkles, CheckCircle2, ShieldCheck, Zap } from 'lucide-react';
 import { staggerContainer, fadeInUp, scaleIn } from '../../animations/variants';
 import Button from '../ui/Button';
 import Badge from '../ui/Badge';
@@ -8,14 +8,14 @@ import MaterialIcon from '../ui/MaterialIcon';
 
 export default function Hero() {
   return (
-    <section className="relative min-h-[90vh] flex items-center pt-28 pb-16 overflow-hidden bg-slate-50 dark:bg-slate-950 transition-colors duration-300">
-      
-      {/* Background grid from Stitch */}
-      <div className="absolute inset-0 grid-bg z-0 pointer-events-none opacity-50 dark:opacity-30"></div>
-      
+    <section className="relative min-h-screen flex items-center justify-center pt-28 pb-16 overflow-hidden bg-slate-50 dark:bg-slate-950 transition-colors duration-300">
+
       {/* Background glow spots */}
       <div className="glow-spot top-1/4 left-1/4 -translate-x-1/2 -translate-y-1/2" />
       <div className="glow-spot bottom-1/4 right-1/4 translate-x-1/2 translate-y-1/2" />
+
+      {/* Grid Overlay */}
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,#e2e8f0_1px,transparent_1px),linear-gradient(to_bottom,#e2e8f0_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#0f172a_1px,transparent_1px),linear-gradient(to_bottom,#0f172a_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)] opacity-30 dark:opacity-20 pointer-events-none transition-colors duration-300" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
@@ -27,14 +27,14 @@ export default function Hero() {
             initial="hidden"
             animate="visible"
           >
-            {/* New Model Badge */}
+            {/* Tagline */}
             <motion.div variants={fadeInUp(20)}>
               <Badge 
                 variant="primary" 
                 icon={Sparkles} 
-                className="text-xs px-3.5 py-1.5 bg-indigo-500/10 font-sans tracking-wide uppercase"
+                className="text-xs px-3 py-1.5 bg-indigo-500/10 font-sans tracking-wide"
               >
-                New: Advanced OCR Model v2.0
+                RxEaseAI - AI-powered Prescription Interpretation
               </Badge>
             </motion.div>
 
@@ -44,17 +44,17 @@ export default function Hero() {
               className="text-4xl sm:text-5xl md:text-[56px] lg:text-[60px] font-extrabold tracking-tight text-slate-900 dark:text-white leading-[1.1]!"
             >
               Transform Handwritten Prescriptions Into{' '}
-              <span className="bg-gradient-to-r from-primary via-indigo-650 to-tertiary bg-clip-text text-transparent font-extrabold">
-                Smart Digital Healthcare
+              <span className="bg-gradient-to-r from-[#0F6FFF] to-[#1DBF73] bg-clip-text text-transparent font-extrabold">
+                Smart AI-Powered Digital Healthcare
               </span>
             </motion.h1>
 
             {/* Description */}
             <motion.p
               variants={fadeInUp(25)}
-              className="text-base sm:text-lg text-slate-600 dark:text-slate-300 max-w-2xl font-light leading-relaxed"
+              className="text-base sm:text-lg text-slate-650 dark:text-slate-300 max-w-2xl font-light leading-relaxed"
             >
-              AI-powered prescription OCR, medicine verification, and affordable recommendations — built to make healthcare clearer, faster, and smarter.
+              We are working to interpret and read Pakistani doctors' handwritten prescriptions. Current accuracy is 74%, and we will keep improving accuracy and security to protect patient data.
             </motion.p>
 
             {/* CTAs */}
@@ -63,44 +63,43 @@ export default function Hero() {
               className="flex flex-wrap gap-4 pt-2"
             >
               <Button
-                href="#how-it-works"
+                href="#workflow"
                 variant="primary"
                 size="lg"
-                icon={Scan}
+                icon={ArrowRight}
               >
-                Scan Prescription
+                Try Interactive Demo
               </Button>
               <Button
-                href="#dashboard"
+                href="#features"
                 variant="secondary"
                 size="lg"
-                icon={PlayCircle}
               >
-                View Demo
+                Explore Features
               </Button>
             </motion.div>
 
-            {/* Trusted by Badges */}
+            {/* Trust Badges */}
             <motion.div
               variants={fadeInUp(15)}
-              className="mt-4 flex items-center gap-4 text-slate-500 dark:text-slate-400 text-xs font-semibold"
+              className="grid grid-cols-3 gap-4 pt-6 border-t border-slate-200 dark:border-slate-800/60 max-w-xl"
             >
-              <div className="flex -space-x-2">
-                <div className="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-900 border-2 border-white dark:border-slate-950 flex items-center justify-center">
-                  <span className="material-symbols-outlined text-xs text-primary font-bold">local_hospital</span>
-                </div>
-                <div className="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-900 border-2 border-white dark:border-slate-950 flex items-center justify-center">
-                  <span className="material-symbols-outlined text-xs text-tertiary font-bold">science</span>
-                </div>
-                <div className="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-900 border-2 border-white dark:border-slate-950 flex items-center justify-center">
-                  <span className="material-symbols-outlined text-xs text-secondary font-bold">verified_user</span>
-                </div>
+              <div className="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400 font-medium">
+                <ShieldCheck className="w-4.5 h-4.5 text-indigo-500 dark:text-indigo-400 shrink-0" />
+                HIPAA Compliant
               </div>
-              <span>Trusted by 500+ clinics worldwide</span>
+              <div className="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400 font-medium">
+                <CheckCircle2 className="w-4.5 h-4.5 text-indigo-500 dark:text-indigo-400 shrink-0" />
+                74% Accuracy
+              </div>
+              <div className="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400 font-medium">
+                <Zap className="w-4.5 h-4.5 text-indigo-500 dark:text-indigo-400 shrink-0" />
+                4m Processing
+              </div>
             </motion.div>
           </motion.div>
 
-          {/* Hero Right Visuals */}
+          {/* Hero Right Visuals with Laser Scan and Hover Reveal */}
           <motion.div
             className="lg:col-span-5 relative"
             variants={scaleIn(0.95, 0.8, 0.3)}
@@ -108,14 +107,14 @@ export default function Hero() {
             animate="visible"
           >
             {/* Visual Container */}
-            <div className="group relative rounded-3xl overflow-hidden border border-slate-200 dark:border-slate-800 shadow-2xl bg-white dark:bg-slate-900 transition-all duration-300 transform rotate-[-2deg] hover:rotate-0">
+            <div className="group relative rounded-3xl overflow-hidden border border-slate-200 dark:border-slate-800 shadow-2xl bg-white dark:bg-slate-900 transition-all duration-300">
 
-              {/* Scan Image from Stitch */}
+              {/* Device Demo Image */}
               <div className="relative aspect-[4/3] w-full overflow-hidden">
                 <img
-                  alt="RxEaseAI Prescription Scanning"
+                  alt="RxEaseAI Dashboard Demo"
                   className="w-full h-full object-cover opacity-90 dark:opacity-80 transition-opacity duration-300"
-                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuCRzGKlD1J_h6E2YZPyt2ZsK_XnYY4AO89Gv437yv7s6dmPM0cdSsserjNr3fDPUQ7GL3URqQmJe7s5Vnf7hi_YYN4syZ5QJ6Omk4VGv2EvgeRtY6Z4B7i60A9D3KwQdYRsIzqWHGC5sNECd9u-uQB1fKPX500okb4Z3AEmQ7tCuJgWy9pk5F7i7PrurKt0K8_XZH23dS4gTg5aWdoSMSGE2E1_ra_2t19qFlzqWgLnK2pKwervGmRyeUW6ap-BF6HEZ14K-79dGCk"
+                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuCxw4aAf0_mpQwihCl_-uFwDMAOxuNHSQWy2r27TDVaSU1vgancDLhXYXB6Os0oEjGOW_jON5ZFgQfxhxT2V7MYMNypyvqpSGfXI0A2nMitG6B19dj94Wj072mSoETtxh_wfhuqBkiqrG7zGtE9mFmEyeo1qGgjk0XyXYAawdM4CylU4VMhO0wO-dVHTnxTdkxrmkKx3sivB4H3etefCkU2CH-xAHlZCDhDea4w5rwOqrrIhWUM0P5m7h3QbIitXN2s9lrPSQTFVPg"
                 />
 
                 {/* Laser line scanning animation */}
@@ -123,29 +122,51 @@ export default function Hero() {
                 <div className="scan-overlay"></div>
               </div>
 
-              {/* Floating UI Element from Stitch */}
-              <div className="absolute top-6 left-6 glass-panel rounded-xl p-3.5 flex items-center gap-3 shadow-lg animate-pulse dark:border-slate-850">
-                <div className="w-8 h-8 rounded-full bg-emerald-500/10 flex items-center justify-center shrink-0">
-                  <span className="material-symbols-outlined text-emerald-600 dark:text-emerald-400 text-sm font-bold" style={{ fontVariationSettings: "'FILL' 1" }}>
-                    check_circle
-                  </span>
-                </div>
-                <div className="text-left">
-                  <p className="text-[10px] text-slate-500 dark:text-slate-400 font-mono tracking-wider uppercase font-semibold">Amoxicillin 500mg</p>
-                  <p className="text-xs font-bold text-slate-900 dark:text-white">Verified</p>
-                </div>
+              {/* Structured Data Hover Revealing overlay */}
+              <div className="absolute inset-0 z-20 flex flex-col justify-center items-end pr-6 gap-4 opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-slate-950/20 backdrop-filter backdrop-blur-xs pointer-events-none">
+
+                {/* Card 1 */}
+                <Card
+                  variant="glass"
+                  className="p-3.5 pop-card shadow-lg flex items-center gap-3 w-[260px] max-w-full text-left"
+                  style={{ animationDelay: '0.4s' }}
+                >
+                  <div className="w-8 h-8 rounded-full bg-[#1DBF73]/20 flex items-center justify-center shrink-0">
+                    <MaterialIcon name="medication" color="text-[#1DBF73]" size="sm" />
+                  </div>
+                  <div>
+                    <p className="text-[10px] text-slate-500 dark:text-slate-400 font-semibold font-mono tracking-wider uppercase">Detected Medication</p>
+                    <p className="text-xs text-slate-850 dark:text-slate-200 font-bold mt-0.5">Amoxicillin 500mg</p>
+                  </div>
+                </Card>
+
+                {/* Card 2 */}
+                <Card
+                  variant="glass"
+                  className="p-3.5 pop-card shadow-lg flex items-center gap-3 w-[260px] max-w-full text-left"
+                  style={{ animationDelay: '1s' }}
+                >
+                  <div className="w-8 h-8 rounded-full bg-[#0F6FFF]/20 flex items-center justify-center shrink-0">
+                    <MaterialIcon name="schedule" color="text-[#0F6FFF]" size="sm" />
+                  </div>
+                  <div>
+                    <p className="text-[10px] text-slate-500 dark:text-slate-400 font-semibold font-mono tracking-wider uppercase">Dosage Instructions</p>
+                    <p className="text-xs text-slate-855 dark:text-slate-200 font-bold mt-0.5">1 pill, 3x daily, 7 days</p>
+                  </div>
+                </Card>
+
               </div>
 
             </div>
 
-            {/* Floating latency badge */}
+            {/* floating badge */}
             <motion.div
               animate={{ y: [0, -6, 0] }}
               transition={{ repeat: Infinity, duration: 4, ease: 'easeInOut' }}
               className="absolute -top-6 -right-6 glassmorphism p-3.5 rounded-xl shadow-xl border border-slate-200 dark:border-slate-800 hidden sm:flex items-center gap-3"
             >
               <div className="w-8 h-8 rounded-lg bg-indigo-500/10 flex items-center justify-center text-indigo-500 dark:text-indigo-400">
-                <Zap className="w-4.5 h-4.5 animate-pulse" />
+                <Zap className="w-4.5 h-4.5" />
               </div>
               <div className="text-left">
                 <div className="text-[9px] text-slate-400 font-mono font-semibold">LATENCY</div>
