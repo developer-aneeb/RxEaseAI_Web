@@ -4,7 +4,7 @@ import { useAuthStore } from '../../store/useAuthStore';
 import { useThemeStore } from '../../store/useThemeStore';
 import { useAppStore } from '../../store/useAppStore';
 import Button from '../../components/ui/Button';
-import PasswordStrengthPanel from '../../components/PasswordStrengthPanel';
+import PasswordStrengthPanel from '../../components/auth/PasswordStrengthPanel';
 import MaterialIcon from '../../components/ui/MaterialIcon';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
