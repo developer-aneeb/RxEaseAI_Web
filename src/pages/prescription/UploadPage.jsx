@@ -1,8 +1,8 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-  Upload, Camera, FileText, CheckCircle2, AlertTriangle,
-  ArrowLeft, RefreshCw, Copy, Check, Lightbulb, Play, Eye
+  Upload, Camera, FileText, AlertTriangle,
+  ArrowLeft, RefreshCw, Lightbulb, Play
 } from 'lucide-react';
 import { usePrescriptionStore } from '../../store/usePrescriptionStore';
 import { useAppStore } from '../../store/useAppStore';
@@ -240,8 +240,6 @@ export default function UploadPage() {
   const [activeTab, setActiveTab] = useState('upload'); // 'upload' | 'camera' | 'sample'
   const [cameraState, setCameraState] = useState('idle'); // 'idle' | 'capturing' | 'captured'
   const [selectedSampleId, setSelectedSampleId] = useState(null);
-  const [copied, setCopied] = useState(false);
-  const [activeJsonTab, setActiveJsonTab] = useState(false); // view raw FHIR JSON
   const fileInputRef = useRef(null);
 
   useEffect(() => {
@@ -346,27 +344,14 @@ export default function UploadPage() {
     setTimeout(() => {
       setOcrState('success');
       showToast('Prescription analyzed successfully!', 'success');
+      window.location.hash = '#result';
     }, 3500);
-  };
-
-  const copyFhirJson = () => {
-    if (!aiResult) return;
-    navigator.clipboard.writeText(JSON.stringify(aiResult.fhir, null, 2));
-    setCopied(true);
-    showToast('FHIR JSON copied to clipboard!', 'success');
-    setTimeout(() => setCopied(false), 2000);
-  };
-
-  const handleApprove = () => {
-    showToast('Prescription approved and logged in clinical registry.', 'success');
-    // Clear and navigate home
-    resetStore();
-    window.location.hash = '#home';
   };
 
   const uploadLinks = [
     { name: 'Home', href: '#home' },
-    { name: 'Verification', href: '#upload' },
+    { name: 'New Upload', href: '#upload' },
+    { name: 'Results', href: '#result' },
   ];
 
   // Render sub-views depending on state
