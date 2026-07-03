@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, Activity, ChevronRight, Sun, Moon } from 'lucide-react';
 import { useThemeStore } from '../../store/useThemeStore';
+import { useAuthStore } from '../../store/useAuthStore';
 import Button from '../ui/Button';
 
 export default function Navbar({ links }) {
@@ -9,6 +10,14 @@ export default function Navbar({ links }) {
     const [scrolled, setScrolled] = useState(false);
     const theme = useThemeStore((state) => state.theme);
     const toggleTheme = useThemeStore((state) => state.toggleTheme);
+    const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+    const user = useAuthStore((state) => state.user);
+    const logout = useAuthStore((state) => state.logout);
+
+    const getInitials = (name) => {
+        if (!name) return 'CU';
+        return name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+    };
 
     useEffect(() => {
         const handleScroll = () => {
