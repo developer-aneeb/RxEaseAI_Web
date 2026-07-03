@@ -24,10 +24,11 @@ export default function Navbar() {
 
     const navLinks = [
         { name: 'Features', href: '#features' },
-        { name: 'Workflow', href: '#workflow' },
+        { name: 'How It Works', href: '#how-it-works' },
         { name: 'Dashboard', href: '#dashboard' },
         { name: 'Analytics', href: '#analytics' },
-        { name: 'FAQ', href: '#faq' },
+        { name: 'Security', href: '#security' },
+        { name: 'FAQs', href: '#faq' },
     ];
 
     return (
@@ -39,11 +40,11 @@ export default function Navbar() {
                 <div className="flex items-center justify-between">
                     {/* Logo */}
                     <a href="#" className="flex items-center gap-2 cursor-pointer">
-                        <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/20">
-                            <Activity className="w-5 h-5 text-white" />
-                        </div>
-                        <span className="font-bold text-xl tracking-tight bg-gradient-to-r from-slate-900 via-slate-800 to-slate-600 dark:from-white dark:via-slate-200 dark:to-slate-400 bg-clip-text text-transparent">
-                            RxEaseAI<span className="text-indigo-500">AI</span>
+                        <span className="material-symbols-outlined text-primary dark:text-indigo-400 text-3xl select-none" style={{ fontVariationSettings: "'FILL' 1" }}>
+                            health_and_safety
+                        </span>
+                        <span className="font-bold text-xl tracking-tight text-primary dark:text-white font-sans">
+                            RxEaseAI
                         </span>
                     </a>
                     {/* Desktop Nav Links */}
