@@ -750,7 +750,8 @@ export default function UploadPage() {
             </motion.div>
           )}
 
-          {/* STATE 4: SUCCESS STRUCTURED AI RESULT          {ocrState === 'success' && aiResult && (
+          {/* STATE 4: SUCCESS STRUCTURED AI RESULT - Moved to ResultPage.jsx */}
+          {false && (
             <motion.div
               key="success-state"
               initial={{ opacity: 0, y: 15 }}

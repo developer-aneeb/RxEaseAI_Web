@@ -2,12 +2,12 @@ import { useEffect } from 'react';
 import Lenis from 'lenis';
 import Navbar from '../components/layout/Navbar';
 import Footer from '../components/layout/Footer';
-import Hero from '../components/sections/Hero';
-import Features from '../components/sections/Features';
-import Workflow from '../components/sections/Workflow';
-import Dashboard from '../components/sections/Dashboard';
-import Analytics from '../components/sections/Analytics';
-import Faq from '../components/sections/Faq';
+import Hero from '../components/sections/landing/Hero';
+import Features from '../components/sections/landing/Features';
+import Workflow from '../components/sections/landing/Workflow';
+import Dashboard from '../components/sections/landing/Dashboard';
+import Analytics from '../components/sections/landing/Analytics';
+import Faq from '../components/sections/landing/Faq';
 
 export default function LandingPage() {
   // Initialize Lenis smooth scroll
