@@ -10,6 +10,7 @@ import Button from '../components/ui/Button';
 import Card from '../components/ui/Card';
 import Badge from '../components/ui/Badge';
 import MaterialIcon from '../components/ui/MaterialIcon';
+import Navbar from '../components/layout/Navbar';
 
 // Mock SVG Prescription generator helper
 const createMockSvg = (patient, drug, dosage, qty, sig, docName) => {
@@ -25,9 +26,48 @@ const MOCK_SAMPLES = [
     sig: 'Take 1 capsule three times daily for 7 days',
     docName: 'Dr. Sterling',
     type: 'Antibiotic',
-    confidence: '99.8%',
+    confidence: '99.2%',
+    accuracy: '100%',
+    verification: 'High',
     status: 'Verified',
     svg: createMockSvg('Amina Khan', 'Amoxicillin 500mg', '500mg', '21 Capsules', 'Take 1 capsule three times daily for 7 days', 'Dr. Sterling'),
+    medications: [
+      {
+        name: 'Amoxicillin 500mg',
+        type: 'Antibiotic • Capsule',
+        match: '99%',
+        dosage: '1 Capsule',
+        frequency: 'Twice Daily',
+        duration: '5 Days',
+        instructions: 'After Meals',
+        icon: 'medication'
+      },
+      {
+        name: 'Paracetamol 650mg',
+        type: 'Analgesic • Tablet',
+        match: '98%',
+        dosage: '1 Tablet',
+        frequency: 'As Needed',
+        duration: '3 Days',
+        instructions: 'Fever > 100°F',
+        icon: 'pill'
+      }
+    ],
+    bento: {
+      generic: {
+        title: 'Generic Alternative Available',
+        desc: 'A structurally identical generic for Amoxicillin is available locally.',
+        savings: 'Save Rs. 450'
+      },
+      safety: {
+        status: 'passed',
+        rules: [
+          'No adverse drug interactions',
+          'Dosages within safe limits',
+          'Clinical checks fully cleared'
+        ]
+      }
+    },
     fhir: {
       resourceType: "MedicationRequest",
       id: "rx-9082",
@@ -53,9 +93,48 @@ const MOCK_SAMPLES = [
     sig: 'Take 1 tablet twice daily with meals',
     docName: 'Dr. Sarah Smith',
     type: 'Anti-Diabetic',
-    confidence: '99.1%',
+    confidence: '99.5%',
+    accuracy: '100%',
+    verification: 'High',
     status: 'Verified',
     svg: createMockSvg('Imran Malik', 'Metformin 1000mg', '1000mg', '60 Tablets', 'Take 1 tablet twice daily with meals', 'Dr. Sarah Smith'),
+    medications: [
+      {
+        name: 'Metformin 1000mg',
+        type: 'Anti-Diabetic • Tablet',
+        match: '99%',
+        dosage: '1 Tablet',
+        frequency: 'Twice Daily',
+        duration: '60 Days',
+        instructions: 'With Meals',
+        icon: 'medication'
+      },
+      {
+        name: 'Glipizide 5mg',
+        type: 'Anti-Diabetic • Tablet',
+        match: '96%',
+        dosage: '1 Tablet',
+        frequency: 'Once Daily',
+        duration: '30 Days',
+        instructions: 'Before Breakfast',
+        icon: 'pill'
+      }
+    ],
+    bento: {
+      generic: {
+        title: 'Generic Alternative Available',
+        desc: 'A structurally identical generic for Metformin is available locally.',
+        savings: 'Save Rs. 180'
+      },
+      safety: {
+        status: 'passed',
+        rules: [
+          'No adverse drug interactions',
+          'Dosages within safe limits',
+          'Clinical checks fully cleared'
+        ]
+      }
+    },
     fhir: {
       resourceType: "MedicationRequest",
       id: "rx-9081",
@@ -82,8 +161,47 @@ const MOCK_SAMPLES = [
     docName: 'Dr. Sterling',
     type: 'NSAID',
     confidence: '97.5%',
+    accuracy: '98%',
+    verification: 'Flagged',
     status: 'Flagged (Dosage)',
     svg: createMockSvg('Bilal Ahmed', 'Ibuprofen 400mg', '400mg', '30 Tablets', 'Take 1 tablet every 6 hours as needed for severe pain', 'Dr. Sterling'),
+    medications: [
+      {
+        name: 'Ibuprofen 400mg',
+        type: 'NSAID • Tablet',
+        match: '98%',
+        dosage: '1 Tablet',
+        frequency: 'Every 6 Hours',
+        duration: '3 Days',
+        instructions: 'As Needed for Pain',
+        icon: 'medication'
+      },
+      {
+        name: 'Omeprazole 20mg',
+        type: 'Proton Pump Inhibitor • Capsule',
+        match: '95%',
+        dosage: '1 Capsule',
+        frequency: 'Once Daily',
+        duration: '7 Days',
+        instructions: '30m Before Breakfast',
+        icon: 'pill'
+      }
+    ],
+    bento: {
+      generic: {
+        title: 'Generic Alternative Available',
+        desc: 'A structurally identical generic for Ibuprofen is available locally.',
+        savings: 'Save Rs. 50'
+      },
+      safety: {
+        status: 'flagged',
+        rules: [
+          'No adverse drug interactions detected',
+          'Flagged: High daily cumulative dosage',
+          'Verify patient age and renal clearance'
+        ]
+      }
+    },
     fhir: {
       resourceType: "MedicationRequest",
       id: "rx-9079",
