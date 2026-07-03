@@ -30,41 +30,36 @@ All authentication forms (`SignIn`, `SignUp`, `ForgotPassword`, `ResetPassword`)
 
 **Current Stub (`SignIn.jsx`):**
 ```javascript
-const onSubmit = (data) => {
-  // data contains { email, password } provided by React Hook Form
-  setTimeout(() => {
-    setIsSuccess(true);
-    setTimeout(() => {
-      login(); // AuthContext method sets mock token
-    }, 2000);
-  }, 1500);
-};
-```
-
-**Required Update (`SignIn.jsx`):**
-```javascript
-import api from '../utils/apiClient';
-import { useAuth } from '../contexts/AuthContext';
-
-// Assuming you add setToken() to your AuthContext
-const { login } = useAuth(); 
+const login = useAuthStore((state) => state.login);
 
 const onSubmit = async (data) => {
   try {
-    const response = await api.post('/auth/login', { 
-      email: data.email, 
-      password: data.password 
-    });
-    
-    // 1. Store Token via Context
-    login(response.data.token);
-    
-    // 2. Redirect User (handled by login() or Route Guards)
+    // login action in useAuthStore performs API call and state hydration
+    await login(data.email, data.password);
+    showToast('Welcome Back!', 'success');
   } catch (error) {
-    // 3. Handle Server Errors
-    setApiError(error.response?.data?.message || 'Login failed.');
+    showToast(getFriendlyErrorMessage(error), 'error');
   }
 };
+```
+
+**Zustand Auth Store Action (`useAuthStore.js`):**
+```javascript
+// Inside useAuthStore creation block
+login: async (email, password) => {
+  try {
+    const response = await authService.login(email, password);
+    const { token, user } = response;
+    
+    localStorage.setItem('rxease_token', token);
+    set({ user, isAuthenticated: true });
+    
+    // Trigger layout redirection
+    window.location.hash = '#dashboard';
+  } catch (error) {
+    throw error;
+  }
+}
 ```
 
 ### Expected Backend Payloads
