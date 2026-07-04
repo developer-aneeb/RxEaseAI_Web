@@ -44,7 +44,7 @@ Transform handwritten prescriptions into structured clinical intelligence. RxEas
 - **🔐 Complete Authentication Flow:** Includes fully validated forms for Sign In, Sign Up, Forgot Password, Reset Password, and Email Verification.
 - **⚡ Form Validation:** Powered by React Hook Form + Zod for centralized, strict schema-based error handling.
 - **🛡️ Live Password Security:** Interactive password strength indicators ensuring HIPAA-compliant credential creation.
-- **🔒 Protected Routes:** Role-based guard components to block unauthenticated access to the dashboard.
+- **🔒 Protected Routes:** Role-based guard components to block unauthenticated access to the home page.
 - **🌗 Adaptive Theme System:** Clean light/dark mode with FOUC-resistant startup logic.
 - **🧩 Reusable UI Architecture:** Component-driven design using highly reusable abstractions (Buttons, Icons, Cards, Badges).
 - **🟢 High-Fidelity Laser Scanning:** HUD-style OCR animations that mimic live server scanning.
@@ -53,20 +53,21 @@ Transform handwritten prescriptions into structured clinical intelligence. RxEas
 
 ## How it works
 
-1. **Authenticate:** Securely sign up or log in to the HIPAA-compliant dashboard.
+1. **Authenticate:** Securely sign up or log in to the HIPAA-compliant home page.
 2. **Segment:** Vision model isolates handwriting regions and line tokens.
 3. **Transcribe:** Medical OCR converts text into structured, readable data.
 4. **Audit:** Safety engine checks dosage rules and interaction risk.
 5. **Export:** Data is normalized into FHIR/HL7-compatible JSON.
-6. **Observe:** Analytics dashboards surface throughput and accuracy metrics.
+6. **Observe:** Analytics views surface throughput and accuracy metrics.
 
 ---
 
 ## Where to edit content (quick paths)
 
-- Page composition: `src/pages/LandingPage.jsx`
+- Page composition: `src/pages/LandingPage.jsx`, `src/pages/HomePage.jsx`
+- Prescription Workflow: `src/pages/prescription/UploadPage.jsx`, `src/pages/prescription/ResultPage.jsx`
 - Auth Pages: `src/pages/auth/SignIn.jsx`, `src/pages/auth/SignUp.jsx`, `src/pages/auth/ResetPassword.jsx`, `src/pages/auth/ForgotPassword.jsx`, `src/pages/auth/VerifyEmail.jsx`
-- Sections: `src/components/sections/`
+- Sections: `src/components/sections/landing/` and `src/components/sections/home/`
 - Layout: `src/components/layout/`
 - Auth Components: `src/components/auth/`
 - UI primitives: `src/components/ui/`
@@ -82,15 +83,21 @@ src/
  ├── components/
  │   ├── auth/          # Auth components & Route guards (PasswordStrengthPanel, ProtectedRoute)
  │   ├── layout/        # Navbar and footer
- │   ├── sections/      # Hero, Features, Workflow, Dashboard, Analytics, Faq
+ │   ├── sections/      # Sections grouped by view
+ │   │   ├── home/      # HomeHero, HomeWorkflow, HomeFeatures, HomeSecurity, HomeFaq, HomeCTA
+ │   │   └── landing/   # Hero, Features, Workflow, Dashboard, Analytics, Faq
  │   └── ui/            # Reusable UI primitives (Button, Card, Badge, MaterialIcon, etc.)
  ├── store/
  │   ├── useAuthStore.js # Session, login, logout, and token validation
  │   ├── useThemeStore.js # Theme management and DOM dark-mode syncing
- │   ├── usePrescriptionStore.js # Ingestion cycles, YOLO, OCR tracking
+ │   ├── usePrescriptionStore.js # Ingestion cycles, YOLO, OCR tracking, and clinical results
  │   └── useAppStore.js # Layout sidebar and toast notifications queues
  ├── pages/
- │   ├── LandingPage.jsx # Main Page composer
+ │   ├── LandingPage.jsx # Main Marketing Landing Page
+ │   ├── HomePage.jsx    # Protected Application Home Dashboard
+ │   ├── prescription/   # Prescription Ingestion & Clinical Intelligence
+ │   │   ├── UploadPage.jsx # Step 1: File Ingestion, Camera Snapshot & OCR Processing (#upload)
+ │   │   └── ResultPage.jsx # Step 2: Clinical Intelligence Result Dashboard (#result)
  │   └── auth/           # Authentication pages
  │       ├── SignIn.jsx      
  │       ├── SignUp.jsx
