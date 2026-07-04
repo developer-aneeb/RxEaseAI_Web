@@ -23,8 +23,8 @@ To manage authentication credentials and persistence, the application utilizes a
 ## Route Guards
 
 The application enforces access control using wrapper components:
-1. **`ProtectedRoute.jsx`**: Wraps secure views (like the Dashboard). It queries `isAuthenticated` from `useAuthStore`. If false, it instantly bounces the user to `/#signin`.
-2. **`PublicRoute.jsx`**: Wraps the Auth pages. If an already authenticated user tries to visit Sign In or Sign Up, they are instantly redirected back to their workspace (`/#dashboard`).
+1. **`ProtectedRoute.jsx`**: Wraps secure views (like the Home Page). It queries `isAuthenticated` from `useAuthStore`. If false, it instantly bounces the user to `/#signin`.
+2. **`PublicRoute.jsx`**: Wraps the Auth pages. If an already authenticated user tries to visit Sign In or Sign Up, they are instantly redirected back to their workspace (`/#home`).
 
 ## Security Visuals: `PasswordStrengthPanel`
 

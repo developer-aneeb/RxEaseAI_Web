@@ -43,7 +43,7 @@ A wrapper for Google's Material Symbols Outlined font. Provides consistent sizin
 ```
 
 ### 3. `<Card>`
-A container component utilized extensively for dashboards, feature lists, and background panels.
+A container component utilized extensively for home views, feature lists, and background panels.
 
 **Props:**
 - `variant` (string): `glass`, `glassLight`, or `flat`. (Defaults to `glass`).

@@ -55,7 +55,7 @@ login: async (email, password) => {
     set({ user, isAuthenticated: true });
     
     // Trigger layout redirection
-    window.location.hash = '#dashboard';
+    window.location.hash = '#home';
   } catch (error) {
     throw error;
   }
@@ -87,4 +87,4 @@ When integrating the actual Vision OCR logic, the workflow will likely involve F
 
 1. Ensure the backend endpoint handles `multipart/form-data`.
 2. Provide a polling mechanism, Server-Sent Events (SSE), or WebSockets to stream the OCR progress back to the frontend to power the "Laser Scanning" animations in real-time.
-3. The expected output to the frontend should be structured FHIR/HL7 JSON that populates the dashboard tables.
+3. The expected output to the frontend should be structured FHIR/HL7 JSON that populates the home page tables.

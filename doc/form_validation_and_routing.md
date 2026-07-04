@@ -22,7 +22,7 @@ All validation logic is decoupled from the UI components and centralized into st
 ## 3. Route Guarding Strategy
 Because RxEaseAI uses a custom Hash Router (`App.jsx`), routing is protected via higher-order components.
 
-- **`ProtectedRoute`**: Listens to `useAuthStore`. If `isAuthenticated` is false, it redirects to the Sign-In page. Used for the Dashboard, Analytics, and Upload screens.
+- **`ProtectedRoute`**: Listens to `useAuthStore`. If `isAuthenticated` is false, it redirects to the Sign-In page. Used for the Home, Analytics, and Upload screens.
 - **`PublicRoute`**: The inverse of ProtectedRoute. It prevents authenticated users from accidentally returning to the Sign-In or Sign-Up pages by redirecting them back to their secure workspace. It also contains logic to enforce that unverified authenticated users are correctly bound to the email verification page.
 
 These guards ensure that the client-side routing behaves exactly like a production SPA, cleanly separating public marketing/auth flows from the secure application interior.

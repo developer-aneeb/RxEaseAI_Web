@@ -36,15 +36,15 @@ src/
 Currently, the application employs a **Hash-based Routing System** managed inside `App.jsx`. Access to specific routes is enforced using Higher-Order Components (Guards) which query the auth store directly:
 
 - **`ProtectedRoute`**: Ensures the user is authenticated via `useAuthStore`. If not, they are redirected to `/#signin`.
-- **`PublicRoute`**: Ensures logged-in users cannot access auth pages. They are redirected to `/#dashboard`.
+- **`PublicRoute`**: Ensures logged-in users cannot access auth pages. They are redirected to `/#home`.
 
 ```javascript
 // App.jsx snippet
 const [currentHash, setCurrentHash] = useState(window.location.hash);
 
 // Example Guarded Route
-if (currentHash === '#dashboard') {
-    return <ProtectedRoute><DashboardPlaceholder /></ProtectedRoute>;
+if (currentHash === '#home') {
+    return <ProtectedRoute><HomePage /></ProtectedRoute>;
 }
 ```
 
@@ -56,7 +56,7 @@ if (currentHash === '#dashboard') {
 - `#reset-password`: `ResetPassword`
 - `#verify-email`: `VerifyEmail`
 
-> **Note for Future Scaling**: As the application grows to include protected dashboard routes, it is recommended to replace this hash-based system with `react-router-dom` to support nested routing, layout wrappers, and robust route guarding.
+> **Note for Future Scaling**: As the application grows to include protected home routes, it is recommended to replace this hash-based system with `react-router-dom` to support nested routing, layout wrappers, and robust route guarding.
 
 ## State Management
 - **Local State**: Managed via React's `useState` for UI toggles, while form states are handled efficiently by **React Hook Form**.
