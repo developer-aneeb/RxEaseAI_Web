@@ -10,26 +10,28 @@ The application state is divided into four domain-driven stores located under `s
 
 | Store | File Path | Responsibility |
 | :--- | :--- | :--- |
-| **Auth Store** | `src/store/useAuthStore.js` | User session, login, logout, registration status, session restoration from `localStorage`. |
+| **Auth Store** | `src/store/useAuthStore.js` | User session, JWT tokens, login, logout, and session restoration. Persisted via `persist` middleware (`rxease-auth-storage`). |
 | **Theme Store** | `src/store/useThemeStore.js` | Dark/Light mode selection, root HTML class manipulation, and local persistence. |
-| **Prescription Store** | `src/store/usePrescriptionStore.js` | Prescription lists, OCR processing steps, YOLO scan progress, and AI diagnosis results. |
-| **App Store** | `src/store/useAppStore.js` | App shell states (Sidebar toggles), pharmacist configuration settings, and global toast notifications. |
+| **Prescription Store** | `src/store/usePrescriptionStore.js` | Prescription lists, OCR processing steps, YOLO scan progress, and AI diagnosis results. History persisted via `persist` middleware (`rxease-prescription-storage`). |
+| **App Store** | `src/store/useAppStore.js` | App shell states (Sidebar toggles), user preferences, and global toast notifications. Preferences and sidebar state persisted via `persist` middleware (`rxease-app-storage`). |
 
 ---
 
 ## 2. Store Definitions & API
 
 ### Auth Store (`useAuthStore`)
-Manages authentication credentials and persists access tokens via client side cookies or local storage.
+Manages authentication credentials and automatically persists session state via Zustand's `persist` middleware (`rxease-auth-storage`).
 
 * **State**:
   - `user`: Object containing `id`, `email`, `fullName` (or `null` if unauthenticated).
+  - `token`: Access token string.
+  - `refreshToken`: Refresh token string.
   - `isAuthenticated`: Boolean status indicating if a valid session exists.
   - `isLoading`: Boolean loading indicator for initialization.
 * **Actions**:
-  - `initializeAuth()`: Reads token from local storage and restores the user session on startup.
-  - `login(email, password)`: Authenticates user credentials with the backend API.
-  - `logout()`: Terminates the session, clears cached tokens, and redirects the browser.
+  - `initializeAuth()`: Reads tokens from persistent storage and validates/restores the user session on startup. Includes fallback absorption for plain `localStorage` tokens set during OAuth redirects.
+  - `login(userData, accessToken, refreshToken)`: Hydrates user credentials and JWT tokens into Zustand state.
+  - `logout()`: Terminates the session, clears cached tokens, and redirects the browser to `#signin`.
 
 ### Theme Store (`useThemeStore`)
 Controls dark mode and automatically syncs the DOM element classes.
@@ -40,25 +42,30 @@ Controls dark mode and automatically syncs the DOM element classes.
   - `toggleTheme()`: Inverts the theme and updates the `<html>` element class list.
 
 ### Prescription Store (`usePrescriptionStore`)
-Tracks active prescription ingestion cycles, YOLO line segmentation progress, and clinical audits.
+Tracks active prescription ingestion cycles, YOLO line segmentation progress, and clinical audits. Patient prescription history is persisted across browser reloads via `persist` middleware (`rxease-prescription-storage`).
 
 * **State**:
-  - `prescriptions`: Array of historical and active prescription objects.
+  - `currentPrescription`: Active prescription object under review.
+  - `history`: Array of historical prescription records (persisted).
   - `uploadProgress`: Ingestion percentage `0` to `100`.
   - `ocrState`: Ingestion stages (`'idle'`, `'uploading'`, `'segmenting'`, `'transcribing'`, `'done'`).
   - `aiResult`: Normalized FHIR/HL7 clinical check data.
 * **Actions**:
-  - `uploadPrescription(file)`: Streams prescription images to the API and tracks progress.
-  - `runOCR(prescriptionId)`: Triggers YOLO line segmentation and OCR translation.
+  - `setCurrentPrescription(prescription)`: Sets active prescription.
+  - `addHistoryEntry(entry)`: Prepends a new prescription verification record to the persisted history array.
+  - `clearPrescription()`: Resets active scan state.
 
 ### App Store (`useAppStore`)
-Handles notification alerts and sidebar workspace controls.
+Handles notification alerts and sidebar workspace controls. Uses `persist` middleware (`rxease-app-storage`) partialized to retain user settings, notifications, and sidebar collapse state while omitting transient toasts.
 
 * **State**:
-  - `sidebarOpen`: Sidebar collapse boolean.
-  - `toasts`: Array of active global toast alerts.
+  - `isSidebarOpen`: Sidebar collapse boolean (persisted).
+  - `settings`: Pharmacist preferences (`notificationsEnabled`, `autoAnalyze`, `mfaEnabled`) (persisted).
+  - `notifications`: Array of user notifications (persisted).
+  - `toasts`: Array of active global toast alerts (transient).
 * **Actions**:
   - `toggleSidebar()`: Opens or closes the sidebar menu.
+  - `updateSettings(newSettings)`: Merges new user settings into state.
   - `showToast(message, type)`: Queues a new alert (`'success'`, `'error'`, `'warning'`, `'info'`) which auto-expires after 5 seconds.
   - `removeToast(id)`: Removes a specific toast from the rendering stack.
 

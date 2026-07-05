@@ -49,3 +49,21 @@ export const validateTerms = (terms) => {
   }
   return null;
 };
+
+export const validateReminderDateTime = (date, time) => {
+  if (!date) {
+    return 'Please select a reminder date.';
+  }
+  if (!time) {
+    return 'Please select a reminder time.';
+  }
+  const reminderDateTime = new Date(`${date}T${time}`);
+  if (isNaN(reminderDateTime.getTime())) {
+    return 'Invalid date or time format.';
+  }
+  if (reminderDateTime <= new Date()) {
+    return 'Reminders must be set in the future, never in the past.';
+  }
+  return null;
+};
+

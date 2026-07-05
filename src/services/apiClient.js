@@ -12,7 +12,8 @@ const apiClient = axios.create({
 // Request interceptor to attach bearer token
 apiClient.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('rxease_token');
+    const authStorage = localStorage.getItem('rxease-auth-storage');
+    const token = authStorage ? JSON.parse(authStorage).state?.token : null;
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -30,9 +31,7 @@ apiClient.interceptors.response.use(
     // Check if unauthorized (401) and handle token expiration/logout
     if (error.response && error.response.status === 401) {
       // Clear token and user details on unauthorized
-      localStorage.removeItem('rxease_token');
-      localStorage.removeItem('rxease_refresh_token');
-      localStorage.removeItem('rxease_user');
+      localStorage.removeItem('rxease-auth-storage');
       
       // Notify components or redirect if not already on public route
       const currentHash = window.location.hash;

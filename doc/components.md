@@ -92,3 +92,49 @@ A macro-component designed specifically for the Landing Page to ensure all secti
   subtitle="Everything you need to know about RxEaseAI."
 />
 ```
+
+### 6. `<Input>`
+An atomic, `forwardRef`-compliant input primitive designed to integrate seamlessly with React Hook Form and Zod validation schemas.
+
+**Props:**
+- `label` (string): Standard input field header text.
+- `error` (string): Inline error message string (e.g. from `errors.fieldName?.message`). Automatically applies error styling (rose borders and rings) when present.
+- `type` (string): `text`, `email`, `password`, `time`, `date`, or `number`.
+- `className` (string): Additional Tailwind classes.
+- All standard HTML input props (`placeholder`, `min`, `max`, `onChange`, `onBlur`, `disabled`, etc.).
+
+**Usage:**
+```jsx
+<Input
+  label="Medicine Name"
+  placeholder="e.g. Lisinopril 10mg"
+  error={errors.name?.message}
+  {...register('name')}
+/>
+```
+
+### 7. `<Modal>`
+A centralized dialog overlay utilizing Framer Motion for smooth physics-based animations (backdrop fade and scale transitions).
+
+**Props:**
+- `isOpen` (boolean): Controls visibility of the modal dialog.
+- `onClose` (function): Callback triggered when clicking the close button (`X`) or the backdrop.
+- `title` (React Node | string): Dialog header title or element.
+- `children` (React Node): Form or content body inside the dialog panel.
+- `className` (string): Custom panel sizing or layout classes.
+
+**Usage:**
+```jsx
+<AnimatePresence>
+  <Modal
+    isOpen={isModalOpen}
+    onClose={() => setIsModalOpen(false)}
+    title="Schedule New Reminder"
+  >
+    <form onSubmit={handleSubmit(onSubmit)}>
+      {/* Form inputs */}
+    </form>
+  </Modal>
+</AnimatePresence>
+```
+

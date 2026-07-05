@@ -4,10 +4,11 @@ This document provides a roadmap for integrating the static RxEaseAI frontend wi
 
 ## General Integration Principles
 
-### 1. API Client Setup
-The project already includes a centralized API client powered by `axios`.
+### 1. API Client Setup & Token Persistence
+The project includes a centralized API client powered by `axios`.
 - **Location**: `src/services/apiClient.js`
-- **Features**: Automatically attaches the JWT `Bearer` token to outbound requests and handles global `401 Unauthorized` responses by clearing local storage and redirecting to the sign-in page.
+- **Zustand Persist Compatibility**: Because `useAuthStore` utilizes Zustand's `persist` middleware under the key `rxease-auth-storage`, `apiClient.js` includes custom request interceptor logic that parses `localStorage.getItem('rxease-auth-storage')` (JSON containing `{ state: { token, user, ... } }`) or fallbacks to plain `rxease_token` to attach the JWT `Bearer` token to outbound requests.
+- **Error Interceptors**: Automatically handles global `401 Unauthorized` responses by clearing storage, invoking `useAuthStore.getState().logout()`, and redirecting to `#signin`.
 
 ### 2. The Service Layer
 Rather than putting API calls directly into React components, the project uses the service pattern.
@@ -24,7 +25,7 @@ VITE_API_URL=http://localhost:8000/api/v1
 
 ## Integrating Authentication
 
-All authentication forms (`SignIn`, `SignUp`, `ForgotPassword`, `ResetPassword`) currently simulate a network delay using `setTimeout`. You must replace these with real API calls.
+All authentication forms (`SignIn`, `SignUp`, `ForgotPassword`, `ResetPassword`) currently simulate a network delay using `setTimeout` or point to standard endpoint stubs. You must replace these with live backend services.
 
 ### Example: Sign In Integration
 
@@ -34,8 +35,8 @@ const login = useAuthStore((state) => state.login);
 
 const onSubmit = async (data) => {
   try {
-    // login action in useAuthStore performs API call and state hydration
-    await login(data.email, data.password);
+    // login action in useAuthStore hydrates Zustand store & persisted storage
+    await login(data, 'sample_jwt_token', 'sample_refresh_token');
     showToast('Welcome Back!', 'success');
   } catch (error) {
     showToast(getFriendlyErrorMessage(error), 'error');
@@ -46,19 +47,17 @@ const onSubmit = async (data) => {
 **Zustand Auth Store Action (`useAuthStore.js`):**
 ```javascript
 // Inside useAuthStore creation block
-login: async (email, password) => {
-  try {
-    const response = await authService.login(email, password);
-    const { token, user } = response;
-    
-    localStorage.setItem('rxease_token', token);
-    set({ user, isAuthenticated: true });
-    
-    // Trigger layout redirection
-    window.location.hash = '#home';
-  } catch (error) {
-    throw error;
+login: (userData, accessToken, refreshToken) => {
+  if (accessToken) {
+    localStorage.setItem('rxease_token', accessToken);
   }
+  set({
+    user: userData,
+    token: accessToken || null,
+    refreshToken: refreshToken || null,
+    isAuthenticated: true
+  });
+  window.location.hash = '#home';
 }
 ```
 
@@ -66,25 +65,55 @@ login: async (email, password) => {
 
 For the frontend to work seamlessly, the backend should expose the following REST endpoints and accept the corresponding JSON bodies:
 
+#### Authentication & Profile
 - **POST `/auth/register`**
   - Body: `{ "fullName": "John Doe", "email": "john@hospital.com", "password": "Secure123!" }`
   - Response: `201 Created`
 - **POST `/auth/login`**
   - Body: `{ "email": "john@hospital.com", "password": "Secure123!" }`
-  - Response: `200 OK`, `{ "token": "jwt_string", "user": { ... } }`
+  - Response: `200 OK`, `{ "token": "jwt_string", "refreshToken": "refresh_string", "user": { ... } }`
 - **POST `/auth/forgot-password`**
   - Body: `{ "email": "john@hospital.com" }`
   - Response: `200 OK`
 - **POST `/auth/reset-password`**
   - Body: `{ "token": "url_param_token", "password": "NewSecure123!" }`
   - Response: `200 OK`
+- **PUT `/users/profile`**
+  - Body: `{ "fullName": "Dr. Sarah Jenkins", "phone": "+92 300 1234567", "specialty": "Cardiology" }`
+  - Response: `200 OK`
+
+#### Prescription & Vision OCR
+- **POST `/prescriptions/upload`** (`multipart/form-data`)
+  - Body: Prescription image/PDF file
+  - Response: `202 Accepted`, `{ "scanId": "scan_123", "status": "processing" }`
+- **GET `/prescriptions/history`**
+  - Response: `200 OK`, `{ "data": [ { "id": "h-1", "doctor": "Dr. Thorne", ... } ] }`
+
+#### Medication Reminders
+- **POST `/reminders`**
+  - Body: `{ "medicineName": "Lisinopril", "dosage": "10mg", "frequency": "Daily", "time": "08:00", "date": "2026-07-10", "mealTiming": "after_meal" }`
+  - Response: `201 Created`
+- **GET `/reminders`**
+  - Response: `200 OK`, `{ "reminders": [ ... ] }`
+
+#### Billing & Subscriptions (Pakistan Localized OS)
+- **GET `/billing/subscription`**
+  - Response: `200 OK`, `{ "plan": "pro", "pricePKR": 2499, "status": "active", "renewalDate": "2026-08-01" }`
+- **POST `/billing/subscription`**
+  - Body: `{ "planId": "team", "billingCycle": "monthly" }`
+  - Response: `200 OK`
+- **POST `/billing/payment-methods`**
+  - Body: `{ "type": "easypaisa", "accountNumber": "03001234567" }` (or `card`, `jazzcash`, `bank_transfer`)
+  - Response: `201 Created`
+- **PUT `/billing/ntn-profile`**
+  - Body: `{ "companyName": "City Clinic", "ntnNumber": "1234567-8", "address": "Karachi, Pakistan" }`
+  - Response: `200 OK`
 
 ---
 
-## Future Feature: Integrating the AI Core
+## Integrating the AI Core & WebSockets
 
-When integrating the actual Vision OCR logic, the workflow will likely involve File Uploads. 
-
+When integrating the actual Vision OCR logic:
 1. Ensure the backend endpoint handles `multipart/form-data`.
-2. Provide a polling mechanism, Server-Sent Events (SSE), or WebSockets to stream the OCR progress back to the frontend to power the "Laser Scanning" animations in real-time.
-3. The expected output to the frontend should be structured FHIR/HL7 JSON that populates the home page tables.
+2. Provide Server-Sent Events (SSE) or WebSockets (`/ws/ocr`) to stream line-by-line segmentation progress back to `usePrescriptionStore` to power the "Laser Scanning" animations in real-time.
+3. The expected output to the frontend should be structured FHIR/HL7 JSON that automatically hydrates `usePrescriptionStore.getState().addHistoryEntry()`.

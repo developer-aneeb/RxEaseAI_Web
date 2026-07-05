@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { validateReminderDateTime } from './authValidation';
 
 // Shared base rules
 const passwordRules = z
@@ -37,3 +38,44 @@ export const resetPasswordSchema = z.object({
   message: "Passwords don't match",
   path: ['confirmPassword'],
 });
+
+export const reminderSchema = z.object({
+  name: z.string().min(1, 'Please enter the medicine name'),
+  date: z.string().min(1, 'Please select a reminder date'),
+  time: z.string().min(1, 'Please select a reminder time'),
+  meal: z.enum(['Breakfast', 'Lunch', 'Dinner', 'Before Sleep', 'Anytime'], {
+    required_error: 'Please select a meal timing',
+  }),
+}).superRefine((data, ctx) => {
+  const error = validateReminderDateTime(data.date, data.time);
+  if (error) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: error,
+      path: ['time'],
+    });
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: error,
+      path: ['date'],
+    });
+  }
+});
+
+export const profileSchema = z.object({
+  fullName: z.string().min(1, 'Full name is required'),
+  email: z.string().min(1, 'Email is required').email('Please enter a valid email address'),
+  phone: z.string().min(1, 'Phone number is required'),
+  specialty: z.string().min(1, 'Specialty/Role is required'),
+});
+
+export const feedbackSchema = z.object({
+  rating: z.number().min(1).max(5),
+  feedbackText: z.string().min(10, 'Please write at least 10 characters of feedback'),
+});
+
+export const supportTicketSchema = z.object({
+  subject: z.string().min(3, 'Subject must be at least 3 characters'),
+  description: z.string().min(10, 'Description must be at least 10 characters'),
+});
+

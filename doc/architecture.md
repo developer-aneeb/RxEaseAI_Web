@@ -55,12 +55,25 @@ if (currentHash === '#home') {
 - `#forgot-password`: `ForgotPassword`
 - `#reset-password`: `ResetPassword`
 - `#verify-email`: `VerifyEmail`
+- `#home`: `HomePage` (Protected Dashboard)
+- `#upload`: `UploadPage` (Prescription Upload & AI Scan)
+- `#history`: `HistoryPage` (Prescription History List)
+- `#history-dashboard`: `HistoryDashboardPage` (Prescription Analytics & Verification Dashboard)
+- `#recommendations`: `RecommendationPage` (AI Smart Alternatives & Savings)
+- `#search`: `SearchPage` (Drug Interaction & Clinical Search Engine)
+- `#analytics`: `AnalyticsPage` (Clinical Trends & Intelligence Summary)
+- `#reminders`: `RemindersPage` (Medication Reminder Center)
+- `#notifications`: `NotificationsPage` (System & Clinical Alert Center)
+- `#billing`: `BillingPage` (Localized PK Premium Billing & Subscription OS)
+- `#settings`: `SettingsPage` (Profile, Feedback & Support Tickets)
 
-> **Note for Future Scaling**: As the application grows to include protected home routes, it is recommended to replace this hash-based system with `react-router-dom` to support nested routing, layout wrappers, and robust route guarding.
+> **Note for Future Scaling**: As the application grows to include more complex protected workflows, it is recommended to replace this hash-based system with `react-router-dom` to support nested routing, layout wrappers, and robust route guarding.
 
 ## State Management
 - **Local State**: Managed via React's `useState` for UI toggles, while form states are handled efficiently by **React Hook Form**.
-- **Global State (Zustand)**: 
+- **Global State (Zustand with Persistence)**: 
   - All shared state is managed via Zustand stores under `src/store/` (`useAuthStore`, `useThemeStore`, `usePrescriptionStore`, `useAppStore`). See the [State Management Guide](file:///d:/projects/RxEaseAI_Web/frontend/doc/state_management.md) for details.
+  - **Zustand Persist Middleware**: To prevent data loss across page reloads and browser sessions, `useAuthStore` (`rxease-auth-storage`), `useAppStore` (`rxease-app-storage`), and `usePrescriptionStore` (`rxease-prescription-storage`) utilize Zustand's native `persist` middleware with tailored `partialize` configuration.
   - **Notifications**: Toast queues are populated inside `useAppStore` and consumed by the `ToastContext` wrapper to display floating alerts across the page.
 - **Future Backend State**: When integrated with a real backend, consider introducing a data-fetching library like `React Query` or `RTK Query` to handle API caching and loading states rather than manual `useEffect` chains.
+

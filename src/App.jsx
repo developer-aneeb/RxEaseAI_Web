@@ -3,6 +3,15 @@ import LandingPage from './pages/LandingPage';
 import HomePage from './pages/HomePage';
 import UploadPage from './pages/prescription/UploadPage';
 import ResultPage from './pages/prescription/ResultPage';
+import HistoryPage from './pages/prescription/HistoryPage';
+import RecommendationPage from './pages/prescription/RecommendationPage';
+import SearchPage from './pages/search/SearchPage';
+import AnalyticsPage from './pages/analytics/AnalyticsPage';
+import SettingsPage from './pages/settings/SettingsPage';
+import RemindersPage from './pages/prescription/RemindersPage';
+import NotificationsPage from './pages/notifications/NotificationsPage';
+import HistoryDashboardPage from './pages/prescription/HistoryDashboardPage';
+import BillingPage from './pages/billing/BillingPage';
 import SignUp from './pages/auth/SignUp';
 import SignIn from './pages/auth/SignIn';
 import ForgotPassword from './pages/auth/ForgotPassword';
@@ -24,10 +33,10 @@ function MainRouter() {
     const initializeAuth = useAuthStore((state) => state.initializeAuth);
 
     const pathname = window.location.pathname;
-    const isRedirectPath = pathname === '/reset-password' || 
-                           pathname === '/verify-email' ||
-                           pathname.startsWith('/auth/oauth/success') || 
-                           pathname.startsWith('/auth/oauth/error');
+    const isRedirectPath = pathname === '/reset-password' ||
+        pathname === '/verify-email' ||
+        pathname.startsWith('/auth/oauth/success') ||
+        pathname.startsWith('/auth/oauth/error');
 
     // Restore session on mount
     useEffect(() => {
@@ -126,6 +135,42 @@ function MainRouter() {
 
     if (currentHash === '#result') {
         return <ProtectedRoute><ResultPage /></ProtectedRoute>;
+    }
+
+    if (currentHash === '#history') {
+        return <ProtectedRoute><HistoryPage /></ProtectedRoute>;
+    }
+
+    if (currentHash === '#recommendations') {
+        return <ProtectedRoute><RecommendationPage /></ProtectedRoute>;
+    }
+
+    if (currentHash === '#search') {
+        return <ProtectedRoute><SearchPage /></ProtectedRoute>;
+    }
+
+    if (currentHash === '#analytics') {
+        return <ProtectedRoute><AnalyticsPage /></ProtectedRoute>;
+    }
+
+    if (currentHash === '#settings') {
+        return <ProtectedRoute><SettingsPage /></ProtectedRoute>;
+    }
+
+    if (currentHash === '#reminders') {
+        return <ProtectedRoute><RemindersPage /></ProtectedRoute>;
+    }
+
+    if (currentHash === '#notifications') {
+        return <ProtectedRoute><NotificationsPage /></ProtectedRoute>;
+    }
+
+    if (currentHash === '#history-dashboard') {
+        return <ProtectedRoute><HistoryDashboardPage /></ProtectedRoute>;
+    }
+
+    if (currentHash === '#billing') {
+        return <ProtectedRoute><BillingPage /></ProtectedRoute>;
     }
 
     // Unprotected Public Routes (e.g., Marketing Landing Page)
