@@ -8,9 +8,9 @@ import RecommendationPage from './pages/prescription/RecommendationPage';
 import SearchPage from './pages/search/SearchPage';
 import AnalyticsPage from './pages/analytics/AnalyticsPage';
 import SettingsPage from './pages/settings/SettingsPage';
-import RemindersPage from './pages/prescription/RemindersPage';
+import RemindersPage from './pages/reminder/RemindersPage';
 import NotificationsPage from './pages/notifications/NotificationsPage';
-import HistoryDashboardPage from './pages/prescription/HistoryDashboardPage';
+import PrescriptionAnalytics from './pages/prescription/PrescriptionAnalytics';
 import BillingPage from './pages/billing/BillingPage';
 import SignUp from './pages/auth/SignUp';
 import SignIn from './pages/auth/SignIn';
@@ -165,8 +165,8 @@ function MainRouter() {
         return <ProtectedRoute><NotificationsPage /></ProtectedRoute>;
     }
 
-    if (currentHash === '#history-dashboard') {
-        return <ProtectedRoute><HistoryDashboardPage /></ProtectedRoute>;
+    if (currentHash === '#prescription-analytics') {
+        return <ProtectedRoute><PrescriptionAnalytics /></ProtectedRoute>;
     }
 
     if (currentHash === '#billing') {
