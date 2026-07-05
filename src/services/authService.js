@@ -2,7 +2,8 @@ import apiClient from './apiClient';
 
 export const authService = {
   /**
-   * Sign up a new user
+   * Register a new user
+   * POST /auth/register → 201
    */
   async signup(email, password, name, role = 'user', invitationToken = '') {
     const response = await apiClient.post('/auth/register', {
@@ -10,24 +11,25 @@ export const authService = {
       password,
       name,
       role,
-      invitation_token: invitationToken
+      invitation_token: invitationToken,
     });
     return response.data;
   },
 
   /**
-   * Log in an existing user
+   * Login
+   * POST /auth/login → 200
+   * Returns { data: { user, session: { access_token, refresh_token, expires_at } } }
+   * OR { require2FA: true, challengeId } when MFA is needed
    */
   async login(email, password) {
-    const response = await apiClient.post('/auth/login', {
-      email,
-      password,
-    });
+    const response = await apiClient.post('/auth/login', { email, password });
     return response.data;
   },
 
   /**
-   * Log out the current user
+   * Logout
+   * POST /auth/logout → 200
    */
   async logout() {
     const response = await apiClient.post('/auth/logout');
@@ -35,48 +37,49 @@ export const authService = {
   },
 
   /**
-   * Send a password reset email
+   * Request password reset email
+   * POST /auth/request-password-reset → 200
    */
   async requestPasswordReset(email) {
-    const response = await apiClient.post('/auth/request-password-reset', {
-      email
-    });
+    const response = await apiClient.post('/auth/request-password-reset', { email });
     return response.data;
   },
 
   /**
-   * Update user's password (called after clicking reset link)
+   * Reset password using the token from the reset email link
+   * POST /auth/reset-password → 200
    */
   async resetPassword(accessToken, newPassword) {
     const response = await apiClient.post('/auth/reset-password', {
       access_token: accessToken,
-      new_password: newPassword
+      new_password: newPassword,
     });
     return response.data;
   },
 
   /**
-   * Resend verification email
+   * Resend email verification
+   * POST /auth/resend-verification → 200
    */
   async resendVerification(email) {
-    const response = await apiClient.post('/auth/resend-verification', {
-      email
-    });
+    const response = await apiClient.post('/auth/resend-verification', { email });
     return response.data;
   },
 
   /**
    * Refresh token
+   * POST /auth/refresh-token → 200
    */
   async refreshToken(refreshToken) {
     const response = await apiClient.post('/auth/refresh-token', {
-      refresh_token: refreshToken
+      refresh_token: refreshToken,
     });
     return response.data;
   },
 
   /**
-   * Get the current user profile
+   * Get current user profile (auth context)
+   * GET /auth/profile → 200
    */
   async getProfile() {
     const response = await apiClient.get('/auth/profile');
@@ -84,14 +87,42 @@ export const authService = {
   },
 
   /**
-   * Initiate Google OAuth flow by fetching the redirect URL
+   * Initiate Google OAuth — redirects browser to Google
+   * GET /auth/oauth/google → 200 with { data: { url } }
    */
   async initiateGoogleOAuth() {
     const response = await apiClient.get('/auth/oauth/google');
-    if (response.data && response.data.data && response.data.data.url) {
+    if (response.data?.data?.url) {
       window.location.href = response.data.data.url;
     } else {
       throw new Error('Google OAuth redirect URL not returned by server');
     }
-  }
+  },
+
+  /**
+   * Get linked OAuth providers
+   * GET /auth/oauth/linked → 200
+   */
+  async getLinkedProviders() {
+    const response = await apiClient.get('/auth/oauth/linked');
+    return response.data;
+  },
+
+  /**
+   * Deactivate account
+   * POST /auth/deactivate → 200
+   */
+  async deactivateAccount() {
+    const response = await apiClient.post('/auth/deactivate');
+    return response.data;
+  },
+
+  /**
+   * Reactivate account
+   * POST /auth/reactivate → 200
+   */
+  async reactivateAccount(email, password) {
+    const response = await apiClient.post('/auth/reactivate', { email, password });
+    return response.data;
+  },
 };
