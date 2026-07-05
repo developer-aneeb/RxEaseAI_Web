@@ -80,34 +80,55 @@ Transform handwritten prescriptions into structured clinical intelligence. RxEas
 
 ```bash
 src/
- ├── components/
- │   ├── auth/          # Auth components & Route guards (PasswordStrengthPanel, ProtectedRoute)
- │   ├── layout/        # Navbar and footer
- │   ├── sections/      # Sections grouped by view
- │   │   ├── home/      # HomeHero, HomeWorkflow, HomeFeatures, HomeSecurity, HomeFaq, HomeCTA
- │   │   └── landing/   # Hero, Features, Workflow, Dashboard, Analytics, Faq
- │   └── ui/            # Reusable UI primitives (Button, Card, Badge, MaterialIcon, etc.)
- ├── store/
- │   ├── useAuthStore.js # Session, login, logout, and token validation
- │   ├── useThemeStore.js # Theme management and DOM dark-mode syncing
- │   ├── usePrescriptionStore.js # Ingestion cycles, YOLO, OCR tracking, and clinical results
- │   └── useAppStore.js # Layout sidebar and toast notifications queues
- ├── pages/
- │   ├── LandingPage.jsx # Main Marketing Landing Page
- │   ├── HomePage.jsx    # Protected Application Home Dashboard
- │   ├── prescription/   # Prescription Ingestion & Clinical Intelligence
- │   │   ├── UploadPage.jsx # Step 1: File Ingestion, Camera Snapshot & OCR Processing (#upload)
- │   │   └── ResultPage.jsx # Step 2: Clinical Intelligence Result Dashboard (#result)
- │   └── auth/           # Authentication pages
- │       ├── SignIn.jsx      
- │       ├── SignUp.jsx
- │       ├── ForgotPassword.jsx
- │       ├── ResetPassword.jsx
- │       └── VerifyEmail.jsx
- ├── styles/            # Shared style utilities
- ├── index.css          # Tailwind imports and global styles
- ├── App.jsx            # Routing and Hash-based Navigation
- └── main.jsx           # App entry point
+  ├── components/
+  │   ├── auth/          # Auth components & Route guards (PasswordStrengthPanel, ProtectedRoute, PublicRoute)
+  │   ├── layout/        # Macro layouts (Navbar, Footer, SideNavbar)
+  │   ├── sections/      # Sections grouped by view
+  │   │   ├── home/      # HomeHero, HomeWorkflow, HomeFeatures, HomeSecurity, HomeFaq, HomeCTA
+  │   │   └── landing/   # Hero, Features, Workflow, Dashboard, Analytics, Faq
+  │   └── ui/            # Reusable primitives (Button, Card, Badge, MaterialIcon, Input, Modal, etc.)
+  ├── store/             # Zustand Global State with Persistence Middleware
+  │   ├── useAuthStore.js # Session, JWT tokens, login, logout (`rxease-auth-storage`)
+  │   ├── useThemeStore.js # Theme management and DOM dark-mode syncing
+  │   ├── usePrescriptionStore.js # Ingestion cycles, OCR tracking, and clinical history (`rxease-prescription-storage`)
+  │   └── useAppStore.js # Sidebar state, user settings, and toast notifications (`rxease-app-storage`)
+  ├── pages/
+  │   ├── LandingPage.jsx # Main Marketing Landing Page (`/`)
+  │   ├── HomePage.jsx    # Protected Application Home Dashboard (`#home`)
+  │   ├── prescription/   # Prescription Ingestion & Clinical Intelligence
+  │   │   ├── UploadPage.jsx # Step 1: File Ingestion, Camera Snapshot & OCR Processing (`#upload`)
+  │   │   ├── ResultPage.jsx # Step 2: Clinical Intelligence Result Dashboard (`#result`)
+  │   │   ├── HistoryPage.jsx # Historical Prescription Archives (`#history`)
+  │   │   ├── HistoryDashboardPage.jsx # Analytics Dashboard (`#history-dashboard`)
+  │   │   └── RecommendationPage.jsx # AI Smart Alternatives & Cost Savings (`#recommendations`)
+  │   ├── reminder/       # Medication Reminder Center (`#reminders`)
+  │   │   └── RemindersPage.jsx
+  │   ├── analytics/      # Clinical Intelligence & Adherence Summaries (`#analytics`)
+  │   │   └── AnalyticsPage.jsx
+  │   ├── search/         # Drug Interaction & Clinical Search Engine (`#search`)
+  │   │   └── SearchPage.jsx
+  │   ├── notifications/  # System & Clinical Alert Center (`#notifications`)
+  │   │   └── NotificationsPage.jsx
+  │   ├── billing/        # Localized Pakistan Billing & Subscription OS (`#billing`)
+  │   │   └── BillingPage.jsx
+  │   ├── settings/       # Profile, Feedback & Support Hub (`#settings`)
+  │   │   └── SettingsPage.jsx
+  │   └── auth/           # Authentication pages
+  │       ├── SignIn.jsx      
+  │       ├── SignUp.jsx
+  │       ├── ForgotPassword.jsx
+  │       ├── ResetPassword.jsx
+  │       └── VerifyEmail.jsx
+  ├── doc/               # Comprehensive Architecture & Integration Guides
+  │   ├── architecture.md, project_structure.md, state_management.md
+  │   ├── components.md, form_validation_and_routing.md, theming.md
+  │   ├── authentication.md, backend_integration_guide.md
+  │   ├── new_features_guide.md # Developer playbook for adding new features
+  │   └── api_services.md       # API client & backend service reference
+  ├── styles/            # Shared style utilities
+  ├── index.css          # Tailwind imports and global styles
+  ├── App.jsx            # Routing and Hash-based Navigation
+  └── main.jsx           # App entry point
 ```
 
 ---
