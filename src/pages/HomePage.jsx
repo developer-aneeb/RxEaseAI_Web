@@ -43,6 +43,10 @@ export default function HomePage() {
   const homeLinks = [
     { name: 'Home', href: '#home', onClick: (e) => handleLinkClick(e, 'home-hero') },
     { name: 'Upload', href: '#upload' },
+    { name: 'History', href: '#history' },
+    { name: 'Recommendations', href: '#recommendations' },
+    { name: 'Search', href: '#search' },
+    { name: 'Analytics', href: '#analytics' },
     { name: 'Features', href: '#features', onClick: (e) => handleLinkClick(e, 'features') },
     { name: 'How It Works', href: '#how-it-works', onClick: (e) => handleLinkClick(e, 'how-it-works') },
     { name: 'Security', href: '#security', onClick: (e) => handleLinkClick(e, 'security') },
