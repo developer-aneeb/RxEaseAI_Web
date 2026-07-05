@@ -102,14 +102,14 @@ export default function Navbar({ links }) {
 
                         {isAuthenticated ? (
                             <>
-                                <div 
+                                <div
                                     onClick={() => window.location.hash = '#settings'}
                                     className="hidden sm:flex items-center gap-3 px-4 border-r border-slate-250 dark:border-slate-800 mr-2 text-left cursor-pointer hover:opacity-80 transition-opacity"
                                     title="View Profile Settings"
                                 >
                                     <div>
-                                        <div className="text-xs font-bold text-slate-800 dark:text-slate-200">{user?.fullName || 'Clinical Admin'}</div>
-                                        <div className="text-[10px] text-slate-500">Clinical Admin</div>
+                                        {/* <div className="text-xs font-bold text-slate-800 dark:text-slate-200">{user?.fullName}</div> */}
+                                        {/* <div className="text-[10px] text-slate-500">Clinical Admin</div> */}
                                     </div>
                                     {user?.avatar ? (
                                         <img src={user.avatar} alt="Profile" className="w-8 h-8 rounded-full object-cover border border-primary/20" />
@@ -128,9 +128,9 @@ export default function Navbar({ links }) {
                                 <Button variant="ghost" size="sm" onClick={() => window.location.hash = '#signin'}>
                                     Sign In
                                 </Button>
-                                <Button variant="accent" size="sm" icon={ChevronRight} onClick={() => window.location.hash = '#signup'}>
+                                {/* <Button variant="accent" size="sm" icon={ChevronRight} onClick={() => window.location.hash = '#signup'}>
                                     Get Started
-                                </Button>
+                                </Button> */}
                             </>
                         )}
                     </div>
@@ -201,7 +201,7 @@ export default function Navbar({ links }) {
 
                             {isAuthenticated ? (
                                 <div className="pt-4 pb-2 border-t border-slate-200 dark:border-slate-800/80 px-3 flex flex-col gap-3 text-left">
-                                    <div 
+                                    <div
                                         onClick={() => { setIsOpen(false); window.location.hash = '#settings'; }}
                                         className="flex items-center gap-3 px-3 py-2 cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-900 rounded-xl transition-all"
                                     >
@@ -213,8 +213,8 @@ export default function Navbar({ links }) {
                                             </div>
                                         )}
                                         <div>
-                                            <div className="text-sm font-bold text-slate-800 dark:text-slate-200">{user?.fullName || 'Clinical Admin'}</div>
-                                            <div className="text-xs text-slate-500">Clinical Settings</div>
+                                            {/* <div className="text-sm font-bold text-slate-800 dark:text-slate-200">{user?.fullName}</div>
+                                            <div className="text-xs text-slate-500">Clinical Settings</div> */}
                                         </div>
                                     </div>
                                     <div className="flex gap-2">
