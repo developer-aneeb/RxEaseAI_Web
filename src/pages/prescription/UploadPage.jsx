@@ -11,6 +11,8 @@ import Card from '../../components/ui/Card';
 import Badge from '../../components/ui/Badge';
 import MaterialIcon from '../../components/ui/MaterialIcon';
 import Navbar from '../../components/layout/Navbar';
+import { prescriptionService } from '../../services/prescriptionService';
+import { getFriendlyErrorMessage } from '../../utils/errorMessages';
 
 // Mock SVG Prescription generator helper
 const createMockSvg = (patient, drug, dosage, qty, sig, docName) => {
@@ -240,10 +242,13 @@ export default function UploadPage() {
   const [activeTab, setActiveTab] = useState('upload'); // 'upload' | 'camera' | 'sample'
   const [cameraState, setCameraState] = useState('idle'); // 'idle' | 'capturing' | 'captured'
   const [selectedSampleId, setSelectedSampleId] = useState(null);
+  const [analysisError, setAnalysisError] = useState(null);
   const fileInputRef = useRef(null);
+  const selectedFileRef = useRef(null); // Keep actual File object for upload
 
   useEffect(() => {
-    // Component mounted
+    // Reset error on mount
+    setAnalysisError(null);
   }, []);
 
   const handleDragOver = (e) => {
@@ -266,19 +271,24 @@ export default function UploadPage() {
   };
 
   const handleFile = (file) => {
-    if (!file.type.match('image.*') && file.type !== 'application/pdf') {
-      showToast('Unsupported file type. Please upload an image or PDF.', 'error');
+    const ALLOWED_TYPES = ['image/jpeg', 'image/jpg', 'image/png'];
+    if (!ALLOWED_TYPES.includes(file.type)) {
+      showToast('Please upload a JPEG or PNG image of your prescription.', 'error');
       return;
     }
 
     if (file.size > 10 * 1024 * 1024) {
-      showToast('File is too large. Max 10MB allowed.', 'error');
+      showToast('File is too large. Maximum 10MB allowed.', 'error');
       return;
     }
 
+    // Store the actual File object for backend upload
+    selectedFileRef.current = file;
+    setAnalysisError(null);
+
     const reader = new FileReader();
     reader.onload = (e) => {
-      // Use the read contents as our current prescription
+      // Use the data URL for preview only
       setCurrentPrescription(e.target.result);
       setSelectedSampleId(null);
       showToast('File selected successfully!', 'success');
@@ -309,42 +319,100 @@ export default function UploadPage() {
     }, 2000);
   };
 
-  const startAnalysis = () => {
+  const startAnalysis = async () => {
+    // For real uploads, we need the File object. For mock samples, use sample data.
+    const fileToUpload = selectedFileRef.current;
+    const isRealUpload = !!fileToUpload;
+    const isSampleUpload = !!selectedSampleId && !!aiResult;
+
     if (!currentPrescription) {
       showToast('Please upload a file or select a sample first.', 'warning');
       return;
     }
 
-    // If it was a mock uploaded file without pre-configured AI result, attach a default one
-    if (!aiResult) {
-      setAiResult(MOCK_SAMPLES[0]); // default to sample 1 info
+    // If it's a sample, navigate directly to result with mock data
+    if (isSampleUpload && !isRealUpload) {
+      setOcrState('uploading');
+      setUploadProgress(0);
+      const uploadInterval = setInterval(() => {
+        setUploadProgress((prev) => {
+          if (prev >= 100) {
+            clearInterval(uploadInterval);
+            setOcrState('processing');
+            setTimeout(() => {
+              setOcrState('success');
+              showToast('Sample prescription loaded!', 'success');
+              window.location.hash = '#result';
+            }, 2000);
+            return 100;
+          }
+          return prev + 10;
+        });
+      }, 100);
+      return;
+    }
+
+    // Real file upload to backend
+    if (!isRealUpload) {
+      showToast('Please upload a prescription image file.', 'warning');
+      return;
     }
 
     setOcrState('uploading');
     setUploadProgress(0);
+    setAnalysisError(null);
 
-    // 1. Simulate Upload Progress
-    const uploadInterval = setInterval(() => {
-      setUploadProgress((prev) => {
-        if (prev >= 100) {
-          clearInterval(uploadInterval);
-          // Transition to processing
-          setOcrState('processing');
-          simulateOcrProcessing();
-          return 100;
-        }
-        return prev + 10;
-      });
-    }, 150);
-  };
+    // Animate upload progress (cosmetic — actual upload happens in parallel)
+    let progress = 0;
+    const progressInterval = setInterval(() => {
+      progress += Math.random() * 15;
+      if (progress >= 90) {
+        progress = 90; // Hold at 90% until real response arrives
+        clearInterval(progressInterval);
+      }
+      setUploadProgress(Math.min(Math.round(progress), 90));
+    }, 200);
 
-  const simulateOcrProcessing = () => {
-    // 2. Simulate OCR analysis delay
-    setTimeout(() => {
-      setOcrState('success');
-      showToast('Prescription analyzed successfully!', 'success');
-      window.location.hash = '#result';
-    }, 3500);
+    try {
+      const result = await prescriptionService.uploadAndAnalyze(fileToUpload);
+
+      clearInterval(progressInterval);
+      setUploadProgress(100);
+      setOcrState('processing');
+
+      // Store the real backend result
+      setAiResult(result);
+
+      // Brief processing animation then navigate
+      setTimeout(() => {
+        setOcrState('success');
+        showToast('Prescription analyzed successfully!', 'success');
+        window.location.hash = '#result';
+      }, 1500);
+    } catch (error) {
+      clearInterval(progressInterval);
+      setUploadProgress(0);
+      setOcrState('idle');
+
+      const status = error.response?.status;
+      const errorData = error.response?.data;
+
+      if (status === 422 && errorData?.allowed === false) {
+        // Gate rejection — not a valid prescription
+        const msg = errorData?.message || errorData?.gate?.message || 'This image does not appear to be a valid handwritten prescription.';
+        setAnalysisError(msg);
+        showToast(msg, 'error');
+      } else if (status === 503) {
+        // AI service unavailable
+        const msg = 'The AI analysis service is temporarily unavailable. Please try again in a few minutes.';
+        setAnalysisError(msg);
+        showToast(msg, 'error');
+      } else {
+        const friendlyMsg = getFriendlyErrorMessage(error, 'Failed to analyze prescription. Please try again.');
+        setAnalysisError(friendlyMsg);
+        showToast(friendlyMsg, 'error');
+      }
+    }
   };
 
   const uploadLinks = [

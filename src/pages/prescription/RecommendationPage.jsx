@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAppStore } from '../../store/useAppStore';
 import { useAuthStore } from '../../store/useAuthStore';
@@ -7,186 +7,154 @@ import Card from '../../components/ui/Card';
 import Badge from '../../components/ui/Badge';
 import MaterialIcon from '../../components/ui/MaterialIcon';
 import Navbar from '../../components/layout/Navbar';
-import SideNavbar from '../../components/layout/SideNavbar';
+import Spinner from '../../components/ui/Spinner';
 import {
   Search, Info, Star, ChevronDown, Check,
-  TrendingUp, Award, DollarSign, Filter, RefreshCw,
-  X, CheckCircle, HeartPulse, Sparkles, Navigation
+  TrendingUp, DollarSign, Filter, RefreshCw,
+  X, CheckCircle, HeartPulse, Sparkles, AlertTriangle
 } from 'lucide-react';
-
-const MEDICINES_DATABASE = {
-  myteka: {
-    name: 'Myteka',
-    generic: 'Montelukast Sodium 10mg',
-    price: 460,
-    type: 'Anti-Asthmatic / Allergy',
-    trend: '+18%',
-    trendColor: 'text-rose-500 bg-rose-500/10 border-rose-500/20',
-    recommendations: [
-      {
-        id: 'rec-1',
-        name: 'Montair',
-        manufacturer: 'Sami Pharmaceuticals',
-        price: 315,
-        savings: '31.5%',
-        confidence: 99,
-        rating: 4.8,
-        reviewsCount: 42,
-        pricePercent: 68, // width relative to Myteka
-        safetyStatus: 'Passed',
-        isBestValue: true
-      },
-      {
-        id: 'rec-2',
-        name: 'BreatheFree',
-        manufacturer: 'Hilton Pharma',
-        price: 380,
-        savings: '17.3%',
-        confidence: 98,
-        rating: 4.5,
-        reviewsCount: 29,
-        pricePercent: 82,
-        safetyStatus: 'Passed',
-        isBestValue: false
-      }
-    ]
-  },
-  panadol: {
-    name: 'Panadol Extra',
-    generic: 'Paracetamol / Caffeine 500mg/65mg',
-    price: 350,
-    type: 'Analgesic / Antipyretic',
-    trend: '+5%',
-    trendColor: 'text-amber-500 bg-amber-500/10 border-amber-500/20',
-    recommendations: [
-      {
-        id: 'rec-3',
-        name: 'Calpol',
-        manufacturer: 'GSK Consumer Healthcare',
-        price: 240,
-        savings: '31.4%',
-        confidence: 97,
-        rating: 4.7,
-        reviewsCount: 88,
-        pricePercent: 68,
-        safetyStatus: 'Passed',
-        isBestValue: true
-      },
-      {
-        id: 'rec-4',
-        name: 'Disprol',
-        manufacturer: 'Reckitt Benckiser',
-        price: 290,
-        savings: '17.1%',
-        confidence: 95,
-        rating: 4.4,
-        reviewsCount: 56,
-        pricePercent: 82,
-        safetyStatus: 'Passed',
-        isBestValue: false
-      }
-    ]
-  },
-  lipitor: {
-    name: 'Lipitor',
-    generic: 'Atorvastatin Calcium 20mg',
-    price: 890,
-    type: 'Lipid-Lowering Agent',
-    trend: '-3%',
-    trendColor: 'text-emerald-500 bg-emerald-500/10 border-emerald-500/20',
-    recommendations: [
-      {
-        id: 'rec-5',
-        name: 'Lipiget',
-        manufacturer: 'Getz Pharma',
-        price: 580,
-        savings: '34.8%',
-        confidence: 99,
-        rating: 4.9,
-        reviewsCount: 112,
-        pricePercent: 65,
-        safetyStatus: 'Passed',
-        isBestValue: true
-      },
-      {
-        id: 'rec-6',
-        name: 'Lipirex',
-        manufacturer: 'Highnoon Laboratories',
-        price: 720,
-        savings: '19.1%',
-        confidence: 97,
-        rating: 4.6,
-        reviewsCount: 74,
-        pricePercent: 80,
-        safetyStatus: 'Passed',
-        isBestValue: false
-      }
-    ]
-  }
-};
+import { prescriptionService } from '../../services/prescriptionService';
+import { recommendationService } from '../../services/recommendationService';
+import { searchService } from '../../services/searchService';
+import { getFriendlyErrorMessage } from '../../utils/errorMessages';
 
 export default function RecommendationPage() {
   const user = useAuthStore((state) => state.user);
   const showToast = useAppStore((state) => state.showToast);
 
-  const [searchQuery, setSearchQuery] = useState('Myteka');
-  const [selectedKey, setSelectedKey] = useState('myteka');
-  const [showSuggestions, setShowSuggestions] = useState(false);
-  const [filterType, setFilterType] = useState('All'); // 'All' | 'Generic' | 'Lowest'
+  const [activeMode, setActiveMode] = useState('prescription'); // 'prescription' | 'search'
+  
+  // Prescription Mode States
+  const [prescriptions, setPrescriptions] = useState([]);
+  const [selectedPrescriptionId, setSelectedPrescriptionId] = useState('');
+  const [recommendations, setRecommendations] = useState([]);
+  const [isRecsLoading, setIsRecsLoading] = useState(false);
+  const [isGenerating, setIsGenerating] = useState(false);
 
-  // Rating Modal state
-  const [ratingModalMed, setRatingModalMed] = useState(null); // Medication object to rate
+  // Search Mode States
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState([]);
+  const [isSearching, setIsSearching] = useState(false);
+  const [selectedMedicine, setSelectedMedicine] = useState(null);
+  const [genericAlternatives, setGenericAlternatives] = useState([]);
+  const [isAlternativesLoading, setIsAlternativesLoading] = useState(false);
+
+  // Rating Modal state (UI simulation)
+  const [ratingModalMed, setRatingModalMed] = useState(null); 
   const [userRating, setUserRating] = useState(5);
   const [hoverRating, setHoverRating] = useState(0);
   const [reviewComment, setReviewComment] = useState('');
 
-  // Local database replica to allow reviews to modify ratings dynamically
-  const [localDatabase, setLocalDatabase] = useState(MEDICINES_DATABASE);
+  // Initial fetch
+  useEffect(() => {
+    const loadPrescriptions = async () => {
+      try {
+        const response = await prescriptionService.listPrescriptions();
+        const list = Array.isArray(response)
+          ? response
+          : (response?.data || response?.prescriptions || []);
+        setPrescriptions(list);
+        if (list.length > 0) {
+          setSelectedPrescriptionId(list[0].prescription_id);
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    loadPrescriptions();
+  }, []);
 
-  const activeMed = localDatabase[selectedKey] || localDatabase.myteka;
+  // Fetch recommendations when prescription changes
+  useEffect(() => {
+    if (!selectedPrescriptionId) return;
+    loadPrescriptionRecommendations(selectedPrescriptionId);
+  }, [selectedPrescriptionId]);
 
-  const getInitials = (name) => {
-    if (!name) return 'CU';
-    return name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+  const loadPrescriptionRecommendations = async (pId) => {
+    setIsRecsLoading(true);
+    try {
+      const response = await recommendationService.getSaved(pId);
+      // Backend returns results inside { success, results } or directly
+      const results = response?.results || [];
+      setRecommendations(results);
+    } catch (err) {
+      console.error(err);
+      showToast('Failed to load recommendations.', 'error');
+    } finally {
+      setIsRecsLoading(false);
+    }
   };
 
-  const handleSearchSubmit = (key) => {
-    if (localDatabase[key]) {
-      setSelectedKey(key);
-      setSearchQuery(localDatabase[key].name);
-    } else {
-      showToast(`No exact match for "${searchQuery}". Showing Myteka.`, 'warning');
-      setSelectedKey('myteka');
-      setSearchQuery('Myteka');
+  const handleGenerateRecommendations = async () => {
+    if (!selectedPrescriptionId) return;
+    setIsGenerating(true);
+    showToast('AI is auditing drug database for affordable generics...', 'info');
+    try {
+      await recommendationService.generateAll(selectedPrescriptionId);
+      showToast('AI Smart Recommendations generated successfully!', 'success');
+      loadPrescriptionRecommendations(selectedPrescriptionId);
+    } catch (error) {
+      console.error(error);
+      const friendlyMsg = getFriendlyErrorMessage(error, 'Failed to generate recommendations.');
+      showToast(friendlyMsg, 'error');
+    } finally {
+      setIsGenerating(false);
     }
-    setShowSuggestions(false);
+  };
+
+  const handleSearch = async (e) => {
+    if (e) e.preventDefault();
+    if (!searchQuery.trim()) return;
+    setIsSearching(true);
+    setSelectedMedicine(null);
+    setGenericAlternatives([]);
+    try {
+      const response = await searchService.searchMedicines({ query: searchQuery });
+      const data = response?.data || [];
+      setSearchResults(data);
+      if (data.length > 0) {
+        handleSelectMedicine(data[0]);
+      } else {
+        showToast('No medicines found matching that query.', 'warning');
+      }
+    } catch (error) {
+      console.error(error);
+      showToast('Failed to perform medicine search.', 'error');
+    } finally {
+      setIsSearching(false);
+    }
+  };
+
+  const handleSelectMedicine = async (med) => {
+    setSelectedMedicine(med);
+    setIsAlternativesLoading(true);
+    try {
+      const genericName = med.composition?.generic_name;
+      if (!genericName) {
+        setGenericAlternatives([]);
+        return;
+      }
+      
+      // Search for items with the same active ingredient
+      const response = await searchService.searchMedicines({ query: genericName });
+      const alternatives = response?.data || [];
+      
+      // Filter out current brand and sort by price
+      const currentPrice = med.price?.total_price || 0;
+      const filtered = alternatives
+        .filter(alt => alt.name !== med.name)
+        .sort((a, b) => (a.price?.total_price || 0) - (b.price?.total_price || 0));
+        
+      setGenericAlternatives(filtered);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsAlternativesLoading(false);
+    }
   };
 
   const handleRateSubmit = () => {
-    if (!ratingModalMed) return;
-
-    // Update the rating dynamically in localDatabase state
-    setLocalDatabase(prevDb => {
-      const updatedDb = { ...prevDb };
-      const medList = updatedDb[selectedKey].recommendations;
-      const index = medList.findIndex(m => m.id === ratingModalMed.id);
-
-      if (index !== -1) {
-        const med = medList[index];
-        const oldTotal = med.rating * med.reviewsCount;
-        const newReviewsCount = med.reviewsCount + 1;
-        const newRating = parseFloat(((oldTotal + userRating) / newReviewsCount).toFixed(2));
-
-        medList[index] = {
-          ...med,
-          rating: newRating,
-          reviewsCount: newReviewsCount
-        };
-      }
-      return updatedDb;
-    });
-
-    showToast(`Successfully submitted rating of ${userRating} stars for ${ratingModalMed.name}!`, 'success');
+    showToast(`Thank you! Successfully submitted rating for ${ratingModalMed.name}!`, 'success');
     setRatingModalMed(null);
     setUserRating(5);
     setReviewComment('');
@@ -212,346 +180,325 @@ export default function RecommendationPage() {
       <div className="absolute inset-0 grid-bg z-0 pointer-events-none opacity-50 dark:opacity-30"></div>
       <div className="fixed inset-0 pointer-events-none z-0">
         <div className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-primary/10 rounded-full blur-[100px] mix-blend-multiply opacity-50"></div>
-        <div className="absolute top-1/3 right-0 w-[500px] h-[500px] bg-secondary-container/10 rounded-full blur-[100px] mix-blend-multiply opacity-50"></div>
+        <div className="absolute top-1/3 right-0 w-[500px] h-[500px] bg-emerald-500/5 rounded-full blur-[100px] mix-blend-multiply opacity-50"></div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
-        <div className="flex flex-col lg:flex-row gap-8 items-start">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full text-left">
+        <div className="space-y-6 mb-8">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary font-bold text-[10px] tracking-wide uppercase shadow-sm">
+            <Sparkles className="w-3.5 h-3.5 text-primary animate-pulse" />
+            <span>Smart Generic Recommendation System</span>
+          </div>
 
-          {/* SideNavBar - Desktop only (matches Stitch Layout style) */}
-          {/* <SideNavbar activeRoute="#recommendations" /> */}
+          <h1 className="text-3xl md:text-5xl font-black tracking-tight text-slate-850 dark:text-white leading-tight">
+            Find <span className="bg-gradient-to-r from-emerald-500 via-teal-500 to-indigo-500 bg-clip-text text-transparent">Affordable Medicine</span> Alternatives
+          </h1>
+          <p className="text-xs text-slate-500 dark:text-slate-400 max-w-2xl">
+            Compare active ingredients, safety flags, and pricing of generic drug alternatives to save on medical costs.
+          </p>
 
-          {/* Main Content Area */}
-          <div className="flex-1 w-full space-y-6">
+          {/* Mode Switch Tab */}
+          <div className="flex gap-2 p-1 bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl w-fit">
+            <button
+              onClick={() => setActiveMode('prescription')}
+              className={`px-4 py-2 rounded-lg text-xs font-bold transition-all border-0 cursor-pointer ${
+                activeMode === 'prescription'
+                  ? 'bg-white dark:bg-slate-950 text-primary dark:text-white shadow-sm'
+                  : 'bg-transparent text-slate-500 hover:text-slate-800 dark:hover:text-slate-200'
+              }`}
+            >
+              Prescription Audit
+            </button>
+            <button
+              onClick={() => setActiveMode('search')}
+              className={`px-4 py-2 rounded-lg text-xs font-bold transition-all border-0 cursor-pointer ${
+                activeMode === 'search'
+                  ? 'bg-white dark:bg-slate-950 text-primary dark:text-white shadow-sm'
+                  : 'bg-transparent text-slate-500 hover:text-slate-800 dark:hover:text-slate-200'
+              }`}
+            >
+              Manual Medicine Search
+            </button>
+          </div>
+        </div>
 
-            {/* Header / Search Area */}
-            <div className="space-y-6 animate-fade-in-up">
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary font-bold text-[10px] tracking-wide uppercase shadow-sm">
-                <Sparkles className="w-3.5 h-3.5 text-primary animate-pulse" />
-                <span>Smart Medicine Recommendation System</span>
-              </div>
-
-              <h1 className="text-3xl md:text-5xl font-black tracking-tight text-slate-850 dark:text-white leading-tight">
-                Find <span className="bg-gradient-to-r from-emerald-500 via-teal-500 to-indigo-500 bg-clip-text text-transparent">Affordable Medicine</span> Alternatives
-              </h1>
-
-              {/* Dynamic Auto-Search Bar */}
-              <div className="max-w-3xl relative group">
-                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                  <Search className="text-slate-400 group-focus-within:text-primary transition-colors w-5 h-5" />
-                </div>
-
-                <input
-                  type="text"
-                  placeholder="Enter medicine name, brand, or generic compound..."
-                  value={searchQuery}
-                  onFocus={() => setShowSuggestions(true)}
-                  onChange={(e) => {
-                    setSearchQuery(e.target.value);
-                    setShowSuggestions(true);
-                  }}
-                  className="block w-full pl-12 pr-12 py-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-805 rounded-2xl text-sm focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all font-medium text-slate-700 dark:text-slate-100 shadow-lg"
-                />
-
-                <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
-                  <button
-                    onClick={() => setShowSuggestions(!showSuggestions)}
-                    className="p-2 bg-slate-50 dark:bg-slate-955 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors border border-slate-200 dark:border-slate-800 cursor-pointer"
-                  >
-                    <Filter className="w-4 h-4" />
-                  </button>
-                </div>
-
-                {/* Suggestions Dropdown */}
-                <AnimatePresence>
-                  {showSuggestions && (
-                    <motion.div
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: 10 }}
-                      className="absolute left-0 right-0 top-full mt-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl p-2.5 z-30"
-                    >
-                      <div className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider px-3 py-1.5 border-b border-slate-50 dark:border-slate-850 mb-1">
-                        Popular Prescribed Drugs
-                      </div>
-
-                      <div className="space-y-0.5">
-                        <button
-                          onClick={() => handleSearchSubmit('myteka')}
-                          className="w-full text-left px-3.5 py-2.5 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-850 text-xs font-semibold text-slate-700 dark:text-slate-250 flex items-center justify-between"
-                        >
-                          <span>Myteka (Montelukast Sodium 10mg)</span>
-                          <Badge variant="neutral">Anti-Asthmatic</Badge>
-                        </button>
-                        <button
-                          onClick={() => handleSearchSubmit('panadol')}
-                          className="w-full text-left px-3.5 py-2.5 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-850 text-xs font-semibold text-slate-700 dark:text-slate-250 flex items-center justify-between"
-                        >
-                          <span>Panadol Extra (Paracetamol / Caffeine)</span>
-                          <Badge variant="neutral">Analgesic</Badge>
-                        </button>
-                        <button
-                          onClick={() => handleSearchSubmit('lipitor')}
-                          className="w-full text-left px-3.5 py-2.5 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-850 text-xs font-semibold text-slate-700 dark:text-slate-250 flex items-center justify-between"
-                        >
-                          <span>Lipitor (Atorvastatin Calcium 20mg)</span>
-                          <Badge variant="neutral">Lipid-Lowering</Badge>
-                        </button>
-                      </div>
-                    </motion.div>
+        {/* PRESCRIPTION AUDIT MODE */}
+        {activeMode === 'prescription' && (
+          <div className="space-y-6">
+            {/* Prescription Selector Card */}
+            <Card variant="glass" className="p-5 border border-slate-200 dark:border-slate-800 bg-white/70 dark:bg-slate-900/60 backdrop-blur-md flex flex-col sm:flex-row justify-between items-center gap-4">
+              <div className="flex items-center gap-3 w-full sm:w-auto">
+                <span className="text-xs font-bold text-slate-450 uppercase shrink-0">Prescription:</span>
+                <select
+                  value={selectedPrescriptionId}
+                  onChange={(e) => setSelectedPrescriptionId(e.target.value)}
+                  className="bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl py-2 px-3 text-xs w-full sm:w-[260px] focus:ring-1 focus:ring-primary focus:border-primary focus:outline-none transition-colors"
+                >
+                  {prescriptions.map(p => (
+                    <option key={p.prescription_id} value={p.prescription_id}>
+                      {p.doctor_name || 'AI Extraction'} - {new Date(p.created_at).toLocaleDateString()}
+                    </option>
+                  ))}
+                  {prescriptions.length === 0 && (
+                    <option value="">No prescriptions uploaded</option>
                   )}
-                </AnimatePresence>
+                </select>
               </div>
 
-              {/* Filter Chips */}
-              <div className="flex flex-wrap gap-2">
-                <button
-                  onClick={() => setFilterType('All')}
-                  className={`px-4 py-1.5 rounded-full border text-xs font-bold transition-colors cursor-pointer ${filterType === 'All'
-                      ? 'border-primary text-primary bg-primary/5'
-                      : 'border-slate-200 dark:border-slate-800 text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-850'
-                    }`}
+              {selectedPrescriptionId && (
+                <Button
+                  variant="primary"
+                  onClick={handleGenerateRecommendations}
+                  disabled={isGenerating}
+                  className="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 px-6 rounded-xl flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50"
                 >
-                  All Matches
-                </button>
-                <button
-                  onClick={() => setFilterType('Generic')}
-                  className={`px-4 py-1.5 rounded-full border text-xs font-bold transition-colors cursor-pointer ${filterType === 'Generic'
-                      ? 'border-primary text-primary bg-primary/5'
-                      : 'border-slate-200 dark:border-slate-800 text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-850'
-                    }`}
-                >
-                  Generic Brands
-                </button>
-                <button
-                  onClick={() => setFilterType('Lowest')}
-                  className={`px-4 py-1.5 rounded-full border text-xs font-bold transition-colors cursor-pointer flex items-center gap-1 ${filterType === 'Lowest'
-                      ? 'border-primary text-primary bg-primary/5'
-                      : 'border-slate-200 dark:border-slate-800 text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-850'
-                    }`}
-                >
-                  Lowest Price <MaterialIcon name="arrow_downward" size="xs" />
-                </button>
+                  <RefreshCw className={`w-3.5 h-3.5 ${isGenerating ? 'animate-spin' : ''}`} />
+                  <span>Generate All Recommendations</span>
+                </Button>
+              )}
+            </Card>
+
+            {isRecsLoading ? (
+              <div className="py-24 flex items-center justify-center">
+                <Spinner />
               </div>
+            ) : recommendations.length > 0 ? (
+              <div className="flex flex-col gap-6">
+                {recommendations.map((recItem, idx) => (
+                  <Card key={idx} variant="glass" className="p-6 border border-slate-200 dark:border-slate-800 bg-white/70 dark:bg-slate-900/60 backdrop-blur-md flex flex-col gap-5">
+                    {/* Prescription Item Info Header */}
+                    <div className="flex justify-between items-start border-b border-slate-200/50 dark:border-slate-800/80 pb-4">
+                      <div>
+                        <span className="text-[9px] font-bold text-slate-450 uppercase tracking-wider">Prescribed Medicine</span>
+                        <h3 className="text-base font-extrabold text-slate-900 dark:text-white mt-0.5">{recItem.medicine_name}</h3>
+                        <p className="text-xs text-slate-500 mt-1">Confidence Match: {Math.round((recItem.validation?.validation_confidence || 0.8) * 100)}% ({recItem.validation?.level || 'Confirmed'})</p>
+                      </div>
+                      <div className="text-right">
+                        <span className="text-[9px] font-bold text-slate-450 uppercase tracking-wider block">Estimated Price</span>
+                        <span className="text-sm font-bold text-slate-700 dark:text-slate-350 line-through">
+                          {recItem.original?.price?.total_price ? `Rs. ${recItem.original.price.total_price}` : 'Pricing unavailable'}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Recommendation items list */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      {recItem.recommendations && recItem.recommendations.length > 0 ? (
+                        recItem.recommendations.map((alt, altIdx) => {
+                          const savingsPercent = recItem.original?.price?.total_price && alt.price?.total_price
+                            ? Math.round(((recItem.original.price.total_price - alt.price.total_price) / recItem.original.price.total_price) * 100)
+                            : 0;
+
+                          return (
+                            <Card
+                              key={altIdx}
+                              variant="glass"
+                              className="p-5 flex flex-col gap-4 border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/20 hover:border-emerald-500/20 relative overflow-hidden"
+                            >
+                              {altIdx === 0 && savingsPercent > 0 && (
+                                <div className="absolute top-0 right-0 bg-gradient-to-r from-emerald-500 to-teal-500 text-white px-3 py-1 rounded-bl-2xl text-[9px] font-black tracking-wider uppercase shadow-sm">
+                                  Best Savings
+                                </div>
+                              )}
+
+                              <div className="flex justify-between items-start pr-12">
+                                <div>
+                                  <h4 className="text-sm font-bold text-slate-800 dark:text-slate-100">{alt.name}</h4>
+                                  <p className="text-[10px] text-slate-500 mt-0.5">{alt.brands?.name || 'Generic Alternative'}</p>
+                                </div>
+                                <div className="text-right">
+                                  <div className="text-xs font-bold text-slate-800 dark:text-slate-200">
+                                    {alt.price?.total_price ? `Rs. ${alt.price.total_price}` : 'Price unavailable'}
+                                  </div>
+                                  {savingsPercent > 0 && (
+                                    <div className="text-[8px] font-bold text-emerald-600 bg-emerald-500/10 px-1 rounded mt-0.5 inline-block">
+                                      -{savingsPercent}% Savings
+                                    </div>
+                                  )}
+                                </div>
+                              </div>
+
+                              <div className="pt-2 flex items-center justify-between border-t border-slate-200/50 dark:border-slate-800/80">
+                                <div className="flex items-center gap-1">
+                                  <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
+                                  <span className="text-xs font-bold text-slate-800 dark:text-slate-200">4.8</span>
+                                  <span className="text-[10px] text-slate-400">(drap verified)</span>
+                                </div>
+
+                                <button
+                                  onClick={() => setRatingModalMed(alt)}
+                                  className="text-[10px] font-bold text-primary hover:underline flex items-center gap-0.5 cursor-pointer border-0 bg-transparent"
+                                >
+                                  <Star className="w-3.5 h-3.5" />
+                                  <span>Efficacy Rating</span>
+                                </button>
+                              </div>
+                            </Card>
+                          );
+                        })
+                      ) : (
+                        <div className="col-span-2 py-6 text-center text-xs text-slate-500 bg-slate-100/50 dark:bg-slate-950/20 border border-slate-200/50 dark:border-slate-850/80 rounded-2xl flex items-center justify-center gap-2">
+                          <AlertTriangle className="w-4 h-4 text-amber-500" />
+                          <span>No cheaper alternative generic brands matching this item's formulation.</span>
+                        </div>
+                      )}
+                    </div>
+                  </Card>
+                ))}
+              </div>
+            ) : (
+              <div className="py-16 text-center text-slate-450 bg-white/70 dark:bg-slate-900/60 rounded-3xl border border-slate-200 dark:border-slate-800 flex flex-col items-center justify-center gap-2.5 shadow-sm">
+                <HeartPulse className="w-12 h-12 text-slate-350" />
+                <h3 className="text-sm font-bold text-slate-800 dark:text-slate-200">No Recommendations Available</h3>
+                <p className="text-xs text-slate-450 max-w-sm">No generic recommendations have been calculated for this prescription. Click the generate button above to scan active generic directories.</p>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* MANUAL MEDICINE SEARCH MODE */}
+        {activeMode === 'search' && (
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            
+            {/* Left Panel: Search and Select (4 cols) */}
+            <div className="lg:col-span-5 flex flex-col gap-6">
+              <Card variant="glass" className="p-5 border border-slate-200 dark:border-slate-800 bg-white/70 dark:bg-slate-900/60 backdrop-blur-md flex flex-col gap-4">
+                <span className="text-[10px] font-bold text-slate-405 uppercase tracking-wider">Search Database</span>
+                <form onSubmit={handleSearch} className="relative">
+                  <input
+                    type="text"
+                    placeholder="Enter brand name (e.g. Lipitor)..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="w-full pl-4 pr-10 py-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-xs focus:ring-1 focus:ring-primary focus:outline-none transition-colors"
+                  />
+                  <button
+                    type="submit"
+                    disabled={isSearching}
+                    className="absolute right-2.5 top-1/2 -translate-y-1/2 p-1.5 text-slate-400 hover:text-primary transition-colors cursor-pointer border-0 bg-transparent"
+                  >
+                    <Search className="w-4.5 h-4.5" />
+                  </button>
+                </form>
+              </Card>
+
+              {searchResults.length > 0 && (
+                <div className="flex flex-col gap-3 max-h-[360px] overflow-y-auto pr-1">
+                  {searchResults.map((med, idx) => (
+                    <div
+                      key={idx}
+                      onClick={() => handleSelectMedicine(med)}
+                      className={`p-4 rounded-xl border text-left cursor-pointer transition-all ${selectedMedicine?.name === med.name
+                        ? 'bg-primary/5 border-primary shadow-sm'
+                        : 'bg-white/60 dark:bg-slate-900/40 border-slate-200 dark:border-slate-800/80 hover:bg-white dark:hover:bg-slate-900'
+                      }`}
+                    >
+                      <h4 className="text-xs font-bold text-slate-900 dark:text-white">{med.name}</h4>
+                      <p className="text-[10px] text-slate-500 truncate mt-0.5">{med.brand || 'Generic formulation'}</p>
+                      <div className="flex justify-between items-center mt-3 text-[10px] font-bold">
+                        <span className="text-slate-400">{med.composition?.strength || 'Details'}</span>
+                        <span className="text-primary">{med.price?.total_price ? `Rs. ${med.price.total_price}` : 'Pricing N/A'}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
 
-            {/* Layout Grid: 35/65 Split */}
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-
-              {/* LEFT PANEL (35%) */}
-              <div className="lg:col-span-4 flex flex-col gap-6 animate-fade-in-up delay-100">
-
-                {/* Selected Medicine Card */}
-                <Card variant="glass" className="p-5 relative overflow-hidden group hover:-translate-y-0.5 transition-all shadow-lg bg-white/80 dark:bg-slate-900/80 backdrop-blur-md">
-                  <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
-                    <span className="material-symbols-outlined text-[72px] text-primary">medication</span>
-                  </div>
-                  <div className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-2">Target Medicine</div>
-                  <h2 className="text-2xl font-black text-slate-800 dark:text-white mb-1">{activeMed.name}</h2>
-                  <p className="text-xs font-medium text-slate-500 dark:text-slate-400 mb-6">{activeMed.generic}</p>
-
-                  <div className="bg-slate-50 dark:bg-slate-950/60 rounded-2xl p-4 border border-slate-200/50 dark:border-slate-805 space-y-3.5">
-                    <div className="flex justify-between items-center">
-                      <span className="text-xs font-medium text-slate-500 dark:text-slate-400">Current Market Price</span>
-                      <span className="text-sm font-semibold text-slate-700 dark:text-slate-300 line-through decoration-slate-400/50">Rs. {activeMed.price}</span>
+            {/* Right Panel: Alternatives (7 cols) */}
+            <div className="lg:col-span-7 flex flex-col gap-6">
+              {selectedMedicine ? (
+                <div className="space-y-6">
+                  {/* Selected Medicine Info Card */}
+                  <Card variant="glass" className="p-5 border border-primary/20 bg-primary/5 rounded-2xl flex justify-between items-start gap-4">
+                    <div>
+                      <span className="text-[9px] font-bold text-primary uppercase tracking-wider">Selected Target Brand</span>
+                      <h3 className="text-lg font-black text-slate-900 dark:text-white mt-1">{selectedMedicine.name}</h3>
+                      <p className="text-xs text-slate-600 dark:text-slate-400 mt-1">Generic Name: {selectedMedicine.composition?.generic_name || 'N/A'}</p>
                     </div>
-
-                    <div className="flex justify-between items-center">
-                      <span className="text-xs font-bold text-slate-700 dark:text-slate-250 flex items-center gap-1">
-                        <MaterialIcon name="verified" size="xs" className="text-emerald-500" />
-                        <span>Lowest Found Price</span>
-                      </span>
-                      <span className="text-lg font-black text-emerald-500">Rs. {activeMed.recommendations[0]?.price}</span>
-                    </div>
-
-                    <div className="pt-3 border-t border-slate-100 dark:border-slate-850 flex justify-between items-center">
-                      <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Potential Savings</span>
-                      <span className="text-xs font-bold text-emerald-600 bg-emerald-500/10 dark:bg-emerald-500/20 px-2 py-0.5 rounded-lg border border-emerald-500/10">
-                        Rs. {activeMed.price - activeMed.recommendations[0]?.price} / pack
+                    <div className="text-right shrink-0">
+                      <span className="text-[9px] font-bold text-slate-450 uppercase tracking-wider block">Total price</span>
+                      <span className="text-base font-extrabold text-slate-800 dark:text-white mt-1 block">
+                        {selectedMedicine.price?.total_price ? `Rs. ${selectedMedicine.price.total_price}` : 'N/A'}
                       </span>
                     </div>
-                  </div>
-                </Card>
+                  </Card>
 
-                {/* Trend Insights */}
-                <Card variant="flat" className="p-5 flex flex-col justify-between hover:shadow-lg transition-shadow border-l-2 border-l-primary bg-white dark:bg-slate-900">
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="text-xs font-bold text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
-                      <TrendingUp className="w-4 h-4 text-primary" />
-                      <span>Market Trend</span>
-                    </div>
-                    <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-lg text-[10px] font-bold border ${activeMed.trendColor}`}>
-                      <MaterialIcon name={activeMed.trend.startsWith('+') ? 'arrow_upward' : 'arrow_downward'} size="xs" />
-                      <span>{activeMed.trend}</span>
-                    </span>
-                  </div>
-
-                  <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed mb-4">
-                    Interest in generic alternatives for <span className="font-bold text-slate-750 dark:text-slate-300">{activeMed.generic.split(' ')[0]}</span> is trending up this week due to recent supply chain adjustments.
-                  </p>
-
-                  {/* Minimal Sparkline Graphic */}
-                  <div className="h-10 w-full flex items-end gap-1 px-1 mt-2">
-                    <div className="w-1/6 bg-primary/10 dark:bg-primary/20 h-1/4 rounded"></div>
-                    <div className="w-1/6 bg-primary/20 dark:bg-primary/30 h-2/4 rounded"></div>
-                    <div className="w-1/6 bg-primary/15 dark:bg-primary/25 h-1/3 rounded"></div>
-                    <div className="w-1/6 bg-primary/30 dark:bg-primary/45 h-3/4 rounded"></div>
-                    <div className="w-1/6 bg-primary/80 h-full rounded relative">
-                      <div className="absolute -top-1 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-primary ring-2 ring-primary/25 animate-ping"></div>
-                    </div>
-                    <div className="w-1/6 bg-primary/30 dark:bg-primary/40 h-2/3 rounded"></div>
-                  </div>
-                </Card>
-
-                {/* Verification Badge */}
-                <div className="flex items-center gap-3 p-4 rounded-2xl border border-emerald-500/20 bg-emerald-500/5 dark:bg-emerald-500/10 shadow-sm">
-                  <div className="w-10 h-10 rounded-xl bg-emerald-500/15 flex items-center justify-center text-emerald-500 shrink-0 border border-emerald-500/20">
-                    <MaterialIcon name="health_and_safety" size="sm" />
-                  </div>
-                  <div className="min-w-0">
-                    <div className="text-xs font-bold text-slate-800 dark:text-slate-200">Medical Database Verified</div>
-                    <div className="text-[10px] text-slate-500 dark:text-slate-450 mt-0.5">Sources cross-checked via DRAP guidelines.</div>
-                  </div>
-                </div>
-
-              </div>
-
-              {/* RIGHT PANEL (65%) */}
-              <div className="lg:col-span-8 flex flex-col gap-6">
-
-                {/* AI Summary Header */}
-                <div className="glassmorphism p-5 rounded-3xl border border-slate-200/60 dark:border-slate-800 shadow-md flex flex-col sm:flex-row items-center justify-between gap-4 bg-white dark:bg-slate-900 animate-fade-in-up delay-200">
+                  {/* Alternatives Section */}
                   <div>
-                    <h3 className="text-sm font-bold text-slate-800 dark:text-slate-100 flex items-center gap-1.5">
-                      <MaterialIcon name="robot_2" size="sm" className="text-primary animate-bounce" />
-                      <span>RxEaseAI Insights</span>
+                    <h3 className="text-sm font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-1.5">
+                      <Sparkles className="w-4 h-4 text-emerald-500" />
+                      <span>Cheaper Generic Brand Alternatives</span>
                     </h3>
-                    <p className="text-[11px] text-slate-500 dark:text-slate-450 mt-0.5">Analyzing {activeMed.recommendations.length} verified generic matches.</p>
+
+                    {isAlternativesLoading ? (
+                      <div className="py-12 flex items-center justify-center">
+                        <Spinner />
+                      </div>
+                    ) : genericAlternatives.length > 0 ? (
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {genericAlternatives.map((alt, idx) => {
+                          const diff = (selectedMedicine.price?.total_price || 0) - (alt.price?.total_price || 0);
+                          const savingsPercent = selectedMedicine.price?.total_price && alt.price?.total_price
+                            ? Math.round((diff / selectedMedicine.price.total_price) * 100)
+                            : 0;
+
+                          return (
+                            <Card
+                              key={idx}
+                              variant="glass"
+                              className="p-4 flex flex-col justify-between gap-4 border border-slate-205 dark:border-slate-800/80 bg-white/60 dark:bg-slate-900/60"
+                            >
+                              <div className="flex justify-between items-start gap-3">
+                                <div>
+                                  <h4 className="text-xs font-bold text-slate-800 dark:text-white">{alt.name}</h4>
+                                  <p className="text-[9px] text-slate-500 mt-0.5">{alt.brand || 'Generic Alternative'}</p>
+                                </div>
+                                <div className="text-right shrink-0">
+                                  <div className="text-xs font-black text-slate-850 dark:text-white">
+                                    {alt.price?.total_price ? `Rs. ${alt.price.total_price}` : 'N/A'}
+                                  </div>
+                                  {savingsPercent > 0 && (
+                                    <div className="text-[8px] font-bold text-emerald-600 bg-emerald-500/10 px-1 rounded mt-0.5">
+                                      Save {savingsPercent}%
+                                    </div>
+                                  )}
+                                </div>
+                              </div>
+
+                              <div className="pt-2 flex justify-between items-center border-t border-slate-100 dark:border-slate-850/80 text-[10px] text-slate-500">
+                                <span>drap registration verified</span>
+                                <button
+                                  onClick={() => setRatingModalMed(alt)}
+                                  className="text-primary font-bold hover:underline cursor-pointer border-0 bg-transparent"
+                                >
+                                  Rate
+                                </button>
+                              </div>
+                            </Card>
+                          );
+                        })}
+                      </div>
+                    ) : (
+                      <div className="py-12 text-center text-xs text-slate-500 bg-slate-50 dark:bg-slate-950/20 border border-dashed border-slate-200 dark:border-slate-850 rounded-2xl flex items-center justify-center gap-2">
+                        <AlertTriangle className="w-4 h-4 text-amber-500" />
+                        <span>No cheaper alternative generic brands matching this composition in database.</span>
+                      </div>
+                    )}
                   </div>
-
-                  <div className="flex gap-6">
-                    <div className="text-right">
-                      <div className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Avg. Confidence</div>
-                      <div className="text-lg font-black text-primary dark:text-primary-fixed-dim mt-0.5">98.5%</div>
-                    </div>
-                    <div className="w-px h-8 bg-slate-100 dark:bg-slate-800 hidden sm:block align-self-center"></div>
-                    <div className="text-right">
-                      <div className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Max Savings</div>
-                      <div className="text-lg font-black text-emerald-500 mt-0.5">31.5%</div>
-                    </div>
-                  </div>
                 </div>
-
-                {/* Recommendation Cards Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {activeMed.recommendations
-                    .filter(rec => {
-                      if (filterType === 'Generic') return rec.name !== '';
-                      if (filterType === 'Lowest') return rec.price <= 350;
-                      return true;
-                    })
-                    .map((rec) => (
-                      <Card
-                        key={rec.id}
-                        variant="glass"
-                        className="p-5 flex flex-col gap-4 hover:border-indigo-500/30 transition-all hover:-translate-y-0.5 shadow-md bg-white/80 dark:bg-slate-900/80 backdrop-blur-md relative overflow-hidden"
-                      >
-                        {/* Best Value Absolute Tag */}
-                        {rec.isBestValue && (
-                          <div className="absolute top-0 right-0 bg-gradient-to-r from-emerald-500 to-teal-500 text-white px-3 py-1 rounded-bl-2xl text-[9px] font-black tracking-wider uppercase shadow-sm flex items-center gap-1 z-10">
-                            <Star className="w-3 h-3 fill-white" />
-                            <span>Best Value</span>
-                          </div>
-                        )}
-
-                        {/* Card Header */}
-                        <div className="flex justify-between items-start mb-2 pr-16">
-                          <div>
-                            <h4 className="text-base font-bold text-slate-800 dark:text-slate-100">{rec.name}</h4>
-                            <p className="text-[10px] text-slate-500 dark:text-slate-450 mt-0.5">{rec.manufacturer}</p>
-                          </div>
-
-                          <div className="text-right">
-                            <div className="text-sm font-black text-slate-850 dark:text-slate-100">Rs. {rec.price}</div>
-                            <div className="text-[9px] font-bold text-emerald-600 bg-emerald-500/10 dark:bg-emerald-500/20 px-1 rounded-md mt-0.5 inline-block">
-                              -{rec.savings}
-                            </div>
-                          </div>
-                        </div>
-
-                        {/* Match Confidence Progress Bar */}
-                        <div>
-                          <div className="flex justify-between items-end mb-1">
-                            <span className="text-[10px] font-bold text-slate-450 dark:text-slate-500 flex items-center gap-1">
-                              <MaterialIcon name="psychology" size="xs" className="text-primary" />
-                              <span>Match Confidence</span>
-                            </span>
-                            <span className="text-[10px] font-bold text-primary">{rec.confidence}%</span>
-                          </div>
-                          <div className="h-1.5 w-full bg-slate-100 dark:bg-slate-950 rounded-full overflow-hidden">
-                            <div
-                              className="h-full bg-primary rounded-full animate-progress"
-                              style={{ width: `${rec.confidence}%` }}
-                            ></div>
-                          </div>
-                        </div>
-
-                        {/* Visual Price Comparison Line */}
-                        <div className="bg-slate-50 dark:bg-slate-950/60 rounded-xl p-3 border border-slate-200/50 dark:border-slate-850 space-y-2">
-                          <div className="flex items-center gap-2">
-                            <div className="w-16 text-right text-[10px] font-bold text-slate-400">{activeMed.name}</div>
-                            <div className="flex-grow h-1.5 bg-slate-100 dark:bg-slate-850 rounded-full">
-                              <div className="h-full bg-slate-400 dark:bg-slate-600 rounded-full w-full"></div>
-                            </div>
-                            <div className="w-10 text-[10px] font-bold text-slate-600 dark:text-slate-400">{activeMed.price}</div>
-                          </div>
-
-                          <div className="flex items-center gap-2">
-                            <div className="w-16 text-right text-[10px] font-bold text-emerald-500">{rec.name}</div>
-                            <div className="flex-grow h-1.5 bg-slate-100 dark:bg-slate-850 rounded-full">
-                              <div
-                                className="h-full bg-emerald-500 rounded-full"
-                                style={{ width: `${rec.pricePercent}%` }}
-                              ></div>
-                            </div>
-                            <div className="w-10 text-[10px] font-bold text-emerald-600">{rec.price}</div>
-                          </div>
-                        </div>
-
-                        {/* Interactive Clinician Rating Section */}
-                        <div className="pt-2 flex items-center justify-between border-t border-slate-100 dark:border-slate-850/80">
-                          <div className="flex items-center gap-1">
-                            <Star className="w-4 h-4 fill-amber-400 text-amber-400" />
-                            <span className="text-xs font-bold text-slate-800 dark:text-slate-200">{rec.rating}</span>
-                            <span className="text-[10px] text-slate-400">({rec.reviewsCount} reviews)</span>
-                          </div>
-
-                          <button
-                            onClick={() => setRatingModalMed(rec)}
-                            className="text-[10px] font-bold text-primary hover:underline flex items-center gap-0.5 cursor-pointer"
-                          >
-                            <Star className="w-3.5 h-3.5" />
-                            <span>Rate Medicine</span>
-                          </button>
-                        </div>
-
-                      </Card>
-                    ))}
+              ) : (
+                <div className="py-24 text-center text-slate-450 bg-white/70 dark:bg-slate-900/60 border border-slate-205 dark:border-slate-800 rounded-3xl flex flex-col items-center justify-center gap-2.5">
+                  <Search className="w-12 h-12 text-slate-350" />
+                  <h3 className="text-sm font-bold text-slate-800 dark:text-slate-200">Medicine lookup</h3>
+                  <p className="text-xs text-slate-450 max-w-xs">Type a brand medicine on the left to automatically look up affordable alternatives.</p>
                 </div>
-
-                {/* Disclaimer / Footer */}
-                <div className="mt-4 flex items-start gap-2 text-slate-400 dark:text-slate-500 text-[10px] font-medium max-w-2xl leading-relaxed">
-                  <Info className="w-4 h-4 shrink-0 mt-0.5" />
-                  <p>Prices are estimates based on recent database updates and may vary by local pharmacy. Always consult with a healthcare professional before switching active clinical prescriptions.</p>
-                </div>
-
-              </div>
-
+              )}
             </div>
 
           </div>
+        )}
 
-        </div>
       </div>
 
       {/* Clinician Rating Modal */}
@@ -569,11 +516,11 @@ export default function RecommendationPage() {
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.95, opacity: 0 }}
               onClick={(e) => e.stopPropagation()}
-              className="relative max-w-md w-full bg-white dark:bg-slate-900 rounded-3xl p-6 shadow-2xl border border-slate-200 dark:border-slate-800 font-sans"
+              className="relative max-w-md w-full bg-white dark:bg-slate-900 rounded-3xl p-6 shadow-2xl border border-slate-200 dark:border-slate-800 font-sans text-left"
             >
               <button
                 onClick={() => setRatingModalMed(null)}
-                className="absolute top-4 right-4 p-2 rounded-full bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-500 dark:text-slate-400 transition-colors cursor-pointer"
+                className="absolute top-4 right-4 p-2 rounded-full bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-500 dark:text-slate-400 transition-colors cursor-pointer border-0"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -583,14 +530,13 @@ export default function RecommendationPage() {
                   <Star className="w-6 h-6 fill-amber-500" />
                 </div>
                 <h3 className="text-lg font-bold text-slate-900 dark:text-white">
-                  Rate Clinician Experience
+                  Rate Efficacy Experience
                 </h3>
                 <p className="text-xs text-slate-450 mt-1">
-                  Rate your clinical observation and efficacy of {ratingModalMed.name}.
+                  Rate your clinical experience of using {ratingModalMed.name}.
                 </p>
               </div>
 
-              {/* Star Rating Select Area */}
               <div className="space-y-6">
                 <div className="flex justify-center items-center gap-2">
                   {[1, 2, 3, 4, 5].map((star) => (
@@ -599,19 +545,18 @@ export default function RecommendationPage() {
                       onMouseEnter={() => setHoverRating(star)}
                       onMouseLeave={() => setHoverRating(0)}
                       onClick={() => setUserRating(star)}
-                      className="p-1 cursor-pointer transition-transform hover:scale-110 focus:outline-none"
+                      className="p-1 cursor-pointer transition-transform hover:scale-110 focus:outline-none border-0 bg-transparent"
                     >
                       <Star
                         className={`w-8 h-8 ${star <= (hoverRating || userRating)
                             ? 'fill-amber-400 text-amber-400'
-                            : 'text-slate-200 dark:text-slate-800'
+                            : 'text-slate-200 dark:text-slate-850'
                           }`}
                       />
                     </button>
                   ))}
                 </div>
 
-                {/* Optional comment */}
                 <div>
                   <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5 block">Clinical Notes (Optional)</label>
                   <textarea
@@ -619,12 +564,11 @@ export default function RecommendationPage() {
                     value={reviewComment}
                     onChange={(e) => setReviewComment(e.target.value)}
                     placeholder="Enter notes regarding efficacy, tolerability, or patient response..."
-                    className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-205 dark:border-slate-850 rounded-xl py-2 px-3 text-xs focus:ring-1 focus:ring-primary focus:border-primary transition-colors focus:outline-none resize-none"
+                    className="w-full bg-slate-55 dark:bg-slate-950 border border-slate-205 dark:border-slate-850 rounded-xl py-2 px-3 text-xs focus:ring-1 focus:ring-primary focus:border-primary transition-colors focus:outline-none resize-none text-slate-950 dark:text-white"
                   ></textarea>
                 </div>
               </div>
 
-              {/* Submit Buttons */}
               <div className="mt-6 pt-4 border-t border-slate-100 dark:border-slate-800 flex justify-end gap-3">
                 <Button variant="outline" onClick={() => setRatingModalMed(null)}>
                   Cancel
@@ -632,7 +576,7 @@ export default function RecommendationPage() {
                 <Button
                   variant="primary"
                   onClick={handleRateSubmit}
-                  className="bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-2.5 px-6 rounded-xl hover:bg-primary-container"
+                  className="bg-indigo-650 hover:bg-indigo-600 text-white font-bold py-2.5 px-6 rounded-xl"
                 >
                   Submit Rating
                 </Button>

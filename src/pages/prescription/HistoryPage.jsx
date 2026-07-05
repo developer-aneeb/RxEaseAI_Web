@@ -1,14 +1,14 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { usePrescriptionStore } from '../../store/usePrescriptionStore';
-import { useAppStore } from '../../store/useAppStore';
 import { useAuthStore } from '../../store/useAuthStore';
+import { useAppStore } from '../../store/useAppStore';
 import Button from '../../components/ui/Button';
 import Card from '../../components/ui/Card';
 import Badge from '../../components/ui/Badge';
 import MaterialIcon from '../../components/ui/MaterialIcon';
 import Navbar from '../../components/layout/Navbar';
-import SideNavbar from '../../components/layout/SideNavbar';
+import Spinner from '../../components/ui/Spinner';
+import Modal from '../../components/ui/Modal';
 import {
   Search, Eye, Download, MoreVertical, Edit2,
   Trash2, X, ZoomIn, CheckCircle2, AlertTriangle,
@@ -16,34 +16,98 @@ import {
   TrendingUp, Activity, ShieldAlert, Share2, Clipboard,
   Check, Mail, Send
 } from 'lucide-react';
+import { prescriptionService } from '../../services/prescriptionService';
+import { shareService } from '../../services/shareService';
+import { getFriendlyErrorMessage } from '../../utils/errorMessages';
 
 export default function HistoryPage() {
-  const { history, addHistoryEntry, resetStore } = usePrescriptionStore();
   const user = useAuthStore((state) => state.user);
   const showToast = useAppStore((state) => state.showToast);
 
+  const [prescriptions, setPrescriptions] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [filterStatus, setFilterStatus] = useState('All'); // 'All' | 'Verified' | 'Needs Review'
   const [timeFilter, setTimeFilter] = useState('All'); // 'All' | 'Today' | 'This Week'
+  
   const [selectedImage, setSelectedImage] = useState(null); // Fullscreen preview modal
   const [currentPage, setCurrentPage] = useState(1);
   const [activeMenuId, setActiveMenuId] = useState(null);
 
-  // Download & Share Multi-select state
+  // Bulk / Share / Expiry State
   const [selectedIds, setSelectedIds] = useState([]);
-  const [shareData, setShareData] = useState(null); // null or { type: 'single' | 'bulk', items: [...] }
+  const [shareData, setShareData] = useState(null); // null or { type: 'single' | 'bulk', ids: [...] }
+  const [recipientEmail, setRecipientEmail] = useState('');
+  const [isSharing, setIsSharing] = useState(false);
   const [shareLinkCopied, setShareLinkCopied] = useState(false);
-  const [shareExpiry, setShareExpiry] = useState('24h');
+  const [generatedShareToken, setGeneratedShareToken] = useState(null);
+  const [isExporting, setIsExporting] = useState(false);
 
   const itemsPerPage = 4;
+
+  const fetchPrescriptions = async () => {
+    setIsLoading(true);
+    try {
+      const response = await prescriptionService.listPrescriptions();
+      // Backend returns prescriptions array directly or inside { success, data }
+      const list = Array.isArray(response) 
+        ? response 
+        : (response?.data || response?.prescriptions || []);
+      setPrescriptions(list);
+    } catch (error) {
+      console.error(error);
+      const friendlyMsg = getFriendlyErrorMessage(error, 'Failed to fetch prescription history.');
+      showToast(friendlyMsg, 'error');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchPrescriptions();
+  }, []);
 
   const getInitials = (name) => {
     if (!name) return 'CU';
     return name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
   };
 
+  // Normalize API data to UI format
+  const normalizedPrescriptions = prescriptions.map((item) => {
+    const pId = item.prescription_id;
+    const dateParsed = item.created_at ? new Date(item.created_at) : new Date();
+    const dateStr = dateParsed.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    
+    const items = item.prescription_items || [];
+    const isVerified = items.every(i => i.validation_confidence >= 0.75) && items.length > 0;
+    
+    // Get average confidence
+    const totalConfidence = items.reduce((sum, i) => sum + (i.validation_confidence || 0.5), 0);
+    const avgConfidence = items.length > 0 ? (totalConfidence / items.length) : 0.8;
+    const ocrMatch = Math.round(avgConfidence * 100) + '%';
+    
+    const imageObject = item.prescription_images || item.prescription_image || {};
+    const originalUrl = imageObject.original_image_url || 'https://lh3.googleusercontent.com/aida-public/AB6AXuBDxQMub5mJyvN_Cs0E38s9xswudAcqO5X1pfkR06mQ9H4cANALe-RShm66y8uZrtbGXITAnGU97gPcBG1HxPMouEpayXk9lS22aks08N7qc7YlAHbY-EvpD3oNl4In5MZ2NyErdZsiluw6XQInHb8yI7WwG9iwPRHJ53GA0uiY7rjQrckh6NpKndXo1NcYuzwLkVt6b9_qycEBm2s1OqplznGTFBvEM-BanNk-3yg9r5V04hqDvsjQmXGhkPhJBH2VpyjGKxj35ek';
+
+    return {
+      id: pId,
+      doctor: item.doctor_name || 'AI Extraction Pipeline',
+      department: item.medical_notes || 'Handwritten Prescription',
+      date: dateStr,
+      rawDate: dateParsed,
+      medicinesCount: items.length,
+      medicines: items.map(i => ({
+        name: i.medicine_name,
+        status: i.validation_confidence < 0.6 ? 'warning' : 'normal'
+      })),
+      ocrMatch,
+      status: isVerified ? 'Verified' : 'Needs Review',
+      image: originalUrl
+    };
+  });
+
   // Filter and Search Logic
-  const filteredHistory = history.filter((item) => {
+  const filteredHistory = normalizedPrescriptions.filter((item) => {
     const matchesSearch =
       item.doctor.toLowerCase().includes(searchQuery.toLowerCase()) ||
       item.department.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -52,12 +116,14 @@ export default function HistoryPage() {
     const matchesStatus = filterStatus === 'All' || item.status === filterStatus;
 
     let matchesTime = true;
-    const todayStr = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    const now = new Date();
+    const itemDate = item.rawDate;
     if (timeFilter === 'Today') {
-      matchesTime = item.date.includes('Oct 24') || item.date === todayStr;
+      matchesTime = itemDate.toDateString() === now.toDateString();
     } else if (timeFilter === 'This Week') {
-      // Simple mock filter logic
-      matchesTime = item.date.includes('Oct') || item.date === todayStr;
+      const diffTime = Math.abs(now - itemDate);
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      matchesTime = diffDays <= 7;
     }
 
     return matchesSearch && matchesStatus && matchesTime;
@@ -68,34 +134,84 @@ export default function HistoryPage() {
   const startIndex = (currentPage - 1) * itemsPerPage;
   const paginatedItems = filteredHistory.slice(startIndex, startIndex + itemsPerPage);
 
-  const handleDownload = (doctor) => {
-    showToast(`Generating and downloading PDF audit report for ${doctor}...`, 'info');
+  const handleDownload = async (id) => {
+    setIsExporting(true);
+    showToast(`Generating PDF audit report...`, 'info');
+    try {
+      const blob = await prescriptionService.exportPDF(id);
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `prescription_report_${id}.pdf`);
+      document.body.appendChild(link);
+      link.click();
+      link.parentNode.removeChild(link);
+      showToast(`Successfully downloaded prescription report!`, 'success');
+    } catch (error) {
+      console.error(error);
+      const friendlyMsg = getFriendlyErrorMessage(error, 'Failed to download prescription PDF.');
+      showToast(friendlyMsg, 'error');
+    } finally {
+      setIsExporting(false);
+    }
   };
 
-  const handleDownloadMultiple = () => {
+  const handleDownloadMultiple = async () => {
     if (selectedIds.length === 0) return;
+    setIsExporting(true);
     const count = selectedIds.length;
-    showToast(`Generating bulk archive for ${count} prescriptions...`, 'info');
-    setTimeout(() => {
-      showToast(`Successfully exported ${count} prescriptions to PDF_Prescriptions_Archive.zip`, 'success');
+    showToast(`Generating combined PDF for ${count} prescriptions...`, 'info');
+    try {
+      const blob = await prescriptionService.exportMultiplePDF(selectedIds);
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `combined_prescription_reports.pdf`);
+      document.body.appendChild(link);
+      link.click();
+      link.parentNode.removeChild(link);
+      showToast(`Successfully exported ${count} prescriptions to PDF!`, 'success');
       setSelectedIds([]);
-    }, 1500);
+    } catch (error) {
+      console.error(error);
+      const friendlyMsg = getFriendlyErrorMessage(error, 'Failed to export bulk prescriptions PDF.');
+      showToast(friendlyMsg, 'error');
+    } finally {
+      setIsExporting(false);
+    }
   };
 
-  const handleShareMultiple = () => {
-    if (selectedIds.length === 0) return;
-    const selectedItems = history.filter(item => selectedIds.includes(item.id));
-    setShareData({
-      type: 'bulk',
-      items: selectedItems
-    });
+  const handleDelete = async (id) => {
+    if (!window.confirm('Are you sure you want to delete this prescription from history?')) return;
+    try {
+      await prescriptionService.deletePrescription(id);
+      showToast('Prescription deleted successfully.', 'success');
+      fetchPrescriptions();
+    } catch (error) {
+      console.error(error);
+      const friendlyMsg = getFriendlyErrorMessage(error, 'Failed to delete prescription.');
+      showToast(friendlyMsg, 'error');
+    }
   };
 
-  const handleShareSingle = (item) => {
-    setShareData({
-      type: 'single',
-      items: [item]
-    });
+  const handleShareSubmit = async (e) => {
+    e.preventDefault();
+    if (!recipientEmail) return;
+    setIsSharing(true);
+    try {
+      const mainId = shareData.ids[0];
+      const result = await shareService.sharePrescription(mainId, recipientEmail);
+      const token = result.share_token || result.token;
+      
+      setGeneratedShareToken(token);
+      showToast(`Prescription report successfully emailed to ${recipientEmail}!`, 'success');
+    } catch (error) {
+      console.error(error);
+      const friendlyMsg = getFriendlyErrorMessage(error, 'Failed to share prescription.');
+      showToast(friendlyMsg, 'error');
+    } finally {
+      setIsSharing(false);
+    }
   };
 
   const toggleSelect = (id) => {
@@ -105,7 +221,6 @@ export default function HistoryPage() {
   };
 
   const toggleSelectAll = () => {
-    // Filter to only select currently visible items on the page
     const visibleIds = paginatedItems.map(item => item.id);
     const allVisibleSelected = visibleIds.every(id => selectedIds.includes(id));
 
@@ -142,171 +257,89 @@ export default function HistoryPage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
         <div className="flex flex-col xl:flex-row gap-8 items-start">
 
-          {/* SideNavBar - Desktop only (matches Stitch Layout style but custom styled for our dark/light layout) */}
-          {/* <SideNavbar activeRoute="#history" /> */}
-
           {/* Main Content Area */}
           <div className="flex-1 w-full space-y-6">
 
-            {/* Header Section */}
-            <div className="glassmorphism p-6 md:p-8 rounded-3xl border border-slate-200/60 dark:border-slate-800 shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-6 bg-white dark:bg-slate-900">
+            {/* Header section */}
+            <div className="bg-white/70 dark:bg-slate-900/60 rounded-3xl p-6 border border-slate-200 dark:border-slate-800 shadow-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-6 backdrop-blur-md text-left">
               <div>
-                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary font-bold text-[10px] tracking-wide uppercase mb-3 border border-primary/20">
-                  <MaterialIcon name="local_pharmacy" size="xs" />
-                  <span>Prescription Management</span>
-                </span>
-                <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 dark:from-white dark:via-indigo-200 dark:to-white bg-clip-text text-transparent">
-                  Prescription History
-                </h1>
-                <p className="text-slate-500 dark:text-slate-400 text-xs md:text-sm mt-2 max-w-xl">
-                  Access, organize, review, and manage all of your AI-processed prescriptions in one secure, compliant workspace.
-                </p>
+                <h2 className="text-2xl font-extrabold text-slate-900 dark:text-white leading-tight">Prescription History</h2>
+                <p className="text-xs text-slate-500 mt-1">Review, search, export and manage your past AI-ingested medical prescriptions.</p>
               </div>
               <Button
                 variant="primary"
                 onClick={() => window.location.hash = '#upload'}
-                className="bg-gradient-to-r from-indigo-650 to-purple-650 hover:from-indigo-600 hover:to-purple-600 text-white font-bold py-3.5 px-6 rounded-xl shadow-lg shadow-indigo-500/20 flex items-center justify-center gap-2 shrink-0 cursor-pointer"
+                className="bg-primary hover:bg-primary-container text-white text-xs font-bold py-2.5 px-5 rounded-xl shadow-lg shadow-primary/20 flex items-center gap-1.5 cursor-pointer"
               >
-                <MaterialIcon name="upload_file" size="sm" />
-                <span>+ Upload New Prescription</span>
+                <MaterialIcon name="upload" size="sm" />
+                <span>Upload Prescription</span>
               </Button>
             </div>
 
-            {/* Summary Cards */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-
-              {/* Card 1 */}
-              <Card variant="flat" className="p-5 flex flex-col justify-between hover:shadow-lg transition-shadow">
-                <div className="flex items-start justify-between mb-4">
-                  <div className="p-2.5 bg-indigo-500/10 dark:bg-indigo-500/20 rounded-xl text-primary">
-                    <MaterialIcon name="receipt_long" size="md" />
-                  </div>
-                  <span className="text-emerald-500 font-bold text-xs flex items-center gap-0.5">
-                    <TrendingUp className="w-3.5 h-3.5" />
-                    <span>+12%</span>
-                  </span>
-                </div>
-                <div>
-                  <p className="text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Total Prescriptions</p>
-                  <h3 className="text-2xl font-black text-slate-800 dark:text-white mt-1">245</h3>
-                </div>
-              </Card>
-
-              {/* Card 2 */}
-              <Card variant="flat" className="p-5 flex flex-col justify-between hover:shadow-lg transition-shadow border-l-2 border-l-tertiary">
-                <div className="flex items-start justify-between mb-4">
-                  <div className="p-2.5 bg-tertiary/10 rounded-xl text-tertiary">
-                    <MaterialIcon name="smart_toy" size="md" />
-                  </div>
-                  <Badge variant="info">This Month</Badge>
-                </div>
-                <div>
-                  <p className="text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">AI Processed</p>
-                  <h3 className="text-2xl font-black text-slate-800 dark:text-white mt-1">32</h3>
-                </div>
-              </Card>
-
-              {/* Card 3 */}
-              <Card variant="flat" className="p-5 flex flex-col justify-between hover:shadow-lg transition-shadow">
-                <div className="flex items-start justify-between mb-4">
-                  <div className="p-2.5 bg-emerald-500/10 rounded-xl text-emerald-500">
-                    <MaterialIcon name="verified" size="md" />
-                  </div>
-                </div>
-                <div>
-                  <p className="text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Verified Medicines</p>
-                  <h3 className="text-2xl font-black text-slate-800 dark:text-white mt-1">684</h3>
-                </div>
-              </Card>
-
-              {/* Card 4 */}
-              <Card variant="flat" className="p-5 flex flex-col justify-between hover:shadow-lg transition-shadow">
-                <div className="flex items-start justify-between mb-4">
-                  <div className="p-2.5 bg-rose-500/10 rounded-xl text-rose-500">
-                    <MaterialIcon name="notification_important" size="md" />
-                  </div>
-                </div>
-                <div>
-                  <p className="text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Upcoming Reminders</p>
-                  <h3 className="text-2xl font-black text-slate-800 dark:text-white mt-1">14</h3>
-                </div>
-              </Card>
-            </div>
-
-            {/* List & Filters Section */}
-            <div className="space-y-4">
-
-              {/* Search and filter controls */}
-              <div className="flex flex-col md:flex-row gap-4 justify-between items-center bg-white dark:bg-slate-900 p-3 rounded-2xl border border-slate-200/60 dark:border-slate-800 shadow-md">
-                <div className="flex-1 w-full relative">
-                  <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 w-4 h-4" />
-                  <input
-                    type="text"
-                    placeholder="Filter medicines, doctors, or status..."
-                    value={searchQuery}
-                    onChange={(e) => {
-                      setSearchQuery(e.target.value);
-                      setCurrentPage(1);
-                    }}
-                    className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl py-2.5 pl-10 pr-4 text-xs focus:ring-1 focus:ring-primary focus:border-primary transition-colors focus:outline-none"
-                  />
-                </div>
-
-                <div className="flex items-center gap-2 w-full md:w-auto overflow-x-auto justify-end">
-                  <button
-                    onClick={() => {
-                      setTimeFilter(timeFilter === 'Today' ? 'All' : 'Today');
-                      setCurrentPage(1);
-                    }}
-                    className={`px-3.5 py-2 rounded-xl border text-xs font-bold transition-colors whitespace-nowrap cursor-pointer ${timeFilter === 'Today'
-                        ? 'border-primary/30 text-primary bg-primary/5'
-                        : 'border-slate-200 dark:border-slate-800 text-slate-500 dark:text-slate-450 hover:bg-slate-50 dark:hover:bg-slate-850'
-                      }`}
-                  >
-                    Today
-                  </button>
-                  <button
-                    onClick={() => {
-                      setTimeFilter(timeFilter === 'This Week' ? 'All' : 'This Week');
-                      setCurrentPage(1);
-                    }}
-                    className={`px-3.5 py-2 rounded-xl border text-xs font-bold transition-colors whitespace-nowrap cursor-pointer ${timeFilter === 'This Week'
-                        ? 'border-primary/30 text-primary bg-primary/5'
-                        : 'border-slate-200 dark:border-slate-800 text-slate-500 dark:text-slate-450 hover:bg-slate-50 dark:hover:bg-slate-850'
-                      }`}
-                  >
-                    This Week
-                  </button>
-
-                  <div className="relative">
-                    <button
-                      onClick={() => setFilterStatus(filterStatus === 'All' ? 'Verified' : filterStatus === 'Verified' ? 'Needs Review' : 'All')}
-                      className="px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-800 text-xs font-bold text-slate-500 dark:text-slate-455 hover:bg-slate-50 dark:hover:bg-slate-850 transition-colors whitespace-nowrap flex items-center gap-1.5 cursor-pointer"
-                    >
-                      <span>Status: {filterStatus}</span>
-                      <MaterialIcon name="arrow_drop_down" size="xs" />
-                    </button>
-                  </div>
-                </div>
+            {/* Filters Row */}
+            <div className="bg-white/50 dark:bg-slate-900/40 rounded-2xl p-4 border border-slate-200 dark:border-slate-800/80 shadow-sm flex flex-col md:flex-row justify-between items-center gap-4 text-left">
+              <div className="relative w-full md:w-[280px]">
+                <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                <input
+                  type="text"
+                  placeholder="Search doctor, drug name..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-xs focus:ring-1 focus:ring-primary focus:border-primary transition-all focus:outline-none"
+                />
               </div>
 
-              {/* Grid of Prescription Cards */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="flex gap-4 w-full md:w-auto items-center flex-wrap">
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Status:</span>
+                  <select
+                    value={filterStatus}
+                    onChange={(e) => setFilterStatus(e.target.value)}
+                    className="bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl py-2 px-3 text-xs focus:ring-1 focus:ring-primary focus:border-primary focus:outline-none transition-colors"
+                  >
+                    <option value="All">All Statuses</option>
+                    <option value="Verified">Verified</option>
+                    <option value="Needs Review">Needs Review</option>
+                  </select>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Time:</span>
+                  <select
+                    value={timeFilter}
+                    onChange={(e) => setTimeFilter(e.target.value)}
+                    className="bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl py-2 px-3 text-xs focus:ring-1 focus:ring-primary focus:border-primary focus:outline-none transition-colors"
+                  >
+                    <option value="All">All Time</option>
+                    <option value="Today">Today</option>
+                    <option value="This Week">This Week</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            {/* Ingestion Table/List */}
+            {isLoading ? (
+              <div className="py-24 flex items-center justify-center">
+                <Spinner />
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {paginatedItems.map((item) => (
                   <Card
                     key={item.id}
                     variant="glass"
-                    className="p-5 flex flex-col gap-4 hover:border-indigo-500/30 transition-all hover:-translate-y-1 shadow-md bg-white/80 dark:bg-slate-900/80 backdrop-blur-md"
+                    className="p-5 rounded-3xl border border-slate-200 dark:border-slate-800 bg-white/70 dark:bg-slate-900/60 shadow-lg relative flex flex-col gap-4 text-left group"
                   >
                     <div className="flex gap-3.5 items-start">
                       {/* Checkbox for Bulk Actions */}
-                      <div className="pt-10 shrink-0">
+                      <div className="pt-1 shrink-0">
                         <input
                           type="checkbox"
                           checked={selectedIds.includes(item.id)}
                           onChange={() => toggleSelect(item.id)}
                           onClick={(e) => e.stopPropagation()}
-                          className="w-4.5 h-4.5 rounded-lg border-slate-200 dark:border-slate-800 text-indigo-600 focus:ring-indigo-500/25 cursor-pointer accent-indigo-600"
+                          className="w-4.5 h-4.5 rounded-lg border-slate-200 dark:border-slate-800 text-indigo-650 focus:ring-indigo-500/25 cursor-pointer accent-indigo-600"
                         />
                       </div>
 
@@ -333,7 +366,7 @@ export default function HistoryPage() {
                       </div>
 
                       {/* Info & Details */}
-                      <div className="flex-1 min-w-0">
+                      <div className="flex-1 min-w-0 text-left">
                         <div className="flex justify-between items-start mb-1 gap-2">
                           <h4 className="text-sm font-bold text-slate-800 dark:text-slate-100 truncate">{item.doctor}</h4>
                           <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-lg text-[9px] font-bold border shrink-0 ${item.status === 'Verified'
@@ -346,7 +379,7 @@ export default function HistoryPage() {
                         </div>
                         <p className="text-[11px] font-medium text-slate-500 dark:text-slate-400 truncate mb-3">{item.department}</p>
 
-                        <div className="flex items-center gap-4 text-[10px] font-bold text-slate-400 dark:text-slate-550">
+                        <div className="flex items-center gap-4 text-[10px] font-bold text-slate-450">
                           <span className="flex items-center gap-1"><MaterialIcon name="calendar_today" size="xs" /> {item.date}</span>
                           <span className="flex items-center gap-1"><MaterialIcon name="pill" size="xs" /> {item.medicinesCount} Medicines</span>
                         </div>
@@ -355,29 +388,36 @@ export default function HistoryPage() {
                       {/* Action buttons */}
                       <div className="flex flex-col gap-1.5 shrink-0 relative">
                         <button
-                          onClick={() => setSelectedImage(item.image)}
-                          className="p-1.5 rounded-lg bg-slate-50 dark:bg-slate-950 text-slate-600 dark:text-slate-400 hover:bg-indigo-50 dark:hover:bg-slate-850 hover:text-primary transition-colors cursor-pointer"
+                          onClick={() => {
+                            // Redirect to result page loaded with this prescription's data
+                            prescriptionService.getPrescriptionDetails(item.id).then(res => {
+                              usePrescriptionStore.getState().setAiResult(res);
+                              usePrescriptionStore.getState().setCurrentPrescription(item.image);
+                              window.location.hash = '#result';
+                            });
+                          }}
+                          className="p-1.5 rounded-lg bg-slate-50 dark:bg-slate-950 text-slate-600 dark:text-slate-400 hover:bg-indigo-50 dark:hover:bg-slate-850 hover:text-primary transition-colors cursor-pointer border-0"
                           title="View Details"
                         >
                           <Eye className="w-3.5 h-3.5" />
                         </button>
                         <button
-                          onClick={() => handleDownload(item.doctor)}
-                          className="p-1.5 rounded-lg bg-slate-50 dark:bg-slate-950 text-slate-600 dark:text-slate-400 hover:bg-indigo-50 dark:hover:bg-slate-850 hover:text-primary transition-colors cursor-pointer"
+                          onClick={() => handleDownload(item.id)}
+                          className="p-1.5 rounded-lg bg-slate-50 dark:bg-slate-950 text-slate-600 dark:text-slate-400 hover:bg-indigo-50 dark:hover:bg-slate-850 hover:text-primary transition-colors cursor-pointer border-0"
                           title="Download PDF"
                         >
                           <Download className="w-3.5 h-3.5" />
                         </button>
                         <button
-                          onClick={() => handleShareSingle(item)}
-                          className="p-1.5 rounded-lg bg-slate-50 dark:bg-slate-950 text-slate-600 dark:text-slate-400 hover:bg-indigo-50 dark:hover:bg-slate-850 hover:text-primary transition-colors cursor-pointer"
+                          onClick={() => setShareData({ type: 'single', ids: [item.id] })}
+                          className="p-1.5 rounded-lg bg-slate-50 dark:bg-slate-950 text-slate-600 dark:text-slate-400 hover:bg-indigo-50 dark:hover:bg-slate-850 hover:text-primary transition-colors cursor-pointer border-0"
                           title="Share Prescription"
                         >
                           <Share2 className="w-3.5 h-3.5" />
                         </button>
                         <button
                           onClick={() => setActiveMenuId(activeMenuId === item.id ? null : item.id)}
-                          className="p-1.5 rounded-lg text-slate-450 hover:bg-slate-100 dark:hover:bg-slate-850 transition-colors cursor-pointer"
+                          className="p-1.5 rounded-lg text-slate-450 hover:bg-slate-100 dark:hover:bg-slate-850 transition-colors cursor-pointer border-0 bg-transparent"
                           title="More Options"
                         >
                           <MoreVertical className="w-3.5 h-3.5" />
@@ -388,23 +428,27 @@ export default function HistoryPage() {
                           <div className="absolute right-0 top-10 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-lg p-1.5 z-20 min-w-[120px]">
                             <button
                               onClick={() => {
-                                showToast('Manual clinical review triggered', 'info');
+                                prescriptionService.getPrescriptionDetails(item.id).then(res => {
+                                  usePrescriptionStore.getState().setAiResult(res);
+                                  usePrescriptionStore.getState().setCurrentPrescription(item.image);
+                                  window.location.hash = '#result';
+                                });
                                 setActiveMenuId(null);
                               }}
-                              className="w-full text-left px-3 py-2 text-[10px] font-bold text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-850 rounded-lg flex items-center gap-1.5"
+                              className="w-full text-left px-3 py-2 text-[10px] font-bold text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-850 rounded-lg flex items-center gap-1.5 border-0 bg-transparent"
                             >
                               <Edit2 className="w-3 h-3" />
-                              Edit Record
+                              View/Audit
                             </button>
                             <button
                               onClick={() => {
-                                showToast('Audit checklist verified', 'success');
+                                handleDelete(item.id);
                                 setActiveMenuId(null);
                               }}
-                              className="w-full text-left px-3 py-2 text-[10px] font-bold text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-850 rounded-lg flex items-center gap-1.5"
+                              className="w-full text-left px-3 py-2 text-[10px] font-bold text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/20 rounded-lg flex items-center gap-1.5 border-0 bg-transparent"
                             >
-                              <CheckCircle2 className="w-3 h-3" />
-                              Force Verify
+                              <Trash2 className="w-3 h-3" />
+                              Delete
                             </button>
                           </div>
                         )}
@@ -412,7 +456,7 @@ export default function HistoryPage() {
                     </div>
 
                     {/* Footer tag summary */}
-                    <div className="pt-3 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between gap-2 flex-wrap">
+                    <div className="pt-3 border-t border-slate-100 dark:border-slate-805/80 flex items-center justify-between gap-2 flex-wrap">
                       <div className="flex gap-1.5 flex-wrap">
                         {item.medicines.slice(0, 2).map((m, idx) => (
                           <span
@@ -434,7 +478,7 @@ export default function HistoryPage() {
 
                       <div className="flex items-center gap-1 text-[9px] font-extrabold text-tertiary bg-tertiary/5 px-2 py-0.5 rounded-full border border-tertiary/10 tracking-wide">
                         <MaterialIcon name="document_scanner" size="xs" />
-                        <span>{item.ocrMatch} OCR Match</span>
+                        <span>{item.ocrMatch} Avg Match</span>
                       </div>
                     </div>
                   </Card>
@@ -442,54 +486,53 @@ export default function HistoryPage() {
 
                 {filteredHistory.length === 0 && (
                   <div className="col-span-2 py-16 text-center bg-white dark:bg-slate-900 rounded-3xl border border-slate-200/50 dark:border-slate-800 shadow-md">
-                    <MaterialIcon name="search_off" size="3xl" className="text-slate-350 dark:text-slate-655 mb-4" />
-                    <h3 className="text-sm font-bold text-slate-800 dark:text-slate-200">No matching prescriptions found</h3>
-                    <p className="text-xs text-slate-450 mt-1">Try adjusting your filters or search terms.</p>
+                    <MaterialIcon name="search_off" size="3xl" className="text-slate-350 dark:text-slate-600 mb-4" />
+                    <h3 className="text-sm font-bold text-slate-800 dark:text-slate-200">No prescriptions found</h3>
+                    <p className="text-xs text-slate-400 mt-1">Try uploading a new prescription or adjusting filters.</p>
                   </div>
                 )}
               </div>
+            )}
 
-              {/* Pagination Controls */}
-              {totalPages > 1 && (
-                <div className="flex items-center justify-between py-4 px-2">
-                  <span className="text-[10px] font-bold text-slate-450 uppercase tracking-wider">
-                    Showing {startIndex + 1} to {Math.min(startIndex + itemsPerPage, filteredHistory.length)} of {filteredHistory.length} entries
-                  </span>
+            {/* Pagination Controls */}
+            {!isLoading && totalPages > 1 && (
+              <div className="flex items-center justify-between py-4 px-2">
+                <span className="text-[10px] font-bold text-slate-405 uppercase tracking-wider">
+                  Showing {startIndex + 1} to {Math.min(startIndex + itemsPerPage, filteredHistory.length)} of {filteredHistory.length} entries
+                </span>
 
-                  <div className="flex items-center gap-1.5">
+                <div className="flex items-center gap-1.5">
+                  <button
+                    onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                    disabled={currentPage === 1}
+                    className="p-2 rounded-xl border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-850 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
+                  >
+                    <ChevronLeft className="w-3.5 h-3.5" />
+                  </button>
+
+                  {Array.from({ length: totalPages }).map((_, idx) => (
                     <button
-                      onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-                      disabled={currentPage === 1}
-                      className="p-2 rounded-xl border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-850 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
+                      key={idx}
+                      onClick={() => setCurrentPage(idx + 1)}
+                      className={`w-8 h-8 rounded-xl font-bold text-xs flex items-center justify-center transition-colors cursor-pointer border-0 ${currentPage === idx + 1
+                          ? 'bg-primary text-white shadow-md shadow-primary/20'
+                          : 'bg-transparent text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-850 hover:text-slate-800 dark:hover:text-white'
+                        }`}
                     >
-                      <ChevronLeft className="w-3.5 h-3.5" />
+                      {idx + 1}
                     </button>
+                  ))}
 
-                    {Array.from({ length: totalPages }).map((_, idx) => (
-                      <button
-                        key={idx}
-                        onClick={() => setCurrentPage(idx + 1)}
-                        className={`w-8 h-8 rounded-xl font-bold text-xs flex items-center justify-center transition-colors cursor-pointer ${currentPage === idx + 1
-                            ? 'bg-primary text-white shadow-md shadow-primary/20'
-                            : 'text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-850 hover:text-slate-800 dark:hover:text-white'
-                          }`}
-                      >
-                        {idx + 1}
-                      </button>
-                    ))}
-
-                    <button
-                      onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
-                      disabled={currentPage === totalPages}
-                      className="p-2 rounded-xl border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-850 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
-                    >
-                      <ChevronRight className="w-3.5 h-3.5" />
-                    </button>
-                  </div>
+                  <button
+                    onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                    disabled={currentPage === totalPages}
+                    className="p-2 rounded-xl border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-850 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
+                  >
+                    <ChevronRight className="w-3.5 h-3.5" />
+                  </button>
                 </div>
-              )}
-            </div>
-
+              </div>
+            )}
           </div>
 
           {/* Secondary Sidebar (Recent Activity Feed) */}
@@ -497,38 +540,22 @@ export default function HistoryPage() {
             <div className="glassmorphism p-6 rounded-3xl border border-slate-200/60 dark:border-slate-800 shadow-xl bg-white/80 dark:bg-slate-900/80 backdrop-blur-md">
               <h3 className="text-sm font-bold text-slate-800 dark:text-slate-100 mb-6 flex items-center gap-2">
                 <MaterialIcon name="history" size="sm" className="text-primary" />
-                <span>Recent Activity</span>
+                <span>Quick Statistics</span>
               </h3>
 
-              <div className="relative pl-4 space-y-6 before:absolute before:inset-y-0 before:left-[11px] before:w-[2px] before:bg-slate-200 dark:before:bg-slate-800">
-
-                {/* Activity Item 1 */}
-                <div className="relative">
-                  <div className="absolute -left-[21px] w-2.5 h-2.5 rounded-full bg-primary border-2 border-white dark:border-slate-900 shadow-md mt-1"></div>
-                  <p className="text-xs font-bold text-slate-800 dark:text-slate-200 mb-0.5">Prescription Captured</p>
-                  <p className="text-[11px] text-slate-500 mb-1">Dr. Sarah Jenkins Snapped</p>
-                  <span className="text-[9px] font-bold text-slate-400 dark:text-slate-500">10 mins ago</span>
+              <div className="flex flex-col gap-4 text-left font-geist">
+                <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-200/50 dark:border-slate-850 flex items-center justify-between">
+                  <span className="text-xs text-slate-500 font-medium">Total Ingested</span>
+                  <span className="text-base font-extrabold text-slate-900 dark:text-white">{normalizedPrescriptions.length}</span>
                 </div>
-
-                {/* Activity Item 2 */}
-                <div className="relative">
-                  <div className="absolute -left-[21px] w-2.5 h-2.5 rounded-full bg-tertiary border-2 border-white dark:border-slate-900 shadow-md mt-1"></div>
-                  <p className="text-xs font-bold text-slate-800 dark:text-slate-200 mb-0.5 flex items-center gap-1">
-                    <span>AI Processing Complete</span>
-                    <MaterialIcon name="auto_awesome" size="xs" className="text-tertiary" />
-                  </p>
-                  <p className="text-[11px] text-slate-500 mb-1">2 medicines extracted successfully.</p>
-                  <span className="text-[9px] font-bold text-slate-400 dark:text-slate-500">12 mins ago</span>
+                <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-200/50 dark:border-slate-850 flex items-center justify-between">
+                  <span className="text-xs text-slate-500 font-medium">Fully Verified</span>
+                  <span className="text-base font-extrabold text-emerald-500">{normalizedPrescriptions.filter(p => p.status === 'Verified').length}</span>
                 </div>
-
-                {/* Activity Item 3 */}
-                <div className="relative">
-                  <div className="absolute -left-[21px] w-2.5 h-2.5 rounded-full bg-slate-400 border-2 border-white dark:border-slate-900 shadow-md mt-1"></div>
-                  <p className="text-xs font-bold text-slate-800 dark:text-slate-200 mb-0.5">PDF Downloaded</p>
-                  <p className="text-[11px] text-slate-500 mb-1">Previous record accessed.</p>
-                  <span className="text-[9px] font-bold text-slate-400 dark:text-slate-500">2 hours ago</span>
+                <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-200/50 dark:border-slate-850 flex items-center justify-between">
+                  <span className="text-xs text-slate-500 font-medium">Needs Review</span>
+                  <span className="text-base font-extrabold text-amber-500">{normalizedPrescriptions.filter(p => p.status === 'Needs Review').length}</span>
                 </div>
-
               </div>
             </div>
           </aside>
@@ -555,7 +582,7 @@ export default function HistoryPage() {
             >
               <button
                 onClick={() => setSelectedImage(null)}
-                className="absolute top-4 right-4 p-2 rounded-full bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-500 dark:text-slate-400 transition-colors cursor-pointer"
+                className="absolute top-4 right-4 p-2 rounded-full bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-500 dark:text-slate-400 transition-colors cursor-pointer border-0"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -582,16 +609,6 @@ export default function HistoryPage() {
               <div className="mt-6 flex justify-end gap-3">
                 <Button variant="outline" onClick={() => setSelectedImage(null)}>
                   Close
-                </Button>
-                <Button
-                  variant="primary"
-                  onClick={() => {
-                    showToast('Initiating medical grade document export...', 'success');
-                    setSelectedImage(null);
-                  }}
-                  className="bg-primary text-white font-bold py-2.5 px-6 rounded-xl hover:bg-primary-container"
-                >
-                  Export PDF
                 </Button>
               </div>
             </motion.div>
@@ -628,20 +645,11 @@ export default function HistoryPage() {
                 className="flex items-center gap-1.5 text-xs font-bold py-2 px-3 hover:bg-slate-50 dark:hover:bg-slate-850"
               >
                 <Download className="w-3.5 h-3.5" />
-                <span>Download</span>
-              </Button>
-              <Button
-                variant="primary"
-                size="sm"
-                onClick={handleShareMultiple}
-                className="flex items-center gap-1.5 text-xs font-bold py-2 px-3 bg-indigo-650 hover:bg-indigo-600 text-white"
-              >
-                <Share2 className="w-3.5 h-3.5" />
-                <span>Share</span>
+                <span>Combined PDF</span>
               </Button>
               <button
                 onClick={() => setSelectedIds([])}
-                className="text-xs font-bold text-slate-400 hover:text-slate-600 p-2 rounded-xl transition-colors cursor-pointer"
+                className="text-xs font-bold text-slate-450 hover:text-slate-600 p-2 rounded-xl transition-colors cursor-pointer border-0 bg-transparent"
               >
                 Clear
               </button>
@@ -651,120 +659,101 @@ export default function HistoryPage() {
       </AnimatePresence>
 
       {/* Share Prescription Modal */}
-      <AnimatePresence>
-        {shareData && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={() => setShareData(null)}
-            className="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4 md:p-6"
-          >
-            <motion.div
-              initial={{ scale: 0.95, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.95, opacity: 0 }}
-              onClick={(e) => e.stopPropagation()}
-              className="relative max-w-md w-full bg-white dark:bg-slate-900 rounded-3xl p-6 shadow-2xl border border-slate-200 dark:border-slate-800"
-            >
-              <button
+      <Modal
+        isOpen={!!shareData}
+        onClose={() => {
+          setShareData(null);
+          setGeneratedShareToken(null);
+          setRecipientEmail('');
+        }}
+        title="Share Prescription Report"
+      >
+        {!generatedShareToken ? (
+          <form onSubmit={handleShareSubmit} className="flex flex-col gap-4 font-sans text-left">
+            <p className="text-xs text-slate-500 leading-relaxed">
+              We will generate a secure access token and email the medical audit details (including a PDF copy) directly to the recipient address below.
+            </p>
+            <div className="flex flex-col gap-1.5">
+              <label className="text-[11px] font-bold uppercase text-slate-400">Recipient Email Address</label>
+              <input
+                type="email"
+                placeholder="doctor@hospital.com"
+                value={recipientEmail}
+                onChange={(e) => setRecipientEmail(e.target.value)}
+                required
+                className="p-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-slate-950 dark:text-white focus:outline-none focus:border-indigo-500 text-sm transition-colors"
+              />
+            </div>
+            <div className="flex gap-3 justify-end pt-2 border-t border-slate-100 dark:border-slate-800">
+              <Button
+                variant="outline"
+                size="sm"
                 onClick={() => setShareData(null)}
-                className="absolute top-4 right-4 p-2 rounded-full bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-500 dark:text-slate-400 transition-colors cursor-pointer"
+                type="button"
               >
-                <X className="w-5 h-5" />
-              </button>
-
-              <div className="text-center mb-6">
-                <div className="w-12 h-12 bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 rounded-full flex items-center justify-center mx-auto mb-3">
-                  <Share2 className="w-6 h-6" />
-                </div>
-                <h3 className="text-lg font-bold text-slate-900 dark:text-white">
-                  {shareData.type === 'bulk' ? 'Share Selected Prescriptions' : 'Share Prescription'}
-                </h3>
-                <p className="text-xs text-slate-450 mt-1">
-                  {shareData.type === 'bulk'
-                    ? `Generating a secure share link for ${shareData.items.length} records.`
-                    : `Share diagnostic records from ${shareData.items[0]?.doctor || 'provider'}.`}
-                </p>
+                Cancel
+              </Button>
+              <Button
+                variant="primary"
+                size="sm"
+                type="submit"
+                disabled={isSharing}
+                className="flex items-center gap-1.5 bg-indigo-600 hover:bg-indigo-500 text-white font-bold"
+              >
+                {isSharing ? (
+                  <div className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                ) : (
+                  <Send className="w-3.5 h-3.5" />
+                )}
+                <span>Email Report</span>
+              </Button>
+            </div>
+          </form>
+        ) : (
+          <div className="flex flex-col gap-4 text-left font-sans">
+            <div className="p-3 bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 rounded-xl text-xs flex items-center gap-2">
+              <span className="material-symbols-outlined text-[16px]">check_circle</span>
+              <span>Secure sharing record established successfully!</span>
+            </div>
+            <div className="bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl p-3">
+              <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Public Share Link</span>
+              <div className="flex items-center justify-between gap-2">
+                <span className="text-xs text-slate-700 dark:text-slate-350 truncate font-mono select-all">
+                  {`${window.location.origin}/api/v1/share/share/${generatedShareToken}`}
+                </span>
+                <button
+                  onClick={() => {
+                    const link = `${window.location.origin}/api/v1/share/share/${generatedShareToken}`;
+                    navigator.clipboard.writeText(link);
+                    setShareLinkCopied(true);
+                    showToast('Link copied to clipboard!', 'success');
+                    setTimeout(() => setShareLinkCopied(false), 2000);
+                  }}
+                  className="p-1.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg text-slate-600 hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer shrink-0"
+                >
+                  {shareLinkCopied ? <Check className="w-3.5 h-3.5 text-emerald-500" /> : <Clipboard className="w-3.5 h-3.5" />}
+                </button>
               </div>
-
-              {/* Share link box */}
-              <div className="space-y-4">
-                <div className="bg-slate-55 dark:bg-slate-950 border border-slate-200 dark:border-slate-850 rounded-xl p-3.5 relative flex items-center justify-between gap-3">
-                  <div className="min-w-0 flex-1">
-                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Secure Share Link</p>
-                    <p className="text-xs text-slate-700 dark:text-slate-200 truncate font-mono">
-                      {shareData.type === 'bulk'
-                        ? `https://rxeaseai.med/share/bulk?ids=${shareData.items.map(i => i.id).join(',')}`
-                        : `https://rxeaseai.med/share/${shareData.items[0]?.id}`}
-                    </p>
-                  </div>
-                  <button
-                    onClick={() => {
-                      const link = shareData.type === 'bulk'
-                        ? `https://rxeaseai.med/share/bulk?ids=${shareData.items.map(i => i.id).join(',')}`
-                        : `https://rxeaseai.med/share/${shareData.items[0]?.id}`;
-                      navigator.clipboard.writeText(link);
-                      setShareLinkCopied(true);
-                      showToast('Secure link copied to clipboard!', 'success');
-                      setTimeout(() => setShareLinkCopied(false), 2050);
-                    }}
-                    className="p-2 bg-indigo-50 dark:bg-slate-850 hover:bg-indigo-100 text-indigo-650 dark:text-indigo-400 rounded-xl transition-colors cursor-pointer shrink-0"
-                    title="Copy Link"
-                  >
-                    {shareLinkCopied ? <Check className="w-4 h-4 text-emerald-500" /> : <Clipboard className="w-4 h-4" />}
-                  </button>
-                </div>
-
-                {/* Expiry selection */}
-                <div>
-                  <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5 block">Access Expiry</label>
-                  <select
-                    value={shareExpiry}
-                    onChange={(e) => setShareExpiry(e.target.value)}
-                    className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-850 rounded-xl py-2 px-3 text-xs focus:ring-1 focus:ring-primary focus:border-primary transition-colors focus:outline-none"
-                  >
-                    <option value="1h">1 Hour (Highly Secure)</option>
-                    <option value="24h">24 Hours (Standard)</option>
-                    <option value="7d">7 Days</option>
-                    <option value="never">No Expiry</option>
-                  </select>
-                </div>
-
-                {/* Sharing actions */}
-                <div className="grid grid-cols-2 gap-3 pt-2">
-                  <button
-                    onClick={() => {
-                      showToast('Inviting secure recipient via Email...', 'success');
-                      setShareData(null);
-                    }}
-                    className="py-3 px-4 rounded-xl border border-slate-200 dark:border-slate-800 text-xs font-bold text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-850 flex items-center justify-center gap-2 cursor-pointer transition-colors"
-                  >
-                    <Mail className="w-4 h-4 text-slate-500" />
-                    <span>Share via Email</span>
-                  </button>
-                  <button
-                    onClick={() => {
-                      showToast('Sharing link via secure messaging...', 'success');
-                      setShareData(null);
-                    }}
-                    className="py-3 px-4 rounded-xl border border-slate-200 dark:border-slate-800 text-xs font-bold text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-850 flex items-center justify-center gap-2 cursor-pointer transition-colors"
-                  >
-                    <Send className="w-4 h-4 text-emerald-500" />
-                    <span>Share via WhatsApp</span>
-                  </button>
-                </div>
-              </div>
-
-              <div className="mt-6 pt-4 border-t border-slate-100 dark:border-slate-800 flex justify-end">
-                <Button variant="outline" onClick={() => setShareData(null)}>
-                  Cancel
-                </Button>
-              </div>
-            </motion.div>
-          </motion.div>
+            </div>
+            <p className="text-[10px] text-slate-500 leading-normal">
+              Any person with this link will be able to retrieve the clinical prescription items directly from our database.
+            </p>
+            <div className="flex justify-end pt-2 border-t border-slate-100 dark:border-slate-800">
+              <Button
+                variant="primary"
+                size="sm"
+                onClick={() => {
+                  setShareData(null);
+                  setGeneratedShareToken(null);
+                  setRecipientEmail('');
+                }}
+              >
+                Close
+              </Button>
+            </div>
+          </div>
         )}
-      </AnimatePresence>
+      </Modal>
     </div>
   );
 }
