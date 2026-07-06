@@ -114,8 +114,8 @@ export default function NotificationsPage() {
     const isToday = dateObj.toDateString() === new Date().toDateString();
     const isUnread = item.status === 'pending' || item.status === 'triggered';
     const isHighPriority = item.event_type === 'dose_missed' || item.event_type === 'dose_skipped';
-    const generatedTitle = item.event_type 
-      ? item.event_type.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) 
+    const generatedTitle = item.event_type
+      ? item.event_type.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())
       : 'Notification Alert';
 
     return {
@@ -138,6 +138,7 @@ export default function NotificationsPage() {
 
     if (!matchesSearch) return false;
 
+    // Category / Filter button match
     if (activeFilter === 'All') return true;
     if (activeFilter === 'Unread') return n.unread;
     if (activeFilter === 'High Priority') return n.priority === 'high';
@@ -165,14 +166,10 @@ export default function NotificationsPage() {
 
   const navLinks = [
     { name: 'Home', href: '#home' },
-    { name: 'New Upload', href: '#upload' },
+    { name: 'Upload', href: '#upload' },
     { name: 'History', href: '#history' },
-    { name: 'Recommendations', href: '#recommendations' },
     { name: 'Search', href: '#search' },
-    { name: 'Analytics', href: '#analytics' },
     { name: 'Reminders', href: '#reminders' },
-    { name: 'Notifications', href: '#notifications' },
-    { name: 'Dashboard', href: '#history-dashboard' },
   ];
 
   return (
@@ -265,8 +262,8 @@ export default function NotificationsPage() {
                     key={filter}
                     onClick={() => setActiveFilter(filter)}
                     className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer border whitespace-nowrap ${activeFilter === filter
-                        ? 'bg-primary border-primary text-white shadow-sm'
-                        : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-650 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800'
+                      ? 'bg-primary border-primary text-white shadow-sm'
+                      : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-650 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800'
                       }`}
                   >
                     {filter}
@@ -324,8 +321,8 @@ export default function NotificationsPage() {
                         <div
                           key={item.id}
                           className={`bg-white dark:bg-slate-900 border rounded-2xl p-5 shadow-sm transition-all relative overflow-hidden group text-left ${item.priority === 'high'
-                              ? 'border-rose-250 dark:border-rose-900/50 shadow-[0_4px_20px_rgba(244,63,94,0.05)]'
-                              : 'border-slate-200 dark:border-slate-800 hover:shadow-md'
+                            ? 'border-rose-250 dark:border-rose-900/50 shadow-[0_4px_20px_rgba(244,63,94,0.05)]'
+                            : 'border-slate-200 dark:border-slate-800 hover:shadow-md'
                             }`}
                         >
                           {item.priority === 'high' && (
@@ -333,8 +330,8 @@ export default function NotificationsPage() {
                           )}
                           <div className="flex gap-4">
                             <div className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${item.priority === 'high'
-                                ? 'bg-rose-105 dark:bg-rose-950 text-rose-500'
-                                : 'bg-primary/10 text-primary'
+                              ? 'bg-rose-105 dark:bg-rose-950 text-rose-500'
+                              : 'bg-primary/10 text-primary'
                               }`}>
                               <MaterialIcon name="alarm" size="sm" />
                             </div>
@@ -343,8 +340,8 @@ export default function NotificationsPage() {
                               <div className="flex justify-between items-start mb-1 gap-2">
                                 <div className="flex items-center gap-2">
                                   <span className={`px-2 py-0.5 rounded text-[9px] font-black uppercase tracking-wider ${item.priority === 'high'
-                                      ? 'bg-rose-100 dark:bg-rose-950 text-rose-600'
-                                      : 'bg-slate-100 dark:bg-slate-800 text-slate-500'
+                                    ? 'bg-rose-100 dark:bg-rose-950 text-rose-600'
+                                    : 'bg-slate-100 dark:bg-slate-800 text-slate-500'
                                     }`}>
                                     {item.category}
                                   </span>
