@@ -15,7 +15,7 @@ export const followUpService = {
 
   /**
    * POST /followups
-   * Body: { reminder_type: "doctor_visit"|"lab_test"|"prescription_refill"|"other", title, scheduled_at }
+   * Body: { reminder_type: "revisit"|"lab_test"|"general", title, scheduled_at, notes? }
    */
   async create(data) {
     const response = await apiClient.post('/followups', data);
