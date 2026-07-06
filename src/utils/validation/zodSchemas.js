@@ -40,33 +40,49 @@ export const resetPasswordSchema = z.object({
 });
 
 export const reminderSchema = z.object({
-  name: z.string().min(1, 'Please enter the medicine name'),
+  medicine_name: z.string().min(1, 'Please enter the medicine name'),
+  dosage: z.string().optional().or(z.literal('')),
   date: z.string().min(1, 'Please select a reminder date'),
   time: z.string().min(1, 'Please select a reminder time'),
-  meal: z.enum(['Breakfast', 'Lunch', 'Dinner', 'Before Sleep', 'Anytime'], {
-    required_error: 'Please select a meal timing',
-  }),
+  schedule_type: z.enum(['once', 'daily', 'weekly', 'monthly']),
+  weekdays: z.array(z.number()).optional(),
+  remind_count: z.number().min(1).max(10).optional(),
+  remind_interval_minutes: z.number().min(1).max(240).optional(),
+  meal: z.string().optional(),
 }).superRefine((data, ctx) => {
-  const error = validateReminderDateTime(data.date, data.time);
-  if (error) {
+  if (data.schedule_type === 'weekly' && (!data.weekdays || data.weekdays.length === 0)) {
     ctx.addIssue({
       code: z.ZodIssueCode.custom,
-      message: error,
-      path: ['time'],
-    });
-    ctx.addIssue({
-      code: z.ZodIssueCode.custom,
-      message: error,
-      path: ['date'],
+      message: 'Please select at least one day of the week',
+      path: ['weekdays'],
     });
   }
+});
+
+export const followUpSchema = z.object({
+  reminder_type: z.enum(['revisit', 'lab_test', 'general'], {
+    required_error: 'Please select a follow-up type',
+  }),
+  title: z.string().min(2, 'Title must be at least 2 characters').max(200, 'Title is too long'),
+  date: z.string().min(1, 'Please select a date'),
+  time: z.string().min(1, 'Please select a time'),
+  notes: z.string().optional().or(z.literal('')),
 });
 
 export const profileSchema = z.object({
   fullName: z.string().min(1, 'Full name is required'),
   email: z.string().min(1, 'Email is required').email('Please enter a valid email address'),
-  phone: z.string().min(1, 'Phone number is required'),
-  specialty: z.string().min(1, 'Specialty/Role is required'),
+  phone: z.string().optional().or(z.literal('')),
+  specialty: z.string().optional().or(z.literal('')),
+  date_of_birth: z.string().optional().or(z.literal('')),
+  gender: z.enum(['Male', 'Female', 'Other', '']).optional(),
+  blood_group: z.string().optional().or(z.literal('')),
+  height: z.string().optional().or(z.literal('')),
+  weight: z.string().optional().or(z.literal('')),
+  address: z.string().optional().or(z.literal('')),
+  city: z.string().optional().or(z.literal('')),
+  province: z.string().optional().or(z.literal('')),
+  country: z.string().optional().or(z.literal('')),
 });
 
 export const feedbackSchema = z.object({
