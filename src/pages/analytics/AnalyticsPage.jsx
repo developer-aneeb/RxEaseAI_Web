@@ -21,21 +21,20 @@ export default function AnalyticsPage() {
   const user = useAuthStore((state) => state.user);
   const showToast = useAppStore((state) => state.showToast);
 
-  const [activeTab, setActiveTab] = useState('Adherence'); // 'Adherence', 'Missed', 'Prescriptions', 'Reminders', 'Patterns'
-  
+  const [activeTab, setActiveTab] = useState('Adherence'); // 'Adherence', 'Missed', 'Reminders', 'Patterns'
+
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('All');
   const [currentPage, setCurrentPage] = useState(1);
   const [optApplied, setOptApplied] = useState(false);
 
   const [isLoading, setIsLoading] = useState(true);
-  
+
   // Data States
   const [adherenceData, setAdherenceData] = useState(null);
   const [logs, setLogs] = useState([]);
-  
+
   const [missedData, setMissedData] = useState(null);
-  const [prescriptionsData, setPrescriptionsData] = useState(null);
   const [remindersData, setRemindersData] = useState(null);
   const [patternsData, setPatternsData] = useState(null);
   const [consistencyData, setConsistencyData] = useState(null);
@@ -47,7 +46,7 @@ export default function AnalyticsPage() {
         const response = await analyticsService.getReport();
         const data = response?.data || {};
         setAdherenceData(data);
-        
+
         const dailyList = data.dailyTrend || [];
         const mappedLogs = dailyList.map((d, idx) => {
           const actionable = (d.taken || 0) + (d.skipped || 0) + (d.missed || 0);
@@ -66,14 +65,10 @@ export default function AnalyticsPage() {
           };
         });
         setLogs(mappedLogs.reverse());
-      } 
+      }
       else if (activeTab === 'Missed' && !missedData) {
         const res = await analyticsService.getMissedDoses();
         setMissedData(res?.data || {});
-      }
-      else if (activeTab === 'Prescriptions' && !prescriptionsData) {
-        const res = await analyticsService.getPrescriptionStats();
-        setPrescriptionsData(res?.data || {});
       }
       else if (activeTab === 'Reminders' && !remindersData) {
         const res = await analyticsService.getRemindersSummary();
@@ -120,14 +115,11 @@ export default function AnalyticsPage() {
   // Shared NavLinks
   const navLinks = [
     { name: 'Home', href: '#home' },
-    { name: 'New Upload', href: '#upload' },
-    { name: 'History', href: '#history' },
-    { name: 'Recommendations', href: '#recommendations' },
+    { name: 'Upload', href: '#upload' },
     { name: 'Search', href: '#search' },
-    { name: 'Analytics', href: '#analytics' },
     { name: 'Reminders', href: '#reminders' },
     { name: 'Notifications', href: '#notifications' },
-    { name: 'Dashboard', href: '#history-dashboard' },
+    { name: 'Prescription Analytics', href: '#prescription-analytics' },
   ];
 
   return (
@@ -155,7 +147,7 @@ export default function AnalyticsPage() {
                 Monitor Medicine <span className="bg-gradient-to-r from-primary to-emerald-500 bg-clip-text text-transparent">Adherence</span>
               </h1>
               <p className="text-xs md:text-sm text-slate-500 dark:text-slate-400 mt-2 max-w-2xl leading-relaxed">
-                Real-time synthesis of patient medication compliance, missed doses metrics, prescription workflows, and AI optimization patterns.
+                Real-time synthesis of patient medication compliance, missed doses metrics and AI optimization patterns.
               </p>
             </div>
 
@@ -174,7 +166,6 @@ export default function AnalyticsPage() {
             {[
               { id: 'Adherence', icon: Activity },
               { id: 'Missed', icon: AlertTriangle },
-              { id: 'Prescriptions', icon: FileText },
               { id: 'Reminders', icon: BellRing },
               { id: 'Patterns', icon: TrendingUp }
             ].map((tab) => {
@@ -183,11 +174,10 @@ export default function AnalyticsPage() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`px-4 py-3 text-sm font-bold whitespace-nowrap transition-all border-b-2 flex items-center gap-2 cursor-pointer ${
-                    activeTab === tab.id
-                      ? 'border-primary text-primary'
-                      : 'border-transparent text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'
-                  }`}
+                  className={`px-4 py-3 text-sm font-bold whitespace-nowrap transition-all border-b-2 flex items-center gap-2 cursor-pointer ${activeTab === tab.id
+                    ? 'border-primary text-primary'
+                    : 'border-transparent text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'
+                    }`}
                 >
                   <Icon className="w-4 h-4" />
                   {tab.id}
@@ -214,9 +204,9 @@ export default function AnalyticsPage() {
                 >
                   {/* TAB: ADHERENCE */}
                   {activeTab === 'Adherence' && (
-                    <AdherenceTab 
-                      adherenceData={adherenceData} 
-                      logs={logs} 
+                    <AdherenceTab
+                      adherenceData={adherenceData}
+                      logs={logs}
                       searchTerm={searchTerm}
                       setSearchTerm={setSearchTerm}
                       statusFilter={statusFilter}
@@ -231,11 +221,6 @@ export default function AnalyticsPage() {
                   {/* TAB: MISSED DOSES */}
                   {activeTab === 'Missed' && (
                     <MissedDosesTab data={missedData} />
-                  )}
-
-                  {/* TAB: PRESCRIPTIONS */}
-                  {activeTab === 'Prescriptions' && (
-                    <PrescriptionsTab data={prescriptionsData} />
                   )}
 
                   {/* TAB: REMINDERS */}
@@ -262,9 +247,9 @@ export default function AnalyticsPage() {
 // TAB COMPONENTS
 // ----------------------------------------------------
 
-function AdherenceTab({ 
-  adherenceData, logs, searchTerm, setSearchTerm, statusFilter, setStatusFilter, 
-  currentPage, setCurrentPage, optApplied, handleApplyOptimization 
+function AdherenceTab({
+  adherenceData, logs, searchTerm, setSearchTerm, statusFilter, setStatusFilter,
+  currentPage, setCurrentPage, optApplied, handleApplyOptimization
 }) {
   const stats = {
     total: adherenceData?.summary?.totalDoses || 0,
@@ -350,14 +335,12 @@ function AdherenceTab({
             <div key={idx}>
               <div className="flex justify-between items-center mb-1.5">
                 <span className="text-xs font-semibold text-slate-700 dark:text-slate-355">{l.date}</span>
-                <span className={`text-xs font-bold px-2 py-0.5 rounded-md ${
-                  l.adherence >= 90 ? 'text-emerald-500 bg-emerald-500/10' : 'text-primary bg-primary/10'
-                }`}>{l.adherence}%</span>
+                <span className={`text-xs font-bold px-2 py-0.5 rounded-md ${l.adherence >= 90 ? 'text-emerald-500 bg-emerald-500/10' : 'text-primary bg-primary/10'
+                  }`}>{l.adherence}%</span>
               </div>
               <div className="w-full h-2 bg-slate-100 dark:bg-slate-950 border border-slate-200/55 dark:border-slate-850 rounded-full overflow-hidden">
-                <div className={`h-full rounded-full transition-all duration-300 ${
-                  l.adherence >= 90 ? 'bg-emerald-500' : 'bg-primary'
-                }`} style={{ width: `${l.adherence}%` }}></div>
+                <div className={`h-full rounded-full transition-all duration-300 ${l.adherence >= 90 ? 'bg-emerald-500' : 'bg-primary'
+                  }`} style={{ width: `${l.adherence}%` }}></div>
               </div>
             </div>
           ))}
@@ -452,10 +435,10 @@ function AdherenceTab({
                   <td className={`px-6 py-4 text-right font-bold ${log.adherence >= 90 ? 'text-emerald-500' : log.adherence >= 75 ? 'text-primary' : 'text-rose-500'}`}>{log.adherence}%</td>
                   <td className="px-6 py-4 text-center">
                     <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-semibold border ${log.status === 'Optimal'
-                        ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/10'
-                        : log.status === 'Acceptable'
-                          ? 'bg-primary/10 text-primary border-primary/20'
-                          : 'bg-rose-500/10 text-rose-500 border-rose-500/20'
+                      ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/10'
+                      : log.status === 'Acceptable'
+                        ? 'bg-primary/10 text-primary border-primary/20'
+                        : 'bg-rose-500/10 text-rose-500 border-rose-500/20'
                       }`}>
                       <span className={`w-1 h-1 rounded-full ${log.status === 'Optimal' ? 'bg-emerald-500' : log.status === 'Acceptable' ? 'bg-primary' : 'bg-rose-500 animate-pulse'
                         }`}></span>
@@ -492,8 +475,8 @@ function AdherenceTab({
                 key={page}
                 onClick={() => setCurrentPage(page)}
                 className={`w-8 h-8 rounded-lg border text-xs font-bold transition-all cursor-pointer ${currentPage === page
-                    ? 'bg-primary border-primary text-white shadow-md'
-                    : 'border-slate-200 dark:border-slate-800 text-slate-655 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
+                  ? 'bg-primary border-primary text-white shadow-md'
+                  : 'border-slate-200 dark:border-slate-800 text-slate-655 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
                   }`}
               >
                 {page}
@@ -532,8 +515,8 @@ function MissedDosesTab({ data }) {
                   <span className="font-bold text-slate-800 dark:text-white">{count} misses</span>
                 </div>
                 <div className="w-full h-2 bg-slate-100 dark:bg-slate-900 rounded-full overflow-hidden">
-                  <div 
-                    className="h-full bg-rose-500 rounded-full" 
+                  <div
+                    className="h-full bg-rose-500 rounded-full"
                     style={{ width: `${Math.min((count / Math.max(...Object.values(byTimeOfDay), 1)) * 100, 100)}%` }}
                   ></div>
                 </div>
@@ -541,7 +524,7 @@ function MissedDosesTab({ data }) {
             ))}
           </div>
         </Card>
-        
+
         <Card variant="glass" className="p-6 text-left border-orange-500/20">
           <h3 className="text-sm font-bold text-slate-800 dark:text-white mb-4 flex items-center gap-2">
             <AlertTriangle className="w-4 h-4 text-orange-500" /> Recent Missed Doses
@@ -561,48 +544,6 @@ function MissedDosesTab({ data }) {
           </div>
         </Card>
       </div>
-    </div>
-  );
-}
-
-function PrescriptionsTab({ data }) {
-  const { summary, monthlyTrend } = data || {};
-  const statusBreakdown = summary?.statusBreakdown || {};
-
-  return (
-    <div className="space-y-6">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <Card variant="glass" className="p-5 text-left bg-white/70 dark:bg-slate-900/80 border-emerald-500/20">
-          <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Total Uploads</h3>
-          <div className="text-3xl font-black">{summary?.total || 0}</div>
-        </Card>
-        <Card variant="glass" className="p-5 text-left bg-white/70 dark:bg-slate-900/80 border-emerald-500/20">
-          <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Avg Processing Time</h3>
-          <div className="text-3xl font-black">{summary?.avgProcessingMinutes || 0} <span className="text-sm">min</span></div>
-        </Card>
-        <Card variant="glass" className="p-5 text-left bg-white/70 dark:bg-slate-900/80 border-emerald-500/20">
-          <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Processed Scans</h3>
-          <div className="text-3xl font-black text-emerald-500">{statusBreakdown.processed || 0}</div>
-        </Card>
-      </div>
-      
-      <Card variant="glass" className="p-6 text-left">
-        <h3 className="text-sm font-bold text-slate-800 dark:text-white mb-4">Monthly Processing Trend</h3>
-        <div className="space-y-4">
-          {monthlyTrend?.length > 0 ? monthlyTrend.map((m) => (
-            <div key={m.month} className="flex items-center gap-4">
-              <span className="text-xs font-medium w-16 text-slate-500">{m.month}</span>
-              <div className="flex-1 h-3 bg-slate-100 dark:bg-slate-900 rounded-full overflow-hidden flex">
-                <div className="h-full bg-emerald-500" style={{ width: `${(m.processed / m.total) * 100}%` }} title="Processed"></div>
-                <div className="h-full bg-rose-500" style={{ width: `${(m.failed / m.total) * 100}%` }} title="Failed"></div>
-              </div>
-              <span className="text-xs font-bold w-8 text-right">{m.total}</span>
-            </div>
-          )) : (
-            <p className="text-xs text-slate-500 py-4">No prescription data available.</p>
-          )}
-        </div>
-      </Card>
     </div>
   );
 }
@@ -678,7 +619,7 @@ function PatternsTab({ consistency, patterns }) {
           </h3>
           <p className="text-xs text-slate-500 mt-1">{patMsg || "Track your daily consistency across the week."}</p>
         </div>
-        
+
         <div className="space-y-4">
           {weekdayAdherence?.length > 0 ? weekdayAdherence.map((day) => (
             <div key={day.day}>
@@ -687,8 +628,8 @@ function PatternsTab({ consistency, patterns }) {
                 <span className="font-bold text-slate-800 dark:text-white">{day.adherenceRate}% ({day.taken}/{day.scheduled})</span>
               </div>
               <div className="w-full h-2.5 bg-slate-100 dark:bg-slate-900 rounded-full overflow-hidden">
-                <div 
-                  className={`h-full rounded-full transition-all ${day.adherenceRate >= 90 ? 'bg-emerald-500' : day.adherenceRate >= 70 ? 'bg-primary' : 'bg-rose-500'}`} 
+                <div
+                  className={`h-full rounded-full transition-all ${day.adherenceRate >= 90 ? 'bg-emerald-500' : day.adherenceRate >= 70 ? 'bg-primary' : 'bg-rose-500'}`}
                   style={{ width: `${day.adherenceRate}%` }}
                 ></div>
               </div>
