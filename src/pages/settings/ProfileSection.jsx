@@ -1,0 +1,250 @@
+import { useState, useEffect } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Camera, Trash2, Shield } from 'lucide-react';
+import { profileSchema } from '../../utils/validation/zodSchemas';
+import { profileService } from '../../services/profileService';
+import { useAppStore } from '../../store/useAppStore';
+import { getFriendlyErrorMessage } from '../../utils/errorMessages';
+import Card from '../../components/ui/Card';
+import Button from '../../components/ui/Button';
+import Input from '../../components/ui/Input';
+import MaterialIcon from '../../components/ui/MaterialIcon';
+
+export default function ProfileSection({ profileData, avatar, setAvatar, onSaveSuccess }) {
+  const showToast = useAppStore((state) => state.showToast);
+  const [isUploadingImage, setIsUploadingImage] = useState(false);
+
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    watch,
+    formState: { errors }
+  } = useForm({
+    resolver: zodResolver(profileSchema),
+    defaultValues: {
+      fullName: '',
+      email: '',
+      phone: '',
+      specialty: '',
+      date_of_birth: '',
+      gender: '',
+      blood_group: '',
+      height: '',
+      weight: '',
+      address: '',
+      city: '',
+      province: '',
+      country: ''
+    }
+  });
+
+  const genderValue = watch('gender');
+  const bloodGroupValue = watch('blood_group');
+
+  useEffect(() => {
+    if (profileData) {
+      setValue('fullName', profileData.name || '');
+      setValue('email', profileData.email || '');
+      setValue('phone', profileData.phone || '');
+      setValue('specialty', profileData.role || '');
+      setValue('date_of_birth', profileData.date_of_birth ? profileData.date_of_birth.substring(0, 10) : '');
+      setValue('gender', profileData.gender || '');
+      setValue('blood_group', profileData.blood_group || '');
+      setValue('height', profileData.height ? String(profileData.height) : '');
+      setValue('weight', profileData.weight ? String(profileData.weight) : '');
+      setValue('address', profileData.address || '');
+      setValue('city', profileData.city || '');
+      setValue('province', profileData.province || '');
+      setValue('country', profileData.country || '');
+    }
+  }, [profileData, setValue]);
+
+  const onProfileSave = async (data) => {
+    try {
+      await profileService.updateProfile({
+        name: data.fullName,
+        phone: data.phone,
+        date_of_birth: data.date_of_birth || null,
+        gender: data.gender || null,
+        blood_group: data.blood_group || null,
+        height: data.height ? parseFloat(data.height) : null,
+        weight: data.weight ? parseFloat(data.weight) : null,
+        address: data.address || null,
+        city: data.city || null,
+        province: data.province || null,
+        country: data.country || null
+      });
+      showToast('Profile settings saved successfully.', 'success');
+      onSaveSuccess();
+    } catch (error) {
+      console.error(error);
+      const friendlyMsg = getFriendlyErrorMessage(error, 'Failed to update profile.');
+      showToast(friendlyMsg, 'error');
+    }
+  };
+
+  const handleAvatarUpdate = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setIsUploadingImage(true);
+    showToast('Uploading profile image...', 'info');
+    try {
+      const result = await profileService.uploadImage(file);
+      const url = result?.data?.profile_image_url;
+      if (url) {
+        setAvatar(url);
+        showToast('Profile image updated successfully!', 'success');
+      }
+    } catch (error) {
+      console.error(error);
+      const friendlyMsg = getFriendlyErrorMessage(error, 'Failed to upload profile image.');
+      showToast(friendlyMsg, 'error');
+    } finally {
+      setIsUploadingImage(false);
+    }
+  };
+
+  const handleAvatarDelete = async () => {
+    if (avatar.includes('photo-1612349317150')) {
+      showToast('No custom profile photo is uploaded.', 'warning');
+      return;
+    }
+    showToast('Removing profile image...', 'info');
+    try {
+      await profileService.deleteImage();
+      setAvatar('https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=150&h=150&fit=crop&crop=face');
+      showToast('Profile image removed successfully!', 'success');
+    } catch (error) {
+      console.error(error);
+      showToast('Failed to remove profile image.', 'error');
+    }
+  };
+
+  const bloodGroups = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
+
+  return (
+    <Card id="profile-card" variant="glass" className="p-6 relative overflow-hidden bg-white/70 dark:bg-slate-900/80 text-left border border-slate-200 dark:border-slate-800 shadow-md">
+      <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-bl-full pointer-events-none"></div>
+
+      <div className="flex items-center gap-2 mb-6 border-b border-slate-105 dark:border-slate-800 pb-3">
+        <MaterialIcon name="manage_accounts" size="sm" className="text-primary" />
+        <div>
+          <h3 className="text-sm font-bold text-slate-800 dark:text-white">Profile Settings</h3>
+          <p className="text-[11px] text-slate-400 dark:text-slate-500">Manage credentials and contact preferences</p>
+        </div>
+      </div>
+
+      <div className="flex flex-col sm:flex-row items-center gap-6 mb-8 bg-slate-50 dark:bg-slate-950/40 p-4 rounded-2xl border border-slate-200/50 dark:border-slate-800">
+        <div className="relative group shrink-0">
+          <img src={avatar} className="w-16 h-16 rounded-full object-cover border-2 border-primary shadow-md" alt="Avatar" />
+          <label className="absolute inset-0 rounded-full bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
+            <Camera className="w-5 h-5 text-white" />
+            <input type="file" onChange={handleAvatarUpdate} accept="image/*" className="hidden" />
+          </label>
+        </div>
+        <div className="text-center sm:text-left min-w-0 flex-1">
+          <h4 className="text-sm font-bold text-slate-850 dark:text-white truncate">{profileData?.name || 'Dr. Sarah Jenkins'}</h4>
+          <p className="text-[11px] text-slate-500 truncate mt-0.5">{profileData?.email || 's.jenkins@rxease.ai'}</p>
+          {!avatar.includes('photo-1612349317150') && (
+            <button
+              type="button"
+              onClick={handleAvatarDelete}
+              className="mt-2 text-[10px] text-rose-500 hover:text-rose-700 flex items-center gap-1 font-bold bg-transparent border-0 cursor-pointer p-0"
+            >
+              <Trash2 className="w-3.5 h-3.5" />
+              <span>Remove Photo</span>
+            </button>
+          )}
+        </div>
+      </div>
+
+      <form onSubmit={handleSubmit(onProfileSave)} className="space-y-5">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <Input label="Full Name" placeholder="Dr. Sarah Jenkins" error={errors.fullName?.message} {...register('fullName')} />
+          
+          <div className="relative">
+            <Input 
+              label="Email Address (Locked)" 
+              placeholder="doctor@hospital.com" 
+              readOnly 
+              className="bg-slate-100 dark:bg-slate-950 text-slate-500 cursor-not-allowed pr-10" 
+              error={errors.email?.message} 
+              {...register('email')} 
+            />
+            <Shield className="w-4 h-4 text-slate-400 absolute right-3 top-[34px]" />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <Input label="Phone Number" placeholder="e.g. 03001234567" error={errors.phone?.message} {...register('phone')} />
+          <Input label="City / Region" placeholder="e.g. Lahore" error={errors.city?.message} {...register('city')} />
+          <Input label="Province" placeholder="e.g. Punjab" error={errors.province?.message} {...register('province')} />
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <Input label="Country" placeholder="e.g. Pakistan" error={errors.country?.message} {...register('country')} />
+          <Input label="Date of Birth" type="date" error={errors.date_of_birth?.message} {...register('date_of_birth')} />
+          
+          <div className="flex flex-col">
+            <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider block mb-2">Gender</span>
+            <div className="flex gap-4 h-[44px] items-center">
+              {['Male', 'Female', 'Other'].map((g) => (
+                <label key={g} className="flex items-center gap-2 text-xs font-semibold cursor-pointer">
+                  <input
+                    type="radio"
+                    value={g}
+                    checked={genderValue === g}
+                    onChange={() => setValue('gender', g)}
+                    className="w-4 h-4 text-primary border-slate-300 focus:ring-primary"
+                  />
+                  <span>{g}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div className="flex flex-col">
+            <label className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider block mb-1">Blood Group</label>
+            <select
+              value={bloodGroupValue || ''}
+              onChange={(e) => setValue('blood_group', e.target.value)}
+              className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl py-3 px-3 text-xs outline-none focus:ring-1 focus:ring-primary text-slate-900 dark:text-white h-[46px] font-semibold"
+            >
+              <option value="">Select Group</option>
+              {bloodGroups.map((group) => (
+                <option key={group} value={group}>{group}</option>
+              ))}
+            </select>
+          </div>
+          
+          <Input label="Height (cm)" placeholder="e.g. 175" type="number" step="0.1" error={errors.height?.message} {...register('height')} />
+          <Input label="Weight (kg)" placeholder="e.g. 70" type="number" step="0.1" error={errors.weight?.message} {...register('weight')} />
+          
+          <div className="relative">
+            <Input 
+              label="Assigned Role (Locked)" 
+              placeholder="e.g. Pharmacist" 
+              readOnly 
+              className="bg-slate-100 dark:bg-slate-950 text-slate-500 cursor-not-allowed pr-10" 
+              error={errors.specialty?.message} 
+              {...register('specialty')} 
+            />
+            <Shield className="w-4 h-4 text-slate-400 absolute right-3 top-[34px]" />
+          </div>
+        </div>
+
+        <Input label="Residential Address" placeholder="e.g. 123 Main Street" error={errors.address?.message} {...register('address')} />
+        
+        <div className="pt-2 flex justify-end">
+          <Button type="submit" variant="primary" className="bg-primary text-white font-bold px-6 py-2.5 rounded-xl cursor-pointer">
+            Save Changes
+          </Button>
+        </div>
+      </form>
+    </Card>
+  );
+}
