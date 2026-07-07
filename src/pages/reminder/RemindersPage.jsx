@@ -7,7 +7,7 @@ import Button from '../../components/ui/Button';
 import MaterialIcon from '../../components/ui/MaterialIcon';
 import Spinner from '../../components/ui/Spinner';
 import {
-  BellRing, CheckCircle2, Clock, Calendar, Plus, Activity, Stethoscope, RefreshCw, Sparkles, ShieldAlert
+  BellRing, CheckCircle2, Clock, Calendar, Plus, Activity, Stethoscope, RefreshCw, Sparkles, ShieldAlert, ChevronLeft, ChevronRight
 } from 'lucide-react';
 import { reminderService } from '../../services/reminderService';
 import { followUpService } from '../../services/followUpService';
@@ -35,6 +35,13 @@ export default function RemindersPage() {
 
   // Refill simulation state
   const [isRefilling, setIsRefilling] = useState(false);
+
+  // Pagination State
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(5);
+  
+  const [followUpCurrentPage, setFollowUpCurrentPage] = useState(1);
+  const [followUpItemsPerPage, setFollowUpItemsPerPage] = useState(5);
 
   const fetchData = async () => {
     setIsLoading(true);
@@ -197,6 +204,36 @@ export default function RemindersPage() {
     { name: 'Notifications', href: '#notifications' },
   ];
 
+  // Pagination bounds calculation
+  const totalFilteredCount = reminders.length;
+  const totalPages = Math.ceil(totalFilteredCount / itemsPerPage) || 1;
+  
+  useEffect(() => {
+    if (currentPage > totalPages && totalPages > 0) {
+      setCurrentPage(totalPages);
+    }
+  }, [reminders, totalPages, currentPage]);
+
+  const paginatedReminders = reminders.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
+  // Follow-up Pagination bounds calculation
+  const totalFollowUpCount = followups.length;
+  const totalFollowUpPages = Math.ceil(totalFollowUpCount / followUpItemsPerPage) || 1;
+  
+  useEffect(() => {
+    if (followUpCurrentPage > totalFollowUpPages && totalFollowUpPages > 0) {
+      setFollowUpCurrentPage(totalFollowUpPages);
+    }
+  }, [followups, totalFollowUpPages, followUpCurrentPage]);
+
+  const paginatedFollowUps = followups.slice(
+    (followUpCurrentPage - 1) * followUpItemsPerPage,
+    followUpCurrentPage * followUpItemsPerPage
+  );
+
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors duration-300 font-sans relative overflow-x-hidden pt-24 pb-16">
       <Navbar links={navLinks} />
@@ -327,7 +364,7 @@ export default function RemindersPage() {
                       </div>
 
                       <div className="relative pl-6 space-y-6 before:absolute before:inset-y-0 before:left-[11px] before:w-[2px] before:bg-slate-200 dark:before:bg-slate-800">
-                        {reminders.map((item) => (
+                        {paginatedReminders.map((item) => (
                           <ReminderCard
                             key={item.id}
                             item={item}
@@ -362,6 +399,55 @@ export default function RemindersPage() {
                           </div>
                         )}
                       </div>
+
+                      {/* Pagination Controls */}
+                      {totalFilteredCount > 0 && (
+                        <div className="mt-6 pt-6 border-t border-slate-100 dark:border-slate-800 flex flex-col sm:flex-row justify-between items-center gap-4 text-xs font-semibold text-slate-500">
+                          <div className="flex items-center gap-2">
+                            <span>Show:</span>
+                            <select
+                              value={itemsPerPage}
+                              onChange={(e) => { setItemsPerPage(Number(e.target.value)); setCurrentPage(1); }}
+                              className="bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-2.5 py-1 font-bold outline-none text-slate-800 dark:text-white cursor-pointer"
+                            >
+                              <option value={5}>5 per page</option>
+                              <option value={10}>10 per page</option>
+                              <option value={20}>20 per page</option>
+                              <option value={50}>50 per page</option>
+                            </select>
+                            <span>of {totalFilteredCount} matching</span>
+                          </div>
+
+                          <div className="flex items-center gap-1">
+                            <button
+                              onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                              disabled={currentPage === 1}
+                              className="w-8 h-8 rounded-lg border border-slate-200 dark:border-slate-800 flex items-center justify-center text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer bg-transparent"
+                            >
+                              <ChevronLeft className="w-4 h-4" />
+                            </button>
+                            {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
+                              <button
+                                key={page}
+                                onClick={() => setCurrentPage(page)}
+                                className={`w-8 h-8 rounded-lg border text-xs font-bold transition-all cursor-pointer bg-transparent ${currentPage === page
+                                  ? 'border-primary text-primary shadow-sm ring-1 ring-primary/45 font-black'
+                                  : 'border-slate-200 dark:border-slate-800 text-slate-655 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
+                                  }`}
+                              >
+                                {page}
+                              </button>
+                            ))}
+                            <button
+                              onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                              disabled={currentPage === totalPages}
+                              className="w-8 h-8 rounded-lg border border-slate-200 dark:border-slate-800 flex items-center justify-center text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer bg-transparent"
+                            >
+                              <ChevronRight className="w-4 h-4" />
+                            </button>
+                          </div>
+                        </div>
+                      )}
                     </Card>
                   </div>
 
@@ -420,7 +506,7 @@ export default function RemindersPage() {
                       </div>
 
                       <div className="space-y-3">
-                        {followups.map((f) => (
+                        {paginatedFollowUps.map((f) => (
                           <FollowUpCard
                             key={f.id}
                             item={f}
@@ -442,6 +528,40 @@ export default function RemindersPage() {
                           </div>
                         )}
                       </div>
+
+                      {/* Follow-Up Pagination Controls */}
+                      {totalFollowUpCount > 0 && (
+                        <div className="mt-4 pt-4 border-t border-slate-100 dark:border-slate-800 flex flex-col items-center gap-3 text-xs font-semibold text-slate-500">
+                          <div className="flex items-center gap-1">
+                            <button
+                              onClick={() => setFollowUpCurrentPage(prev => Math.max(prev - 1, 1))}
+                              disabled={followUpCurrentPage === 1}
+                              className="w-7 h-7 rounded-lg border border-slate-200 dark:border-slate-800 flex items-center justify-center text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer bg-transparent"
+                            >
+                              <ChevronLeft className="w-3.5 h-3.5" />
+                            </button>
+                            {Array.from({ length: totalFollowUpPages }, (_, i) => i + 1).map(page => (
+                              <button
+                                key={page}
+                                onClick={() => setFollowUpCurrentPage(page)}
+                                className={`w-7 h-7 rounded-lg border text-[10px] font-bold transition-all cursor-pointer bg-transparent ${followUpCurrentPage === page
+                                  ? 'border-emerald-500 text-emerald-500 shadow-sm ring-1 ring-emerald-500/40 font-black'
+                                  : 'border-slate-200 dark:border-slate-800 text-slate-655 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
+                                  }`}
+                              >
+                                {page}
+                              </button>
+                            ))}
+                            <button
+                              onClick={() => setFollowUpCurrentPage(prev => Math.min(prev + 1, totalFollowUpPages))}
+                              disabled={followUpCurrentPage === totalFollowUpPages}
+                              className="w-7 h-7 rounded-lg border border-slate-200 dark:border-slate-800 flex items-center justify-center text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer bg-transparent"
+                            >
+                              <ChevronRight className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
+                        </div>
+                      )}
                     </Card>
 
                   </div>
