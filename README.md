@@ -41,24 +41,28 @@ Transform handwritten prescriptions into structured clinical intelligence. RxEas
 - **🔍 YOLO Vision Region Detector:** Automatically detects and isolates text regions, lines, and tokens to reduce handwriting noise.
 - **🩺 Specialized Medical OCR:** Translates challenging doctor handwriting into legible clinical transcripts.
 - **💊 Clinical Dosage Audit Engine:** Flags drug interactions, high-risk quantities, and age-limit warnings.
+- **📚 Complete Prescription Archive & Audit Log (`#history`):** Searchable, filterable prescription repository featuring paginated tables, live action logs (exports, shares, deletions), multi-prescription bulk PDF export, and seamless fallback browser-native PDF generation.
+- **🔗 Secure Prescription Sharing (`ShareModal` & `shareService`):** Generate secure shareable tokens or email clinical audit reports directly from the History dashboard.
+- **⏰ Integrated Medication Reminders (`#reminders`):** Manage active schedules and clinical follow-up reminders.
+- **🔔 Categorized Notification Center (`#notifications`):** Filter high-priority alerts and unread notifications with responsive pagination.
+- **📊 Operational & Clinical Analytics (`#analytics`):** Real-time metrics tracking ingestion volume, confidence scores, and workflow efficiency.
 - **🔐 Complete Authentication Flow:** Includes fully validated forms for Sign In, Sign Up, Forgot Password, Reset Password, and Email Verification.
 - **⚡ Form Validation:** Powered by React Hook Form + Zod for centralized, strict schema-based error handling.
 - **🛡️ Live Password Security:** Interactive password strength indicators ensuring HIPAA-compliant credential creation.
 - **🔒 Protected Routes:** Role-based guard components to block unauthenticated access to the home page.
 - **🌗 Adaptive Theme System:** Clean light/dark mode with FOUC-resistant startup logic.
-- **🧩 Reusable UI Architecture:** Component-driven design using highly reusable abstractions (Buttons, Icons, Cards, Badges).
-- **🟢 High-Fidelity Laser Scanning:** HUD-style OCR animations that mimic live server scanning.
+- **🧩 Reusable UI Architecture:** Component-driven design using highly reusable abstractions (Buttons, Icons, Cards, Badges, Modals).
 
 ---
 
 ## How it works
 
 1. **Authenticate:** Securely sign up or log in to the HIPAA-compliant home page.
-2. **Segment:** Vision model isolates handwriting regions and line tokens.
-3. **Transcribe:** Medical OCR converts text into structured, readable data.
-4. **Audit:** Safety engine checks dosage rules and interaction risk.
-5. **Export:** Data is normalized into FHIR/HL7-compatible JSON.
-6. **Observe:** Analytics views surface throughput and accuracy metrics.
+2. **Segment & Transcribe:** Vision model isolates handwriting regions and converts text into structured clinical data.
+3. **Audit & Safety Check:** Safety engine validates dosages and checks drug interactions.
+4. **Archive & Audit Log:** Prescriptions are archived in the History Center with immutable activity logs.
+5. **Export & Share:** Export single or combined PDF audit reports or share secure clinical tokens with patients and physicians.
+6. **Observe:** Analytics views surface throughput, accuracy metrics, and medication adherence.
 
 ---
 
