@@ -57,7 +57,7 @@ if (currentHash === '#home') {
 - `#verify-email`: `VerifyEmail`
 - `#home`: `HomePage` (Protected Dashboard)
 - `#upload`: `UploadPage` (Prescription Upload & AI Scan)
-- `#history`: `HistoryPage` (Prescription History List)
+- `#history`: `HistoryPage` (Prescription History List, single & bulk PDF report export with browser fallback, action audit logs, and secure sharing via `ShareModal`)
 - `#history-dashboard`: `HistoryDashboardPage` (Prescription Analytics & Verification Dashboard)
 - `#recommendations`: `RecommendationPage` (AI Smart Alternatives & Savings)
 - `#search`: `SearchPage` (Drug Interaction & Clinical Search Engine)
