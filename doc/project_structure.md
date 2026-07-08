@@ -37,22 +37,33 @@ The entire application logic resides here.
 - `useAuth.js` & `useTheme.js`: Emptied and deprecated facade hooks. Direct Zustand store imports should be used instead.
 
 ### `pages/`
-- `LandingPage.jsx`: The primary marketing and feature demonstration view.
-- `HomePage.jsx`: The central protected clinical workspace dashboard.
+- `LandingPage.jsx`: The primary marketing and feature demonstration view (`/`).
+- `HomePage.jsx`: The central protected clinical workspace dashboard (`#home`).
 - `auth/`: Directory containing all authentication flows (`SignIn.jsx`, `SignUp.jsx`, `ForgotPassword.jsx`, `ResetPassword.jsx`, `VerifyEmail.jsx`).
-- `prescription/`: Clinical prescription workflows (`UploadPage.jsx`, `HistoryPage.jsx`, `HistoryDashboardPage.jsx`, `RecommendationPage.jsx`, `ResultPage.jsx`, `RemindersPage.jsx`).
-- `analytics/`: Clinical intelligence summaries and charts (`AnalyticsPage.jsx`).
-- `search/`: Drug interaction search engine (`SearchPage.jsx`).
-- `notifications/`: System alert center (`NotificationsPage.jsx`).
-- `billing/`: Localized Pakistan subscription and billing OS (`BillingPage.jsx`).
-- `settings/`: Profile configuration, clinical feedback, and support ticket system (`SettingsPage.jsx`).
+- `prescription/`: Clinical prescription workflows:
+  - `UploadPage.jsx`: OCR upload and live scanning (`#upload`).
+  - `ResultPage.jsx`: Clinical intelligence dashboard (`#result`).
+  - `HistoryPage.jsx`: Comprehensive prescription audit archive with bulk export and secure sharing (`#history`).
+  - `HistoryDashboardPage.jsx`: Analytics dashboard (`#history-dashboard`).
+  - `RecommendationPage.jsx`: Smart alternatives & cost savings (`#recommendations`).
+- `reminder/`: Medication reminders center (`RemindersPage.jsx` at `#reminders`).
+- `analytics/`: Clinical intelligence summaries and charts (`AnalyticsPage.jsx` at `#analytics`).
+- `search/`: Drug interaction search engine (`SearchPage.jsx` at `#search`).
+- `notifications/`: System alert center with Unread & High Priority filtering (`NotificationsPage.jsx` at `#notifications`).
+- `billing/`: Localized Pakistan subscription and billing OS (`BillingPage.jsx` at `#billing`).
+- `settings/`: Profile configuration, clinical feedback, and support ticket system (`SettingsPage.jsx` at `#settings`).
 
 ### `styles/`
 - Contains any complex, highly specific CSS outside of standard Tailwind utilities.
 
 ### `services/`
 - `apiClient.js`: Centralized Axios instance with request/response interceptors to attach tokens from `rxease-auth-storage` and handle 401s.
-- `authService.js`: Pre-built API endpoints for all authentication actions (login, signup, reset, etc.).
+- `authService.js`: Pre-built API endpoints for user authentication actions (login, signup, reset, etc.).
+- `prescriptionService.js`: Endpoints for listing prescriptions, retrieving history logs, single/bulk PDF report exports, and deletions.
+- `shareService.js`: Functions for generating secure share links (`createShareLink`), email sharing (`shareViaEmail`), and viewing shared records.
+- `reminderService.js` & `followUpService.js`: API endpoints for scheduling medication reminders and doctor follow-up check-ins.
+- `analyticsService.js` & `recommendationService.js`: Endpoints for fetching real-time operational metrics and AI alternative recommendations.
+- `searchService.js`, `profileService.js`, & `feedbackService.js`: Specialized services for drug interaction queries, account profile updates, and support feedback.
 
 ### `utils/`
 - `errorMessages.js`: A dictionary utility mapping raw backend error strings into friendly UI copy.
