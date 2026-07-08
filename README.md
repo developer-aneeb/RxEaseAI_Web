@@ -91,6 +91,7 @@ src/
   │   │   ├── home/      # HomeHero, HomeWorkflow, HomeFeatures, HomeSecurity, HomeFaq, HomeCTA
   │   │   └── landing/   # Hero, Features, Workflow, Dashboard, Analytics, Faq
   │   └── ui/            # Reusable primitives (Button, Card, Badge, MaterialIcon, Input, Modal, etc.)
+  ├── services/          # Domain API services (authService, prescriptionService, shareService, etc.)
   ├── store/             # Zustand Global State with Persistence Middleware
   │   ├── useAuthStore.js # Session, JWT tokens, login, logout (`rxease-auth-storage`)
   │   ├── useThemeStore.js # Theme management and DOM dark-mode syncing
