@@ -88,6 +88,19 @@ For the frontend to work seamlessly, the backend should expose the following RES
   - Response: `202 Accepted`, `{ "scanId": "scan_123", "status": "processing" }`
 - **GET `/prescriptions/history`**
   - Response: `200 OK`, `{ "data": [ { "id": "h-1", "doctor": "Dr. Thorne", ... } ] }`
+- **POST `/prescriptions/:id/export`**
+  - Response: `200 OK` (`application/pdf` binary stream / Buffer)
+- **POST `/prescriptions/export-multiple`**
+  - Body: `{ "ids": ["RX001", "RX002"] }`
+  - Response: `200 OK` (`application/pdf` combined report binary stream)
+
+#### Prescription Sharing & Access Controls
+- **POST `/share/token`**
+  - Body: `{ "prescriptionId": "RX1766400474537VA1XA", "expiryDays": 7, "accessType": "view_only" }`
+  - Response: `200 OK`, `{ "token": "share_token_abc123", "shareUrl": "https://rxease.ai/share/view/share_token_abc123" }`
+- **POST `/share/email`**
+  - Body: `{ "prescriptionId": "RX1766400474537VA1XA", "recipientEmail": "doctor@hospital.com", "notes": "Please review dosage." }`
+  - Response: `200 OK`, `{ "status": "sent" }`
 
 #### Medication Reminders
 - **POST `/reminders`**
