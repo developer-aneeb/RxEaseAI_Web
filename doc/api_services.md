@@ -20,17 +20,50 @@ All outbound network requests must pass through our configured Axios instance ex
 
 ---
 
-## 2. Authentication Service (`authService.js`)
+## 2. Domain Service Modules (`src/services/`)
 
-Located at `src/services/authService.js`, this module provides asynchronous wrappers for user authentication endpoints.
+RxEaseAI encapsulates all HTTP communications within specialized domain services. Each service consumes `apiClient` and automatically maps API exceptions into friendly user copy via `getFriendlyErrorMessage`.
 
-### Available Service Functions:
-- `login(email, password)`: Transmits credentials to `/auth/login`. Resolves with JWT token payload and user profile object.
-- `signup(userData)`: Posts registration details to `/auth/register`.
-- `forgotPassword(email)`: Triggers password reset link generation at `/auth/forgot-password`.
-- `resetPassword(token, newPassword)`: Submits new password payload to `/auth/reset-password`.
-- `getProfile()`: Retrieves authenticated user profile data from `/users/profile`.
-- `updateProfile(profileData)`: Transmits profile edits to `/users/profile`.
+### Authentication & Profile Services
+- **`authService.js`**:
+  - `login(email, password)`: Authenticates credentials at `/auth/login` and initializes session state.
+  - `signup(userData)`: Registers a new user account at `/auth/register`.
+  - `forgotPassword(email)`: Requests password reset email at `/auth/forgot-password`.
+  - `resetPassword(token, newPassword)`: Completes password reset at `/auth/reset-password`.
+- **`profileService.js`**:
+  - `getProfile()`: Retrieves user profile details (`/users/profile`).
+  - `updateProfile(profileData)`: Updates account preferences and clinical profile attributes.
+
+### Prescription Ingestion, History & Export (`prescriptionService.js`)
+- `listPrescriptions(params)`: Retrieves paginated list of ingested prescriptions (`/prescriptions`).
+- `getHistory()`: Retrieves comprehensive audit log history for prescription events (`/prescriptions/history`).
+- `exportPDF(id)`: Requests server-rendered PDF audit report (`/prescriptions/:id/export`). Returns a Blob.
+- `exportMultiplePDF(ids)`: Bulk exports multiple prescriptions combined into a single PDF document (`/prescriptions/export-multiple`).
+- `deletePrescription(id)`: Deletes a prescription record from history (`/prescriptions/:id`).
+
+### Secure Prescription Sharing (`shareService.js`)
+- `createShareLink(prescriptionId, options)`: Generates a secure access token and shareable URL (`/share/token`).
+- `shareViaEmail(prescriptionId, email, options)`: Directly sends a prescription audit link to a clinical recipient or patient (`/share/email`).
+- `getSharedPrescription(token)`: Retrieves shared prescription details using a valid access token (`/share/view/:token`).
+
+### Medication Adherence & Follow-ups
+- **`reminderService.js`**:
+  - `listReminders(params)`: Retrieves active medication schedules and dosage timings.
+  - `createReminder(data)`: Schedules a new medication reminder alert.
+  - `updateReminder(id, data)` / `deleteReminder(id)`: Manages existing reminders.
+- **`followUpService.js`**:
+  - `getFollowUps()`: Retrieves scheduled follow-up appointments and doctor check-ins.
+  - `scheduleFollowUp(data)`: Creates a new clinical follow-up task.
+
+### Clinical Analytics & Intelligence
+- **`analyticsService.js`**:
+  - `getUserAnalytics()`: Fetches real-time adherence rates, ingestion counts, and verification speeds.
+- **`recommendationService.js`**:
+  - `getRecommendations(prescriptionId)`: Retrieves AI-powered smart alternatives, generic substitutions, and cost savings.
+- **`searchService.js`**:
+  - `searchInteractions(query)`: Searches drug interaction database and clinical safety guidelines.
+- **`feedbackService.js`**:
+  - `submitFeedback(payload)`: Transmits user feedback or bug reports to support services.
 
 ---
 
@@ -52,39 +85,21 @@ Never display raw API exception strings or database stack traces to end users. A
 
 ---
 
-## 4. Best Practices for New Service Modules
+## 4. Best Practices for Service Module Extensions
 
-When building new domain services (e.g., `src/services/prescriptionService.js` or `src/services/billingService.js`), follow this standard pattern:
+When building new domain services, follow this standard pattern:
 
 ```javascript
 import apiClient from './apiClient';
 import { getFriendlyErrorMessage } from '../utils/errorMessages';
 
-export const prescriptionService = {
-  getHistory: async () => {
+export const exampleService = {
+  fetchRecords: async () => {
     try {
-      const response = await apiClient.get('/prescriptions/history');
+      const response = await apiClient.get('/records');
       return response.data;
     } catch (error) {
-      throw new Error(getFriendlyErrorMessage(error));
-    }
-  },
-
-  uploadScan: async (file, onProgress) => {
-    try {
-      const formData = new FormData();
-      formData.append('file', file);
-      
-      const response = await apiClient.post('/prescriptions/upload', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
-        onUploadProgress: (progressEvent) => {
-          const percent = Math.round((progressEvent.loaded * 100) / progressEvent.total);
-          if (onProgress) onProgress(percent);
-        }
-      });
-      return response.data;
-    } catch (error) {
-      throw new Error(getFriendlyErrorMessage(error));
+      throw new Error(getFriendlyErrorMessage(error, 'Failed to fetch records.'));
     }
   }
 };
