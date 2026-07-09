@@ -13,7 +13,6 @@ Transform handwritten prescriptions into structured clinical intelligence. RxEas
 ## 🌐 Live Demo
 
 - 🚀 RxEaseAI Website: [View Live Portfolio](https://RxEaseAI.vercel.app/)
-
 ---
 
 ## One-line summary
