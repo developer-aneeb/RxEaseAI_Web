@@ -28,7 +28,7 @@
 - YOLO-based segmentation with medical OCR concepts
 - FHIR/HL7-ready structured output
 - React 19, Vite 8, Tailwind CSS v4, Framer Motion
-- Full custom Authentication Flows with interactive form validation (React Hook Form + Zod)
+- Full Authentication Flows with interactive form validation (React Hook Form + Zod)
 - Protected Routing and global mock session state (AuthContext)
 
 ---
