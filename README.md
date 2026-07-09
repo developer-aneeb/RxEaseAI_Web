@@ -18,7 +18,7 @@
 
 ## One-line summary
 
-- RxEaseAI is a modern UI that simulates OCR ingestion, dosage safety checks, operational analytics, and secure authentication for pharmacies and hospital networks.
+- RxEaseAI is a modern UI that simulates OCR ingestion, dosage safety checks, operational analytics, and secure authentication for Patient.
 
 ---
 
