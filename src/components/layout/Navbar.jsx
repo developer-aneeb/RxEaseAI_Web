@@ -15,8 +15,8 @@ export default function Navbar({ links }) {
     const logout = useAuthStore((state) => state.logout);
 
     const getInitials = (name) => {
-        if (!name) return 'CU';
-        return name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+        const str = name || 'User';
+        return str.split(/[ @]/).filter(Boolean).map(n => n[0]).join('').substring(0, 2).toUpperCase();
     };
 
     useEffect(() => {
@@ -115,7 +115,7 @@ export default function Navbar({ links }) {
                                         <img src={user.avatar} alt="Profile" className="w-8 h-8 rounded-full object-cover border border-primary/20" />
                                     ) : (
                                         <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-xs">
-                                            {getInitials(user?.fullName)}
+                                            {getInitials(user?.fullName || user?.name || user?.email)}
                                         </div>
                                     )}
                                 </div>
@@ -209,7 +209,7 @@ export default function Navbar({ links }) {
                                             <img src={user.avatar} alt="Profile" className="w-10 h-10 rounded-full object-cover border border-primary/20" />
                                         ) : (
                                             <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-sm">
-                                                {getInitials(user?.fullName)}
+                                                {getInitials(user?.fullName || user?.name || user?.email)}
                                             </div>
                                         )}
                                         <div>
