@@ -182,8 +182,8 @@ export default function BillingPage() {
   ];
 
   const getInitials = (name) => {
-    if (!name) return 'CU';
-    return name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+    const str = name || 'User';
+    return str.split(/[ @]/).filter(Boolean).map(n => n[0]).join('').substring(0, 2).toUpperCase();
   };
 
   return (
