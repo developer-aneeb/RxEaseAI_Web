@@ -183,7 +183,11 @@ export default function BillingPage() {
 
   const getInitials = (name) => {
     const str = name || 'User';
-    return str.split(/[ @]/).filter(Boolean).map(n => n[0]).join('').substring(0, 2).toUpperCase();
+    const parts = str.trim().split(/[ @]/).filter(Boolean);
+    if (parts.length > 1) {
+      return (parts[0][0] + parts[1][0]).toUpperCase();
+    }
+    return parts[0].substring(0, 2).toUpperCase();
   };
 
   return (
