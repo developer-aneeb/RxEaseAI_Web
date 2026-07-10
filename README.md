@@ -8,8 +8,8 @@
 
 **Transform handwritten prescriptions into structured clinical intelligence. RxEaseAI is a frontend experience that showcases fast ingestion, safety checks, and real-time analytics for pharmacy workflows.**
 
-</div>
 ---
+</div>
 
 ## 🌐 Live Demo
 
