@@ -28,7 +28,7 @@ export default function SideNavbar({ activeRoute = '#home' }) {
     <aside className="hidden lg:flex flex-col w-[260px] shrink-0 bg-white dark:bg-slate-900 rounded-3xl p-6 border border-slate-200/60 dark:border-slate-800 shadow-xl space-y-6">
       <div className="flex items-center gap-3.5 pb-6 border-b border-slate-100 dark:border-slate-800">
         <div className="w-12 h-12 rounded-full bg-primary/15 dark:bg-primary/20 text-primary font-bold text-base flex items-center justify-center border-2 border-white dark:border-slate-800 shadow-md">
-          {getInitials(user?.fullName)}
+          {getInitials(user?.fullName || user?.name || user?.email)}
         </div>
         <div className="min-w-0 text-left">
           <h2 className="text-sm font-bold text-slate-800 dark:text-slate-200 truncate">{user?.fullName || 'Dr. Aris Thorne'}</h2>
