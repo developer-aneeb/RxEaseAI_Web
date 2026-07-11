@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useAppStore } from '../../store/useAppStore';
 import { useAuthStore } from '../../store/useAuthStore';
 import Navbar from '../../components/layout/Navbar';
-import SideNavbar from '../../components/layout/SideNavbar';
+// import SideNavbar from '../../components/layout/SideNavbar';
 import Card from '../../components/ui/Card';
 import Button from '../../components/ui/Button';
 import MaterialIcon from '../../components/ui/MaterialIcon';
@@ -283,8 +283,8 @@ export default function BillingPage() {
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
                   className={`py-3.5 border-b-2 font-bold text-xs transition-all whitespace-nowrap cursor-pointer px-1 ${activeTab === tab.id
-                      ? 'border-primary text-primary'
-                      : 'border-transparent text-slate-500 hover:text-slate-800 dark:hover:text-white'
+                    ? 'border-primary text-primary'
+                    : 'border-transparent text-slate-500 hover:text-slate-800 dark:hover:text-white'
                     }`}
                 >
                   {tab.name}
@@ -421,8 +421,8 @@ export default function BillingPage() {
                         key={plan.id}
                         variant="glass"
                         className={`p-5 flex flex-col justify-between transition-all hover:shadow-lg border-2 ${isCurrent
-                            ? 'border-primary shadow-[0_4px_25px_rgba(0,107,251,0.08)] bg-white'
-                            : 'border-slate-200 dark:border-slate-800 bg-white/50'
+                          ? 'border-primary shadow-[0_4px_25px_rgba(0,107,251,0.08)] bg-white'
+                          : 'border-slate-200 dark:border-slate-800 bg-white/50'
                           }`}
                       >
                         <div className="space-y-4">
@@ -457,8 +457,8 @@ export default function BillingPage() {
                             onClick={() => handleSelectPlan(plan.id)}
                             disabled={isCurrent}
                             className={`w-full py-2.5 rounded-xl font-bold text-xs ${isCurrent
-                                ? 'bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-400 cursor-not-allowed'
-                                : 'bg-primary hover:bg-primary-container text-white shadow-md cursor-pointer'
+                              ? 'bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-400 cursor-not-allowed'
+                              : 'bg-primary hover:bg-primary-container text-white shadow-md cursor-pointer'
                               }`}
                           >
                             {isCurrent ? 'Active Plan' : 'Select Plan'}
