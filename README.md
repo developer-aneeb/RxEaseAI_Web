@@ -138,7 +138,6 @@ src/
   ├── App.jsx            # Routing and Hash-based Navigation
   └── main.jsx           # App entry point
 ```
-
 ---
 
 ## Screenshots / Preview (add your own)
