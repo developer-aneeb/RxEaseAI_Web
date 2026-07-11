@@ -13,7 +13,7 @@
 
 ## 🌐 Live Demo
 
-- 🚀 RxEaseAI Website: [View Live Portfolio](https://rx-ease-ai-web.vercel.app/)
+- 🚀 RxEaseAI Website: [View Live Website](https://rx-ease-ai-web.vercel.app/)
 ---
 
 ## One-line summary
