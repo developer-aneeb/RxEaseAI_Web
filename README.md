@@ -211,7 +211,6 @@ Tailwind CSS v4 dark mode support is enabled via the CSS-first directive:
 
 - This repo is structured for a single front-end experience.
 - Use branches for content updates and open a PR for major layout changes.
-
 ---
 
 ## Contact
