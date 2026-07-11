@@ -7,7 +7,6 @@
 ![React](https://img.shields.io/badge/React-Frontend-61DAFB?logo=react&logoColor=white) ![Vite](https://img.shields.io/badge/Vite-Build-646CFF?logo=vite&logoColor=white) ![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS-Styling-38BDF8?logo=tailwindcss&logoColor=white) ![Framer Motion](https://img.shields.io/badge/Framer%20Motion-Animations-black?logo=framer&logoColor=white) ![ESLint](https://img.shields.io/badge/ESLint-Linting-4B32C3?logo=eslint&logoColor=white) ![Lucide](https://img.shields.io/badge/Lucide-Icons-111827)
 
 **Transform handwritten prescriptions into structured clinical intelligence. RxEaseAI is a frontend experience that showcases fast ingestion, safety checks, and real-time analytics for pharmacy workflows.**
-
 ---
 </div>
 
@@ -20,7 +19,7 @@
 
 - RxEaseAI is a modern UI that simulates OCR ingestion, dosage safety checks, operational analytics, and secure authentication for Patient.
 
----
+--
 
 ## Key facts (quick)
 
