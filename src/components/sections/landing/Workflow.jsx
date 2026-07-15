@@ -41,7 +41,7 @@ export default function Workflow() {
   return (
     <section id="workflow" className="relative py-24 bg-slate-50 dark:bg-slate-950 transition-colors duration-300 overflow-hidden">
 
-      {/* Background Glow */}
+      {/* Background Glow  */}
       <div className="glow-spot top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
