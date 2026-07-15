@@ -76,7 +76,7 @@ export default function Workflow() {
                   key={step.id}
                   className="flex flex-row items-center gap-4 md:gap-0"
                 >
-                  {/* Left Column (Desktop only) */}
+                  {/* Left Column (Desktop only)  */}
                   <div className={`hidden md:block flex-1 text-right md:pr-8 ${!isLeft ? 'invisible pointer-events-none' : ''}`}>
                     <motion.div
                       initial={{ opacity: 0, x: -30 }}
