@@ -74,11 +74,10 @@ export default function Workflow() {
               return (
                 <div
                   key={step.id}
-                  className="flex flex-col md:flex-row items-center gap-6 md:gap-8"
+                  className="flex flex-row items-center gap-4 md:gap-0"
                 >
-                  {/* Left Column (Desktop only: Step 1 & 3 show content here) */}
-                  <div className={`md:w-1/2 md:text-right md:pr-8 order-2 md:order-1 ${isLeft ? 'block' : 'hidden md:block md:invisible pointer-events-none'
-                    }`}>
+                  {/* Left Column (Desktop only) */}
+                  <div className={`hidden md:block flex-1 text-right md:pr-8 ${!isLeft ? 'invisible pointer-events-none' : ''}`}>
                     <motion.div
                       initial={{ opacity: 0, x: -30 }}
                       whileInView={{ opacity: 1, x: 0 }}
@@ -88,37 +87,35 @@ export default function Workflow() {
                       <h3 className="text-lg md:text-xl font-bold text-slate-900 dark:text-white">
                         {step.title}
                       </h3>
-                      <p className="text-sm text-slate-655 dark:text-slate-400 mt-2 leading-relaxed">
+                      <p className="text-sm text-slate-600 dark:text-slate-400 mt-2 leading-relaxed">
                         {step.description}
                       </p>
                     </motion.div>
                   </div>
 
-                  {/* Center Circle Icon (Order 1 on mobile, Order 2 on desktop) */}
+                  {/* Center Circle Icon */}
                   <motion.div
                     initial={{ opacity: 0, scale: 0.7 }}
                     whileInView={{ opacity: 1, scale: 1 }}
                     viewport={{ once: true, margin: '-80px' }}
                     transition={{ type: 'spring', stiffness: 200, damping: 15, delay: index * 0.15 }}
-                    className="w-16 h-16 rounded-full bg-white dark:bg-slate-900 border-4 border-slate-200 dark:border-slate-800 shadow-lg flex items-center justify-center z-10 order-1 md:order-2 shrink-0 transition-colors duration-300"
+                    className="w-16 h-16 rounded-full bg-white dark:bg-slate-900 border-4 border-slate-200 dark:border-slate-800 shadow-lg flex items-center justify-center z-10 shrink-0 transition-colors duration-300"
                   >
                     <MaterialIcon name={step.icon} color={step.color} size="2xl" />
                   </motion.div>
 
-                  {/* Right Column (Desktop only: Step 2 & 4 show content here; Mobile: Shows content for all steps) */}
-                  <div className={`w-full md:w-1/2 md:pl-8 order-3 ${!isLeft ? 'block' : 'block md:hidden md:invisible pointer-events-none'
-                    }`}>
+                  {/* Right Column (Mobile: All steps, Desktop: Right aligned steps) */}
+                  <div className={`flex-1 pl-4 md:pl-8 text-left ${isLeft ? 'md:invisible md:pointer-events-none' : ''}`}>
                     <motion.div
                       initial={{ opacity: 0, x: 30 }}
                       whileInView={{ opacity: 1, x: 0 }}
                       viewport={{ once: true, margin: '-80px' }}
                       transition={{ duration: 0.5, delay: index * 0.15 }}
-                      className="text-left"
                     >
                       <h3 className="text-lg md:text-xl font-bold text-slate-900 dark:text-white">
                         {step.title}
                       </h3>
-                      <p className="text-sm text-slate-650 dark:text-slate-400 mt-2 leading-relaxed">
+                      <p className="text-sm text-slate-600 dark:text-slate-400 mt-2 leading-relaxed">
                         {step.description}
                       </p>
                     </motion.div>
