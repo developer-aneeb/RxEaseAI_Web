@@ -104,7 +104,7 @@ export default function Workflow() {
                     <MaterialIcon name={step.icon} color={step.color} size="2xl" />
                   </motion.div>
 
-                  {/* Right Column (Mobile: All steps, Desktop: Right aligned steps) */}
+                  {/* Right Column (Mobile: All steps, Desktop: Right aligned steps)  */}
                   <div className={`flex-1 pl-4 md:pl-8 text-left ${isLeft ? 'md:invisible md:pointer-events-none' : ''}`}>
                     <motion.div
                       initial={{ opacity: 0, x: 30 }}
