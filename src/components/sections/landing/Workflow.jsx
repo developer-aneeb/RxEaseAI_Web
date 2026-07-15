@@ -93,7 +93,7 @@ export default function Workflow() {
                     </motion.div>
                   </div>
 
-                  {/* Center Circle Icon */}
+                  {/* Center Circle Icon  */}
                   <motion.div
                     initial={{ opacity: 0, scale: 0.7 }}
                     whileInView={{ opacity: 1, scale: 1 }}
