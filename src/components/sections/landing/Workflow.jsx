@@ -46,7 +46,7 @@ export default function Workflow() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
 
-        {/* Section Header */}
+        {/* Section Header  */}
         <SectionHeader
           title="Intelligent Workflow"
           subtitle="Seamlessly transforming raw handwriting into structured clinical intelligence."
