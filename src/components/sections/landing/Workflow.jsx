@@ -41,12 +41,12 @@ export default function Workflow() {
   return (
     <section id="workflow" className="relative py-24 bg-slate-50 dark:bg-slate-950 transition-colors duration-300 overflow-hidden">
 
-      {/* Background Glow  */}
+      {/* Background Glow */}
       <div className="glow-spot top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
 
-        {/* Section Header  */}
+        {/* Section Header */}
         <SectionHeader
           title="Intelligent Workflow"
           subtitle="Seamlessly transforming raw handwriting into structured clinical intelligence."
@@ -104,7 +104,7 @@ export default function Workflow() {
                     <MaterialIcon name={step.icon} color={step.color} size="2xl" />
                   </motion.div>
 
-                  {/* Right Column (Mobile: All steps, Desktop: Right aligned steps)  */}
+                  {/* Right Column (Mobile: All steps, Desktop: Right aligned steps) */}
                   <div className={`flex-1 pl-4 md:pl-8 text-left ${isLeft ? 'md:invisible md:pointer-events-none' : ''}`}>
                     <motion.div
                       initial={{ opacity: 0, x: 30 }}
