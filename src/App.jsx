@@ -61,12 +61,15 @@ function MainRouter() {
             const params = new URLSearchParams(window.location.hash.substring(1));
             const accessToken = params.get('access_token');
             const refreshToken = params.get('refresh_token');
+            const type = params.get('type');
+            
             if (accessToken) {
+                // Save tokens for auto-login after they see the success message
                 localStorage.setItem('rxease_token', accessToken);
                 if (refreshToken) {
                     localStorage.setItem('rxease_refresh_token', refreshToken);
                 }
-                window.location.href = `${window.location.origin}/#home`;
+                window.location.href = `${window.location.origin}/#verify-email?access_token=${accessToken}&type=${type}`;
             } else {
                 window.location.href = `${window.location.origin}/#verify-email`;
             }
