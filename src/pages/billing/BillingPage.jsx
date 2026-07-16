@@ -170,9 +170,8 @@ export default function BillingPage() {
 
   const navLinks = [
     { name: 'Home', href: '#home' },
-    { name: 'New Upload', href: '#upload' },
+    { name: 'Upload', href: '#upload' },
     { name: 'History', href: '#history' },
-    { name: 'Recommendations', href: '#recommendations' },
     { name: 'Search', href: '#search' },
     { name: 'Analytics', href: '#analytics' },
     { name: 'Reminders', href: '#reminders' },
