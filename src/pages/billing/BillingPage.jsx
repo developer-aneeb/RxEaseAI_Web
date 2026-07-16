@@ -175,7 +175,6 @@ export default function BillingPage() {
     { name: 'Search', href: '#search' },
     { name: 'Analytics', href: '#analytics' },
     { name: 'Reminders', href: '#reminders' },
-    { name: 'Notifications', href: '#notifications' },
   ];
 
   const getInitials = (name) => {
