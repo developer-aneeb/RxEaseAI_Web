@@ -27,21 +27,26 @@ export default function ResetPassword() {
   const showToast = useAppStore((state) => state.showToast);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [accessToken, setAccessToken] = useState('');
+  const [tokens, setTokens] = useState({ access_token: '', refresh_token: '' });
 
   useEffect(() => {
     // 1. Try reading from localStorage (saved by App.jsx redirect check)
     let token = localStorage.getItem('rxease_reset_access_token');
+    let rToken = localStorage.getItem('rxease_reset_refresh_token');
 
     // 2. Try reading from current URL hash parameters
-    const hash = window.location.hash;
-    if (!token && hash.includes('?')) {
-      const params = new URLSearchParams(hash.substring(hash.indexOf('?')));
-      token = params.get('access_token') || params.get('token');
+    const hash = window.location.hash || '';
+    if (!token && hash) {
+      const params = new URLSearchParams(hash.replace(/^#/, ''));
+      const parsedToken = params.get('access_token') || params.get('token');
+      if (parsedToken) {
+        token = parsedToken;
+        rToken = params.get('refresh_token') || '';
+      }
     }
 
     if (token) {
-      setAccessToken(token);
+      setTokens({ access_token: token, refresh_token: rToken });
     } else {
       showToast('Missing or invalid password reset link. Redirecting to sign in...', 'error');
       // Redirect to signin after brief delay
@@ -52,13 +57,17 @@ export default function ResetPassword() {
   }, [showToast]);
 
   const onSubmit = async (data) => {
-    if (!accessToken) {
+    if (!tokens.access_token) {
       showToast('Reset token is missing. Please request a new link.', 'error');
       return;
     }
 
     try {
-      await authService.resetPassword(accessToken, data.password);
+      await authService.resetPassword({
+        access_token: tokens.access_token,
+        refresh_token: tokens.refresh_token,
+        new_password: data.password
+      });
       showToast('Password reset successful! Redirecting to sign in...', 'success');
 
       // Clear reset tokens from localStorage
