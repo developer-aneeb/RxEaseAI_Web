@@ -13,13 +13,47 @@ export default function VerifyEmail() {
   const [email, setEmail] = useState('doctor@hospital.com');
   const showToast = useAppStore((state) => state.showToast);
 
+  const [verificationStatus, setVerificationStatus] = useState('pending'); // pending, success, error
+  const [countdown, setCountdown] = useState(5);
+
   useEffect(() => {
     // Try reading registered email from localStorage
     const savedEmail = localStorage.getItem('rxease_registered_email');
     if (savedEmail) {
       setEmail(savedEmail);
     }
-  }, []);
+
+    // Check for tokens in the hash parameters
+    const hash = window.location.hash || '';
+    let hashParams;
+    if (hash.includes('?')) {
+      hashParams = new URLSearchParams(hash.substring(hash.indexOf('?')));
+    } else {
+      hashParams = new URLSearchParams(hash.replace(/^#/, ''));
+    }
+
+    const accessToken = hashParams.get('access_token');
+    const type = hashParams.get('type');
+
+    if (accessToken && (type === 'signup' || type === 'invite')) {
+      setVerificationStatus('success');
+      showToast('Email verified successfully!', 'success');
+
+      // Auto-redirect to home or signin after success
+      const redirectTimer = setInterval(() => {
+        setCountdown((prev) => {
+          if (prev <= 1) {
+            clearInterval(redirectTimer);
+            window.location.hash = '#home';
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+
+      return () => clearInterval(redirectTimer);
+    }
+  }, [showToast]);
 
   const handleResend = async () => {
     try {
@@ -188,127 +222,129 @@ export default function VerifyEmail() {
 
         {/* Right Side: Verification Card (55%) */}
         <section className="w-full md:w-[55%] p-6 flex items-center justify-center relative bg-surface-container-low/30 dark:bg-slate-900/30 border-l border-outline-variant/30 dark:border-slate-800">
-          {/* System Status Glass Widget */}
-          <div className="absolute top-6 right-6">
-            <div className="glass-panel px-4 py-2 rounded-full flex items-center gap-4 border border-white/40 dark:border-slate-800 bg-white/60 dark:bg-slate-900/60 backdrop-blur-md shadow-sm animate-pulse">
-              <span className="w-2 h-2 rounded-full bg-secondary"></span>
-              <span className="font-label-sm text-[12px] font-medium text-on-surface-variant dark:text-slate-400">All Systems Operational</span>
-            </div>
-          </div>
-
           <div className="w-full max-w-lg animate-fade-in-up duration-700 delay-200">
             {/* Main Glassmorphic Card */}
             <div className="bg-[#cfe2f3]/80 dark:bg-slate-800/80 p-10 rounded-[2rem] shadow-2xl relative overflow-hidden border border-white/40 dark:border-slate-700 backdrop-blur-xl">
               <div className="flex flex-col items-center text-center space-y-6">
 
-                {/* Icon with Glowing Gradient Square */}
-                <div className="relative group">
-                  <div className="absolute inset-0 bg-[#0055c9]/20 blur-xl group-hover:bg-[#0055c9]/30 transition-all rounded-full animate-pulse-glow"></div>
-                  <div className="relative w-20 h-20 bg-gradient-to-br from-[#0055c9] to-[#006d3e] rounded-2xl flex items-center justify-center shadow-lg transform group-hover:rotate-6 transition-transform">
-                    <MaterialIcon name="mark_email_read" className="text-white text-[40px]" size="none" />
-                  </div>
-                  {/* Success Pulse */}
-                  <div className="absolute -inset-2 border-2 border-[#0055c9]/20 rounded-2xl animate-ping opacity-25"></div>
-                </div>
-
-                <div className="space-y-2">
-                  <h2 className="font-headline-lg text-[32px] font-bold text-on-surface dark:text-white">Check Your Email</h2>
-                  <p className="font-body-md text-[16px] text-on-surface-variant dark:text-slate-400">
-                    We've sent a verification link to: <br />
-                    <span className="font-semibold text-on-surface dark:text-white underline decoration-primary/30">{email}</span>
-                  </p>
-                </div>
-
-                {/* CTA Section */}
-                <div className="w-full pt-6 space-y-4">
-                  <Button
-                    variant="custom"
-                    size="none"
-                    className="w-full py-3.5 bg-gradient-to-r from-[#0055c9] to-[#006d3e] text-white font-label-md text-[16px] font-semibold rounded-xl shadow-xl shadow-[#0055c9]/20 hover:scale-[1.02] active:scale-95 transition-all"
-                  >
-                    Open Email App
-                  </Button>
-                  <div className="flex flex-col items-center gap-2 mt-2">
-                    <Button
-                      variant="custom"
-                      size="none"
-                      className="font-label-md text-[14px] text-[#0055c9] hover:underline disabled:text-on-surface-variant/40 dark:disabled:text-slate-400 disabled:no-underline font-bold bg-transparent cursor-pointer"
-                      disabled={timeLeft > 0}
-                      onClick={handleResend}
-                    >
-                      Resend Verification Email
-                    </Button>
-                    <span className={`font-label-sm text-[12px] ${timeLeft > 0 ? 'text-on-surface-variant dark:text-slate-400 opacity-60' : 'text-[#006d3e] font-semibold'}`}>
-                      {timeLeft > 0 ? `Wait ${timeLeft}s before resending` : 'Ready to resend link'}
-                    </span>
-                  </div>
-                </div>
-
-                {/* Status Widget */}
-                <div className="w-full bg-white/80 dark:bg-slate-900/80 rounded-2xl p-6 border border-white/40 dark:border-slate-700 mt-10 shadow-sm">
-                  <div className="flex flex-col gap-4">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <MaterialIcon name="check_circle" className="text-[#006d3e]" size="xl" />
-                        <span className="font-label-md text-[14px] font-bold text-on-surface dark:text-slate-200">Email Sent</span>
+                {verificationStatus === 'success' ? (
+                  <>
+                    <div className="relative group">
+                      <div className="absolute inset-0 bg-[#10b981]/20 blur-xl group-hover:bg-[#10b981]/30 transition-all rounded-full animate-pulse-glow"></div>
+                      <div className="relative w-20 h-20 bg-gradient-to-br from-[#10b981] to-[#059669] rounded-2xl flex items-center justify-center shadow-lg transform group-hover:rotate-6 transition-transform">
+                        <MaterialIcon name="check_circle" className="text-white text-[40px]" size="none" />
                       </div>
-                      <span className="font-label-sm text-[12px] font-medium text-on-surface-variant dark:text-slate-400">12:04 PM</span>
+                      <div className="absolute -inset-2 border-2 border-[#10b981]/20 rounded-2xl animate-ping opacity-25"></div>
                     </div>
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <MaterialIcon name="task_alt" className="text-[#006d3e]" size="xl" />
-                        <span className="font-label-md text-[14px] font-bold text-on-surface dark:text-slate-200">Delivery Confirmed</span>
-                      </div>
-                      <span className="font-label-sm text-[12px] font-medium text-on-surface-variant dark:text-slate-400">12:05 PM</span>
-                    </div>
-                    <div className="flex items-center justify-between animate-pulse">
-                      <div className="flex items-center gap-3">
-                        <MaterialIcon name="sync" className="text-[#0055c9]" size="xl" />
-                        <span className="font-label-md text-[14px] font-bold text-[#0055c9]">Awaiting Verification</span>
-                      </div>
-                      <span className="font-label-sm text-[12px] text-[#0055c9] font-bold">Live...</span>
-                    </div>
-                  </div>
-                </div>
 
-                {/* Auto-detection Card */}
-                <div className="w-full glass-panel p-4 rounded-xl border border-primary/10 bg-primary/5 flex items-center justify-between mt-4">
-                  <div className="flex items-center gap-4">
-                    <div className="w-2 h-2 bg-primary rounded-full animate-bounce"></div>
-                    <span className="font-label-sm text-[12px] font-medium text-on-surface-variant dark:text-slate-400">Automatically detecting verification...</span>
-                  </div>
-                  <MaterialIcon name="refresh" className="text-primary animate-spin" size="md" />
-                </div>
+                    <div className="space-y-2">
+                      <h2 className="font-headline-lg text-[32px] font-bold text-on-surface dark:text-white">Email Verified!</h2>
+                      <p className="font-body-md text-[16px] text-on-surface-variant dark:text-slate-400">
+                        Your email has been successfully verified.
+                      </p>
+                      <p className="font-body-md text-[14px] text-primary font-medium mt-4">
+                        Redirecting in {countdown} seconds...
+                      </p>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    {/* Icon with Glowing Gradient Square */}
+                    <div className="relative group">
+                      <div className="absolute inset-0 bg-[#0055c9]/20 blur-xl group-hover:bg-[#0055c9]/30 transition-all rounded-full animate-pulse-glow"></div>
+                      <div className="relative w-20 h-20 bg-gradient-to-br from-[#0055c9] to-[#006d3e] rounded-2xl flex items-center justify-center shadow-lg transform group-hover:rotate-6 transition-transform">
+                        <MaterialIcon name="mark_email_read" className="text-white text-[40px]" size="none" />
+                      </div>
+                      {/* Success Pulse */}
+                      <div className="absolute -inset-2 border-2 border-[#0055c9]/20 rounded-2xl animate-ping opacity-25"></div>
+                    </div>
 
-                {/* Action Links */}
-                <div className="flex gap-6 pt-6 border-t border-outline-variant/30 dark:border-slate-800 w-full justify-center">
-                  <a className="font-label-sm text-[12px] font-semibold text-on-surface-variant dark:text-slate-400 hover:text-primary transition-colors" href="#">Change Email</a>
-                  <a className="font-label-sm text-[12px] font-semibold text-on-surface-variant dark:text-slate-400 hover:text-primary transition-colors" href="#signin">Back to Sign In</a>
-                  <a className="font-label-sm text-[12px] font-semibold text-on-surface-variant dark:text-slate-400 hover:text-primary transition-colors" href="#">Need Help?</a>
+                    <div className="space-y-2">
+                      <h2 className="font-headline-lg text-[32px] font-bold text-on-surface dark:text-white">Check Your Email</h2>
+                      <p className="font-body-md text-[16px] text-on-surface-variant dark:text-slate-400">
+                        We've sent a verification link to: <br />
+                        <span className="font-semibold text-on-surface dark:text-white underline decoration-primary/30">{email}</span>
+                      </p>
+                    </div>
+
+                    {verificationStatus === 'pending' && (
+                      <>
+                        {/* CTA Section */}
+                        <div className="w-full pt-6 space-y-4">
+                          <Button
+                            variant="custom"
+                            size="none"
+                            className="w-full py-3.5 bg-gradient-to-r from-[#0055c9] to-[#006d3e] text-white font-label-md text-[16px] font-semibold rounded-xl shadow-xl shadow-[#0055c9]/20 hover:scale-[1.02] active:scale-95 transition-all"
+                            onClick={() => window.location.href = 'mailto:'}
+                          >
+                            Open Email App
+                          </Button>
+                          <div className="flex flex-col items-center gap-2 mt-2">
+                            <Button
+                              variant="custom"
+                              size="none"
+                              className="font-label-md text-[14px] text-[#0055c9] hover:underline disabled:text-on-surface-variant/40 dark:disabled:text-slate-400 disabled:no-underline font-bold bg-transparent cursor-pointer"
+                              disabled={timeLeft > 0}
+                              onClick={handleResend}
+                            >
+                              Resend Verification Email
+                            </Button>
+                            <span className={`font-label-sm text-[12px] ${timeLeft > 0 ? 'text-on-surface-variant dark:text-slate-400 opacity-60' : 'text-[#006d3e] font-semibold'}`}>
+                              {timeLeft > 0 ? `Wait ${timeLeft}s before resending` : 'Ready to resend link'}
+                            </span>
+                          </div>
+                        </div>
+
+                        {/* Status Widget */}
+                        <div className="w-full bg-white/80 dark:bg-slate-900/80 rounded-2xl p-6 border border-white/40 dark:border-slate-700 mt-10 shadow-sm">
+                          <div className="flex flex-col gap-4">
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center gap-3">
+                                <MaterialIcon name="check_circle" className="text-[#006d3e]" size="xl" />
+                                <span className="font-label-md text-[14px] font-bold text-on-surface dark:text-slate-200">Email Sent</span>
+                              </div>
+                              <span className="font-label-sm text-[12px] font-medium text-on-surface-variant dark:text-slate-400">Now</span>
+                            </div>
+                            <div className="flex items-center justify-between animate-pulse">
+                              <div className="flex items-center gap-3">
+                                <MaterialIcon name="sync" className="text-[#0055c9]" size="xl" />
+                                <span className="font-label-md text-[14px] font-bold text-[#0055c9]">Awaiting Verification</span>
+                              </div>
+                              <span className="font-label-sm text-[12px] text-[#0055c9] font-bold">Live...</span>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Action Links */}
+                        <div className="flex gap-6 pt-6 border-t border-outline-variant/30 dark:border-slate-800 w-full justify-center mt-6">
+                          <a className="font-label-sm text-[12px] font-semibold text-on-surface-variant dark:text-slate-400 hover:text-primary transition-colors" href="#">Change Email</a>
+                          <a className="font-label-sm text-[12px] font-semibold text-on-surface-variant dark:text-slate-400 hover:text-primary transition-colors" href="#signin">Back to Sign In</a>
+                        </div>
+                      </>
+                    )}
+                  </div>
+              </div>
+
+              {/* Security Badges Block */}
+              <div className="grid grid-cols-4 gap-4 mt-10 px-6">
+                <div className="flex flex-col items-center text-center space-y-2 opacity-60 hover:opacity-100 transition-opacity">
+                  <MaterialIcon name="verified_user" className="text-on-surface-variant dark:text-slate-400" size="xl" />
+                  <span className="font-label-sm text-[10px] leading-tight text-on-surface-variant dark:text-slate-400">Secure Verification</span>
+                </div>
+                <div className="flex flex-col items-center text-center space-y-2 opacity-60 hover:opacity-100 transition-opacity">
+                  <MaterialIcon name="medical_services" className="text-on-surface-variant dark:text-slate-400" size="xl" />
+                  <span className="font-label-sm text-[10px] leading-tight text-on-surface-variant dark:text-slate-400">HIPAA Ready</span>
+                </div>
+                <div className="flex flex-col items-center text-center space-y-2 opacity-60 hover:opacity-100 transition-opacity">
+                  <MaterialIcon name="bolt" className="text-on-surface-variant dark:text-slate-400" size="xl" />
+                  <span className="font-label-sm text-[10px] leading-tight text-on-surface-variant dark:text-slate-400">Fast Activation</span>
+                </div>
+                <div className="flex flex-col items-center text-center space-y-2 opacity-60 hover:opacity-100 transition-opacity">
+                  <MaterialIcon name="lock" className="text-on-surface-variant dark:text-slate-400" size="xl" />
+                  <span className="font-label-sm text-[10px] leading-tight text-on-surface-variant dark:text-slate-400">Data Protected</span>
                 </div>
               </div>
             </div>
-
-            {/* Security Badges Block */}
-            <div className="grid grid-cols-4 gap-4 mt-10 px-6">
-              <div className="flex flex-col items-center text-center space-y-2 opacity-60 hover:opacity-100 transition-opacity">
-                <MaterialIcon name="verified_user" className="text-on-surface-variant dark:text-slate-400" size="xl" />
-                <span className="font-label-sm text-[10px] leading-tight text-on-surface-variant dark:text-slate-400">Secure Verification</span>
-              </div>
-              <div className="flex flex-col items-center text-center space-y-2 opacity-60 hover:opacity-100 transition-opacity">
-                <MaterialIcon name="medical_services" className="text-on-surface-variant dark:text-slate-400" size="xl" />
-                <span className="font-label-sm text-[10px] leading-tight text-on-surface-variant dark:text-slate-400">HIPAA Ready</span>
-              </div>
-              <div className="flex flex-col items-center text-center space-y-2 opacity-60 hover:opacity-100 transition-opacity">
-                <MaterialIcon name="bolt" className="text-on-surface-variant dark:text-slate-400" size="xl" />
-                <span className="font-label-sm text-[10px] leading-tight text-on-surface-variant dark:text-slate-400">Fast Activation</span>
-              </div>
-              <div className="flex flex-col items-center text-center space-y-2 opacity-60 hover:opacity-100 transition-opacity">
-                <MaterialIcon name="lock" className="text-on-surface-variant dark:text-slate-400" size="xl" />
-                <span className="font-label-sm text-[10px] leading-tight text-on-surface-variant dark:text-slate-400">Data Protected</span>
-              </div>
-            </div>
-          </div>
         </section>
       </main>
     </div>
