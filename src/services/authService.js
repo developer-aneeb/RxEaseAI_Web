@@ -49,10 +49,11 @@ export const authService = {
    * Reset password using the token from the reset email link
    * POST /auth/reset-password → 200
    */
-  async resetPassword(accessToken, newPassword) {
+  async resetPassword({ access_token, refresh_token, new_password }) {
     const response = await apiClient.post('/auth/reset-password', {
-      access_token: accessToken,
-      new_password: newPassword,
+      access_token,
+      refresh_token,
+      new_password,
     });
     return response.data;
   },
