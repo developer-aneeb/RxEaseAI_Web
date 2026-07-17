@@ -189,8 +189,6 @@ export default function NotificationFeed({
           </AnimatePresence>
         </div>
       )}
-      {/* End fragment from items > 0 */}
-      {items.length > 0 && (
         </>
       )}
 
