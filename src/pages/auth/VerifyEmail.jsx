@@ -12,7 +12,7 @@ export default function VerifyEmail() {
   const [particles, setParticles] = useState([]);
   const [email, setEmail] = useState('doctor@hospital.com');
   const showToast = useAppStore((state) => state.showToast);
-  
+
   const [status, setStatus] = useState('pending'); // pending, success, error
   const [errorMessage, setErrorMessage] = useState('');
   const [countdown, setCountdown] = useState(5);
@@ -54,14 +54,20 @@ export default function VerifyEmail() {
     }
   }, []);
 
-  // Auto-redirect after success
+  // Auto-close window after success or error
   useEffect(() => {
-    if (status === 'success') {
+    if (status === 'success' || status === 'error') {
       const timer = setInterval(() => {
         setCountdown((prev) => {
           if (prev <= 1) {
             clearInterval(timer);
-            window.location.hash = '#signin';
+            window.close();
+            // Fallback for browsers that don't allow window.close()
+            setTimeout(() => {
+              if (!window.closed) {
+                window.location.href = 'about:blank';
+              }
+            }, 100);
             return 0;
           }
           return prev - 1;
@@ -272,14 +278,14 @@ export default function VerifyEmail() {
 
                   {/* CTA Section */}
                   <div className="w-full pt-6 space-y-4">
-                    <Button
+                    {/* <Button
                       variant="custom"
                       size="none"
                       className="w-full py-3.5 bg-gradient-to-r from-[#0055c9] to-[#006d3e] text-white font-label-md text-[16px] font-semibold rounded-xl shadow-xl shadow-[#0055c9]/20 hover:scale-[1.02] active:scale-95 transition-all cursor-pointer"
                       onClick={() => window.open('mailto:', '_blank')}
                     >
                       Open Email App
-                    </Button>
+                    </Button> */}
                     <div className="flex flex-col items-center gap-2 mt-2">
                       <Button
                         variant="custom"
@@ -318,7 +324,7 @@ export default function VerifyEmail() {
 
                   {/* Action Links */}
                   <div className="flex gap-6 pt-6 border-t border-outline-variant/30 dark:border-slate-800 w-full justify-center">
-                    <a className="font-label-sm text-[12px] font-semibold text-on-surface-variant dark:text-slate-400 hover:text-primary transition-colors" href="#signup">Change Email</a>
+                    {/* <a className="font-label-sm text-[12px] font-semibold text-on-surface-variant dark:text-slate-400 hover:text-primary transition-colors" href="#signup">Change Email</a> */}
                     <a className="font-label-sm text-[12px] font-semibold text-on-surface-variant dark:text-slate-400 hover:text-primary transition-colors" href="#signin">Back to Sign In</a>
                     <a className="font-label-sm text-[12px] font-semibold text-on-surface-variant dark:text-slate-400 hover:text-primary transition-colors" href="#">Need Help?</a>
                   </div>
@@ -336,20 +342,12 @@ export default function VerifyEmail() {
                   <div className="space-y-2">
                     <h2 className="font-headline-lg text-[32px] font-bold text-on-surface dark:text-white">Email Verified!</h2>
                     <p className="font-body-md text-[16px] text-on-surface-variant dark:text-slate-400">
-                      Your email address has been successfully verified. You can now access your RxEaseAI workspace.
+                      Your email address has been successfully verified. You can now close this window and return to your app.
                     </p>
                   </div>
                   <p className="font-label-sm text-[#0055c9] font-semibold mt-4 bg-[#0055c9]/10 px-4 py-2 rounded-full">
-                    Redirecting to sign in... {countdown}s
+                    Closing window in {countdown}s...
                   </p>
-                  <Button
-                    variant="custom"
-                    size="none"
-                    className="mt-6 w-full py-3.5 bg-[#0055c9] text-white rounded-xl font-semibold hover:bg-[#00419e] transition-colors cursor-pointer"
-                    onClick={() => window.location.hash = '#signin'}
-                  >
-                    Go to Sign In Now
-                  </Button>
                 </div>
               )}
 
@@ -367,17 +365,9 @@ export default function VerifyEmail() {
                       {errorMessage}
                     </p>
                   </div>
-                  <div className="flex flex-col gap-3 w-full mt-6">
-                    <Button
-                      variant="custom"
-                      size="none"
-                      className="w-full py-3.5 bg-gradient-to-r from-[#0055c9] to-[#006d3e] text-white rounded-xl font-semibold hover:scale-[1.02] transition-transform cursor-pointer"
-                      onClick={() => setStatus('pending')}
-                    >
-                      Try Again
-                    </Button>
-                    <a className="font-label-sm text-[#0055c9] hover:underline" href="#signin">Back to Sign In</a>
-                  </div>
+                  <p className="font-label-sm text-red-500 font-semibold mt-4 bg-red-500/10 px-4 py-2 rounded-full">
+                    Closing window in {countdown}s...
+                  </p>
                 </div>
               )}
             </div>
