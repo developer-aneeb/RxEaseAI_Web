@@ -79,6 +79,7 @@ export default function Button({
 
   return (
     <Component
+      type={props.type || 'button'}
       onClick={onClick}
       className={`group ${combinedClasses}`}
       {...animationProps}
