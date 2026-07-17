@@ -278,6 +278,7 @@ export default function NotificationsPage() {
               <div className="flex overflow-x-auto gap-2 pb-2 sm:pb-0 w-full sm:w-auto scrollbar-hide">
                 {['All', 'Unread', 'High Priority', 'Reminders', 'Alerts'].map(filter => (
                   <button
+                    type="button"
                     key={filter}
                     onClick={() => setActiveFilter(filter)}
                     className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer border whitespace-nowrap ${activeFilter === filter
@@ -293,6 +294,7 @@ export default function NotificationsPage() {
               {/* Actions & Sort */}
               <div className="flex gap-3 items-center w-full sm:w-auto justify-end">
                 <button
+                  type="button"
                   onClick={handleMarkAllAsRead}
                   className="text-xs font-bold text-primary hover:underline border-0 bg-transparent cursor-pointer"
                 >
@@ -300,6 +302,7 @@ export default function NotificationsPage() {
                 </button>
                 <span className="text-slate-300">|</span>
                 <button
+                  type="button"
                   onClick={handleClearAll}
                   className="text-xs font-bold text-rose-500 hover:underline border-0 bg-transparent cursor-pointer"
                 >
