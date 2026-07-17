@@ -321,14 +321,15 @@ export default function NotificationsPage() {
               </div>
             </div>
 
-            {isLoading ? (
-              <div className="py-24 flex items-center justify-center">
-                <Spinner />
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 pb-12">
-                {/* Feed Block (8 Cols) */}
-                <div className="lg:col-span-8 flex flex-col gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 pb-12">
+              {/* Feed Block (8 Cols) */}
+              <div className="lg:col-span-8 flex flex-col gap-6 relative">
+                
+                {isLoading && (
+                  <div className="absolute inset-0 bg-slate-50/50 dark:bg-slate-950/50 backdrop-blur-[2px] z-20 flex items-center justify-center rounded-3xl">
+                    <Spinner />
+                  </div>
+                )}
 
                   {/* Tab Rendering Logic */}
                   <AnimatePresence mode="wait">
@@ -401,7 +402,7 @@ export default function NotificationsPage() {
                   </Card>
                 </div>
               </div>
-            )}
+            </div>
           </div>
         </div>
       </div>
