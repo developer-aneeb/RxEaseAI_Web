@@ -83,6 +83,7 @@ export default function NotificationFeed({
 
                           <div className="relative">
                             <button
+                              type="button"
                               onClick={() => setActiveDropdown(activeDropdown === item.id ? null : item.id)}
                               className="text-slate-400 hover:text-slate-700 dark:hover:text-white transition-colors border-0 bg-transparent cursor-pointer"
                             >
@@ -91,11 +92,11 @@ export default function NotificationFeed({
                             {activeDropdown === item.id && (
                               <div className="absolute right-0 mt-1 w-36 bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 shadow-xl rounded-xl py-1 z-20 text-xs">
                                 {item.unread && (
-                                  <button onClick={() => { onMarkRead(item.id); setActiveDropdown(null); }} className="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-900 text-slate-700 dark:text-slate-350 font-medium flex items-center gap-2 border-0 bg-transparent cursor-pointer">
+                                  <button type="button" onClick={() => { onMarkRead(item.id); setActiveDropdown(null); }} className="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-900 text-slate-700 dark:text-slate-350 font-medium flex items-center gap-2 border-0 bg-transparent cursor-pointer">
                                     <CheckCircle2 className="w-3.5 h-3.5 text-primary" /> Mark Read
                                   </button>
                                 )}
-                                <button onClick={() => { onDelete(item.id); setActiveDropdown(null); }} className="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-900 text-rose-500 font-medium flex items-center gap-2 border-0 bg-transparent cursor-pointer">
+                                <button type="button" onClick={() => { onDelete(item.id); setActiveDropdown(null); }} className="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-900 text-rose-500 font-medium flex items-center gap-2 border-0 bg-transparent cursor-pointer">
                                   <Trash2 className="w-3.5 h-3.5" /> Delete
                                 </button>
                               </div>
@@ -157,6 +158,7 @@ export default function NotificationFeed({
 
                       <div className="relative">
                         <button
+                          type="button"
                           onClick={() => setActiveDropdown(activeDropdown === item.id ? null : item.id)}
                           className="text-slate-400 hover:text-slate-700 dark:hover:text-white transition-colors border-0 bg-transparent cursor-pointer"
                         >
@@ -165,11 +167,11 @@ export default function NotificationFeed({
                         {activeDropdown === item.id && (
                           <div className="absolute right-0 mt-1 w-36 bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 shadow-xl rounded-xl py-1 z-20 text-xs">
                             {item.unread && (
-                              <button onClick={() => { onMarkRead(item.id); setActiveDropdown(null); }} className="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-900 text-slate-700 dark:text-slate-350 font-medium flex items-center gap-2 border-0 bg-transparent cursor-pointer">
+                              <button type="button" onClick={() => { onMarkRead(item.id); setActiveDropdown(null); }} className="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-900 text-slate-700 dark:text-slate-350 font-medium flex items-center gap-2 border-0 bg-transparent cursor-pointer">
                                 <CheckCircle2 className="w-3.5 h-3.5 text-primary" /> Mark Read
                               </button>
                             )}
-                            <button onClick={() => { onDelete(item.id); setActiveDropdown(null); }} className="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-900 text-rose-500 font-medium flex items-center gap-2 border-0 bg-transparent cursor-pointer">
+                            <button type="button" onClick={() => { onDelete(item.id); setActiveDropdown(null); }} className="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-900 text-rose-500 font-medium flex items-center gap-2 border-0 bg-transparent cursor-pointer">
                               <Trash2 className="w-3.5 h-3.5" /> Delete
                             </button>
                           </div>
@@ -212,6 +214,7 @@ export default function NotificationFeed({
 
           <div className="flex items-center gap-1">
             <button
+              type="button"
               onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
               disabled={currentPage === 1}
               className="w-8 h-8 rounded-lg border border-slate-200 dark:border-slate-800 flex items-center justify-center text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer bg-transparent"
@@ -230,6 +233,7 @@ export default function NotificationFeed({
               }
               return pages.map(page => (
                 <button
+                  type="button"
                   key={page}
                   onClick={() => setCurrentPage(page)}
                   className={`w-8 h-8 rounded-lg border text-xs font-bold transition-all cursor-pointer bg-transparent ${currentPage === page
@@ -242,6 +246,7 @@ export default function NotificationFeed({
               ));
             })()}
             <button
+              type="button"
               onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
               disabled={currentPage === totalPages}
               className="w-8 h-8 rounded-lg border border-slate-200 dark:border-slate-800 flex items-center justify-center text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer bg-transparent"
