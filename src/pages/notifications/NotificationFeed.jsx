@@ -12,6 +12,16 @@ export default function NotificationFeed({
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(5);
   const [activeDropdown, setActiveDropdown] = useState(null);
+  const [isPaginating, setIsPaginating] = useState(false);
+
+  const handlePageChange = (newPage) => {
+    if (newPage === currentPage) return;
+    setIsPaginating(true);
+    setCurrentPage(newPage);
+    setTimeout(() => {
+      setIsPaginating(false);
+    }, 400);
+  };
 
   // Pagination bounds calculation
   const totalFilteredCount = items.length;
@@ -39,7 +49,12 @@ export default function NotificationFeed({
           <p className="text-sm text-slate-500 dark:text-slate-400">{emptyMessage}</p>
         </div>
       ) : (
-        <>
+        <div className="relative min-h-[300px]">
+          {isPaginating && (
+            <div className="absolute inset-0 z-20 flex items-center justify-center bg-slate-50/50 dark:bg-slate-950/50 backdrop-blur-[2px] rounded-2xl">
+              <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+            </div>
+          )}
           {/* Today Items */}
           {todayItems.length > 0 && (
             <div className="space-y-3">
@@ -191,7 +206,7 @@ export default function NotificationFeed({
           </AnimatePresence>
         </div>
       )}
-        </>
+        </div>
       )}
 
       {/* Pagination Controls Row */}
@@ -215,8 +230,8 @@ export default function NotificationFeed({
           <div className="flex items-center gap-1">
             <button
               type="button"
-              onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-              disabled={currentPage === 1}
+              onClick={() => handlePageChange(Math.max(currentPage - 1, 1))}
+              disabled={currentPage === 1 || isPaginating}
               className="w-8 h-8 rounded-lg border border-slate-200 dark:border-slate-800 flex items-center justify-center text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer bg-transparent"
             >
               <ChevronLeft className="w-4 h-4" />
@@ -235,8 +250,9 @@ export default function NotificationFeed({
                 <button
                   type="button"
                   key={page}
-                  onClick={() => setCurrentPage(page)}
-                  className={`w-8 h-8 rounded-lg border text-xs font-bold transition-all cursor-pointer bg-transparent ${currentPage === page
+                  onClick={() => handlePageChange(page)}
+                  disabled={isPaginating}
+                  className={`w-8 h-8 rounded-lg border text-xs font-bold transition-all cursor-pointer bg-transparent disabled:opacity-50 ${currentPage === page
                     ? 'border-primary text-primary shadow-sm ring-1 ring-primary/45 font-black'
                     : 'border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
                     }`}
@@ -247,8 +263,8 @@ export default function NotificationFeed({
             })()}
             <button
               type="button"
-              onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
-              disabled={currentPage === totalPages}
+              onClick={() => handlePageChange(Math.min(currentPage + 1, totalPages))}
+              disabled={currentPage === totalPages || isPaginating}
               className="w-8 h-8 rounded-lg border border-slate-200 dark:border-slate-800 flex items-center justify-center text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer bg-transparent"
             >
               <ChevronRight className="w-4 h-4" />
