@@ -324,83 +324,82 @@ export default function NotificationsPage() {
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 pb-12">
               {/* Feed Block (8 Cols) */}
               <div className="lg:col-span-8 flex flex-col gap-6 relative">
-                
+
                 {isLoading && (
                   <div className="absolute inset-0 bg-slate-50/50 dark:bg-slate-950/50 backdrop-blur-[2px] z-20 flex items-center justify-center rounded-3xl">
                     <Spinner />
                   </div>
                 )}
 
-                  {/* Tab Rendering Logic */}
-                  <AnimatePresence mode="wait">
-                    <motion.div
-                      key={activeFilter}
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -10 }}
-                      transition={{ duration: 0.2 }}
-                    >
-                      <NotificationFeed
-                        items={
-                          activeFilter === 'Unread'
-                            ? filteredListForTab.filter(n => n.unread)
-                            : activeFilter === 'High Priority'
-                              ? filteredListForTab.filter(n => n.priority === 'high')
-                              : filteredListForTab
-                        }
-                        onMarkRead={handleMarkAsRead}
-                        onDelete={handleDelete}
-                        emptyMessage={
-                          activeFilter === 'Unread'
-                            ? "No unread notifications right now. You're all caught up!"
-                            : activeFilter === 'High Priority'
-                              ? "No high priority alerts found. Good job!"
-                              : `No notifications found in ${activeFilter}.`
-                        }
-                      />
-                    </motion.div>
-                  </AnimatePresence>
+                {/* Tab Rendering Logic */}
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={activeFilter}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <NotificationFeed
+                      items={
+                        activeFilter === 'Unread'
+                          ? filteredListForTab.filter(n => n.unread)
+                          : activeFilter === 'High Priority'
+                            ? filteredListForTab.filter(n => n.priority === 'high')
+                            : filteredListForTab
+                      }
+                      onMarkRead={handleMarkAsRead}
+                      onDelete={handleDelete}
+                      emptyMessage={
+                        activeFilter === 'Unread'
+                          ? "No unread notifications right now. You're all caught up!"
+                          : activeFilter === 'High Priority'
+                            ? "No high priority alerts found. Good job!"
+                            : `No notifications found in ${activeFilter}.`
+                      }
+                    />
+                  </motion.div>
+                </AnimatePresence>
 
-                </div>
+              </div>
 
-                {/* Sidebar Panel (4 Cols) */}
-                <div className="lg:col-span-4 flex flex-col gap-6">
-                  {/* Quick Settings */}
-                  <Card variant="glass" className="p-6 text-left bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800">
-                    <h3 className="text-sm font-black text-slate-850 dark:text-white mb-5 flex items-center gap-2">
-                      <Settings className="w-4 h-4 text-slate-400" /> Notification Channels
-                    </h3>
-                    <div className="space-y-5">
-                      <div className="flex justify-between items-center">
-                        <div>
-                          <div className="text-xs font-bold text-slate-800 dark:text-white">Push Alerts</div>
-                          <div className="text-[10px] text-slate-500 mt-0.5">Desktop push triggers</div>
-                        </div>
-                        <button
-                          type="button"
-                          onClick={() => { setPushEnabled(!pushEnabled); showToast(`Push notifications ${!pushEnabled ? 'enabled' : 'disabled'}`, 'info'); }}
-                          className={`w-9 h-5 rounded-full p-0.5 transition-colors duration-200 cursor-pointer relative shrink-0 border-0 ${pushEnabled ? 'bg-primary' : 'bg-slate-200 dark:bg-slate-800'}`}
-                        >
-                          <div className={`w-4 h-4 rounded-full bg-white shadow-sm transition-transform duration-200 ${pushEnabled ? 'translate-x-4' : 'translate-x-0'}`}></div>
-                        </button>
+              {/* Sidebar Panel (4 Cols) */}
+              <div className="lg:col-span-4 flex flex-col gap-6">
+                {/* Quick Settings */}
+                <Card variant="glass" className="p-6 text-left bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800">
+                  <h3 className="text-sm font-black text-slate-850 dark:text-white mb-5 flex items-center gap-2">
+                    <Settings className="w-4 h-4 text-slate-400" /> Notification Channels
+                  </h3>
+                  <div className="space-y-5">
+                    <div className="flex justify-between items-center">
+                      <div>
+                        <div className="text-xs font-bold text-slate-800 dark:text-white">Push Alerts</div>
+                        <div className="text-[10px] text-slate-500 mt-0.5">Desktop push triggers</div>
                       </div>
-
-                      <div className="flex justify-between items-center">
-                        <div>
-                          <div className="text-xs font-bold text-slate-800 dark:text-white">Email Digests</div>
-                          <div className="text-[10px] text-slate-500 mt-0.5">Clinical email notifications</div>
-                        </div>
-                        <button
-                          type="button"
-                          onClick={() => { setEmailEnabled(!emailEnabled); showToast(`Email digests ${!emailEnabled ? 'enabled' : 'disabled'}`, 'info'); }}
-                          className={`w-9 h-5 rounded-full p-0.5 transition-colors duration-200 cursor-pointer relative shrink-0 border-0 ${emailEnabled ? 'bg-primary' : 'bg-slate-200 dark:bg-slate-800'}`}
-                        >
-                          <div className={`w-4 h-4 rounded-full bg-white shadow-sm transition-transform duration-200 ${emailEnabled ? 'translate-x-4' : 'translate-x-0'}`}></div>
-                        </button>
-                      </div>
+                      <button
+                        type="button"
+                        onClick={() => { setPushEnabled(!pushEnabled); showToast(`Push notifications ${!pushEnabled ? 'enabled' : 'disabled'}`, 'info'); }}
+                        className={`w-9 h-5 rounded-full p-0.5 transition-colors duration-200 cursor-pointer relative shrink-0 border-0 ${pushEnabled ? 'bg-primary' : 'bg-slate-200 dark:bg-slate-800'}`}
+                      >
+                        <div className={`w-4 h-4 rounded-full bg-white shadow-sm transition-transform duration-200 ${pushEnabled ? 'translate-x-4' : 'translate-x-0'}`}></div>
+                      </button>
                     </div>
-                  </Card>
-                </div>
+
+                    <div className="flex justify-between items-center">
+                      <div>
+                        <div className="text-xs font-bold text-slate-800 dark:text-white">Email Digests</div>
+                        <div className="text-[10px] text-slate-500 mt-0.5">Clinical email notifications</div>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => { setEmailEnabled(!emailEnabled); showToast(`Email digests ${!emailEnabled ? 'enabled' : 'disabled'}`, 'info'); }}
+                        className={`w-9 h-5 rounded-full p-0.5 transition-colors duration-200 cursor-pointer relative shrink-0 border-0 ${emailEnabled ? 'bg-primary' : 'bg-slate-200 dark:bg-slate-800'}`}
+                      >
+                        <div className={`w-4 h-4 rounded-full bg-white shadow-sm transition-transform duration-200 ${emailEnabled ? 'translate-x-4' : 'translate-x-0'}`}></div>
+                      </button>
+                    </div>
+                  </div>
+                </Card>
               </div>
             </div>
           </div>
