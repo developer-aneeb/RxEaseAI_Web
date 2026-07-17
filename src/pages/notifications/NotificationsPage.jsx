@@ -34,14 +34,16 @@ export default function NotificationsPage() {
       let list = [];
       if (Array.isArray(response)) {
         list = response;
-      } else if (response && Array.isArray(response.data)) {
-        list = response.data;
-      } else if (response && Array.isArray(response.notifications)) {
+      } else if (response?.notifications && Array.isArray(response.notifications)) {
         list = response.notifications;
-      } else if (response && response.data && Array.isArray(response.data.notifications)) {
+      } else if (response?.data?.notifications && Array.isArray(response.data.notifications)) {
         list = response.data.notifications;
-      } else if (response && response.data && response.data.data && Array.isArray(response.data.data.notifications)) {
+      } else if (response?.data?.data?.notifications && Array.isArray(response.data.data.notifications)) {
         list = response.data.data.notifications;
+      } else if (response?.data && Array.isArray(response.data)) {
+        list = response.data;
+      } else {
+        console.warn('Could not parse notifications from response:', response);
       }
       setNotifications(list);
     } catch (error) {
