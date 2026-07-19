@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { Download, FileText, Printer, CheckCircle2, AlertCircle } from 'lucide-react';
-import Modal from '../../../../components/ui/Modal';
-import Button from '../../../../components/ui/Button';
-import { prescriptionService } from '../../../../services/prescriptionService';
-import { useAppStore } from '../../../../store/useAppStore';
-import { getFriendlyErrorMessage } from '../../../../utils/errorMessages';
+import Modal from '../../../components/ui/Modal';
+import Button from '../../../components/ui/Button';
+import { prescriptionService } from '../../../services/prescriptionService';
+import { useAppStore } from '../../../store/useAppStore';
+import { getFriendlyErrorMessage } from '../../../utils/errorMessages';
 
 export default function DownloadModal({
   isOpen,
