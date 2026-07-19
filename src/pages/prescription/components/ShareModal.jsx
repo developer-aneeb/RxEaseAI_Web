@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Send, CheckCircle2, Clipboard, Check, Share2, Mail, ExternalLink } from 'lucide-react';
-import Modal from '../../../../components/ui/Modal';
-import Button from '../../../../components/ui/Button';
-import { shareService } from '../../../../services/shareService';
-import { useAppStore } from '../../../../store/useAppStore';
-import { getFriendlyErrorMessage } from '../../../../utils/errorMessages';
+import Modal from '../../../components/ui/Modal';
+import Button from '../../../components/ui/Button';
+import { shareService } from '../../../services/shareService';
+import { useAppStore } from '../../../store/useAppStore';
+import { getFriendlyErrorMessage } from '../../../utils/errorMessages';
 
 export default function ShareModal({
   isOpen,
