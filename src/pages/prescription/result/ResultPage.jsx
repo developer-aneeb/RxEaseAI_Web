@@ -14,6 +14,8 @@ import Modal from '../../../components/ui/Modal';
 import { prescriptionService } from '../../../services/prescriptionService';
 import { shareService } from '../../../services/shareService';
 import { getFriendlyErrorMessage } from '../../../utils/errorMessages';
+import DownloadModal from '../components/DownloadModal';
+import ShareModal from '../components/ShareModal';
 
 export default function ResultPage() {
   const {
@@ -27,11 +29,9 @@ export default function ResultPage() {
   const [copied, setCopied] = useState(false);
   const [activeJsonTab, setActiveJsonTab] = useState(false); // view raw FHIR JSON
 
-  // Share modal state
+  // Share & Download modal state
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
-  const [recipientEmail, setRecipientEmail] = useState('');
-  const [isSharing, setIsSharing] = useState(false);
-  const [isExportingPdf, setIsExportingPdf] = useState(false);
+  const [isDownloadModalOpen, setIsDownloadModalOpen] = useState(false);
 
   // Normalize backend response to UI format
   const normalizedResult = (() => {
@@ -159,48 +159,9 @@ export default function ResultPage() {
     window.location.hash = '#history';
   };
 
-  const handleExportPdf = async () => {
+  const handleExportPdf = () => {
     if (!normalizedResult?.prescriptionId) return;
-    setIsExportingPdf(true);
-    try {
-      showToast('Generating clinical audit report PDF...', 'info');
-      const blob = await prescriptionService.exportPDF(normalizedResult.prescriptionId);
-      const url = window.URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.setAttribute('download', `prescription_report_${normalizedResult.prescriptionId}.pdf`);
-      document.body.appendChild(link);
-      link.click();
-      link.parentNode.removeChild(link);
-      showToast('PDF report downloaded successfully.', 'success');
-    } catch (error) {
-      console.error(error);
-      const friendlyMsg = getFriendlyErrorMessage(error, 'Failed to export prescription PDF.');
-      showToast(friendlyMsg, 'error');
-    } finally {
-      setIsExportingPdf(false);
-    }
-  };
-
-  const handleShareSubmit = async (e) => {
-    e.preventDefault();
-    if (!recipientEmail) {
-      showToast('Please enter a recipient email address.', 'warning');
-      return;
-    }
-    setIsSharing(true);
-    try {
-      await shareService.sharePrescription(normalizedResult.prescriptionId, recipientEmail);
-      showToast(`Prescription shared with ${recipientEmail} successfully!`, 'success');
-      setIsShareModalOpen(false);
-      setRecipientEmail('');
-    } catch (error) {
-      console.error(error);
-      const friendlyMsg = getFriendlyErrorMessage(error, 'Failed to share prescription.');
-      showToast(friendlyMsg, 'error');
-    } finally {
-      setIsSharing(false);
-    }
+    setIsDownloadModalOpen(true);
   };
 
   const resultLinks = [
@@ -637,16 +598,11 @@ export default function ResultPage() {
                 </button>
 
                 <button
-                  onClick={handleExportPdf}
-                  disabled={isExportingPdf}
-                  className="flex-1 sm:flex-none py-3.5 px-3.5 rounded-xl bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-950 text-slate-700 dark:text-slate-300 font-bold border border-slate-200 dark:border-slate-800 transition-colors flex items-center justify-center cursor-pointer disabled:opacity-50"
+                  onClick={() => setIsDownloadModalOpen(true)}
+                  className="flex-1 sm:flex-none py-3.5 px-3.5 rounded-xl bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-950 text-slate-700 dark:text-slate-300 font-bold border border-slate-200 dark:border-slate-800 transition-colors flex items-center justify-center cursor-pointer"
                   title="Download PDF Audit"
                 >
-                  {isExportingPdf ? (
-                    <div className="w-4 h-4 border-2 border-slate-400 border-t-transparent rounded-full animate-spin"></div>
-                  ) : (
-                    <span className="material-symbols-outlined text-[18px]">download</span>
-                  )}
+                  <span className="material-symbols-outlined text-[18px]">download</span>
                 </button>
               </div>
 
@@ -658,53 +614,24 @@ export default function ResultPage() {
 
       </div>
 
-      {/* Share Modal */}
-      <Modal
+      {/* Reusable Share Modal */}
+      <ShareModal
         isOpen={isShareModalOpen}
         onClose={() => setIsShareModalOpen(false)}
-        title="Share Prescription Report"
-      >
-        <form onSubmit={handleShareSubmit} className="flex flex-col gap-4 font-sans text-left">
-          <p className="text-xs text-slate-500 leading-relaxed">
-            Enter a recipient email address (e.g. your doctor, pharmacist, or family member). We will email them a secure portal link and a PDF copy of this prescription audit.
-          </p>
-          <div className="flex flex-col gap-1.5">
-            <label className="text-[11px] font-bold uppercase text-slate-400">Recipient Email Address</label>
-            <input
-              type="email"
-              placeholder="doctor@hospital.com"
-              value={recipientEmail}
-              onChange={(e) => setRecipientEmail(e.target.value)}
-              required
-              className="p-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-slate-950 dark:text-white focus:outline-none focus:border-indigo-500 text-sm transition-colors"
-            />
-          </div>
-          <div className="flex gap-3 justify-end pt-2 border-t border-slate-100 dark:border-slate-800">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setIsShareModalOpen(false)}
-              type="button"
-            >
-              Cancel
-            </Button>
-            <Button
-              variant="primary"
-              size="sm"
-              type="submit"
-              disabled={isSharing}
-              className="flex items-center gap-1.5 bg-indigo-600 hover:bg-indigo-500 text-white font-bold"
-            >
-              {isSharing ? (
-                <div className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-              ) : (
-                <Send className="w-3.5 h-3.5" />
-              )}
-              <span>Send Email</span>
-            </Button>
-          </div>
-        </form>
-      </Modal>
+        prescription={normalizedResult?.prescriptionId || null}
+      />
+
+      {/* Reusable Download Modal */}
+      <DownloadModal
+        isOpen={isDownloadModalOpen}
+        onClose={() => setIsDownloadModalOpen(false)}
+        prescriptions={normalizedResult ? {
+          id: normalizedResult.prescriptionId,
+          doctor: normalizedResult.docName,
+          date: normalizedResult.date,
+          medicines: normalizedResult.medications
+        } : []}
+      />
     </div>
   );
 }
