@@ -17,6 +17,8 @@ import {
 import { prescriptionService } from '../../../services/prescriptionService';
 import { shareService } from '../../../services/shareService';
 import { getFriendlyErrorMessage } from '../../../utils/errorMessages';
+import DownloadModal from '../components/DownloadModal';
+import ShareModal from '../components/ShareModal';
 
 export default function HistoryPage() {
   const user = useAuthStore((state) => state.user);
@@ -34,14 +36,10 @@ export default function HistoryPage() {
   const [itemsPerPage, setItemsPerPage] = useState(4);
   const [activeMenuId, setActiveMenuId] = useState(null);
 
-  // Bulk / Share / Expiry State
+  // Bulk / Share / Download / Expiry State
   const [selectedIds, setSelectedIds] = useState([]);
   const [shareData, setShareData] = useState(null); // null or { type: 'single' | 'bulk', ids: [...] }
-  const [recipientEmail, setRecipientEmail] = useState('');
-  const [isSharing, setIsSharing] = useState(false);
-  const [shareLinkCopied, setShareLinkCopied] = useState(false);
-  const [generatedShareToken, setGeneratedShareToken] = useState(null);
-  const [isExporting, setIsExporting] = useState(false);
+  const [downloadData, setDownloadData] = useState(null); // null or prescription object or array of objects/IDs
 
   const fetchPrescriptions = async () => {
     setIsLoading(true);
@@ -84,7 +82,7 @@ export default function HistoryPage() {
     const ocrMatch = Math.round(avgConfidence * 100) + '%';
 
     const imageObject = item.prescription_images || item.prescription_image || {};
-    const originalUrl = imageObject.original_image_url || 'https://lh3.googleusercontent.com/aida-public/AB6AXuBDxQMub5mJyvN_Cs0E38s9xswudAcqO5X1pfkR06mQ9H4cANALe-RShm66y8uZrtbGXITAnGU97gPcBG1HxPMouEpayXk9lS22aks08N7qc7YlAHbY-EvpD3oNl4In5MZ2NyErdZsiluw6XQInHb8yI7WwG9iwPRHJ53GA0uiY7rjQrckh6NpKndXo1NcYuzwLkVt6b9_qycEBm2s1OqplznGTFBvEM-BanNk-3yg9r5V04hqDvsjQmXGhkPhJBH2VpyjGKxj35ek';
+    const originalUrl = imageObject.original_image_url || null;
 
     return {
       id: pId,
@@ -139,90 +137,15 @@ export default function HistoryPage() {
   const startIndex = (currentPage - 1) * itemsPerPage;
   const paginatedItems = filteredHistory.slice(startIndex, startIndex + itemsPerPage);
 
-  const handleDownload = async (id) => {
-    setIsExporting(true);
-    showToast(`Generating PDF audit report...`, 'info');
-    try {
-      const blob = await prescriptionService.exportPDF(id);
-      const url = window.URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.setAttribute('download', `prescription_report_${id}.pdf`);
-      document.body.appendChild(link);
-      link.click();
-      link.parentNode.removeChild(link);
-      showToast(`Successfully downloaded prescription report!`, 'success');
-
-      // Re-fetch action log to reflect download
-      fetchPrescriptions();
-    } catch (error) {
-      console.warn('Backend PDF generation failed, falling back to frontend generation', error);
-      showToast('Backend PDF failed, generating fallback printable view...', 'warning');
-      try {
-        const p = prescriptions.find(item => item.prescription_id === id);
-        if (!p) throw new Error('Prescription details not found for frontend generation');
-        const printWindow = window.open('', '_blank');
-        const itemsHtml = (p.prescription_items || []).map(i => `<tr><td>${i.medicine_name}</td><td>${i.validation_status ?? 'Unknown'}</td></tr>`).join('');
-        printWindow.document.write(`
-          <html>
-            <head>
-              <title>Prescription #${id}</title>
-              <style>
-                body { font-family: sans-serif; padding: 20px; }
-                table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-                th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
-                th { background-color: #f4f4f4; }
-              </style>
-            </head>
-            <body>
-              <h2>Prescription #${id}</h2>
-              <p><strong>Doctor:</strong> ${p.doctor_name || 'AI Extraction Pipeline'}</p>
-              <p><strong>Date:</strong> ${new Date(p.created_at || Date.now()).toLocaleDateString()}</p>
-              <table>
-                <thead><tr><th>Medicine</th><th>Status</th></tr></thead>
-                <tbody>${itemsHtml || '<tr><td colspan="2">No medicines</td></tr>'}</tbody>
-              </table>
-              <script>window.onload = function() { window.print(); window.close(); }</script>
-            </body>
-          </html>
-        `);
-        printWindow.document.close();
-      } catch (fallbackError) {
-        console.error(fallbackError);
-        const friendlyMsg = getFriendlyErrorMessage(error, 'Failed to download prescription PDF.');
-        showToast(friendlyMsg, 'error');
-      }
-    } finally {
-      setIsExporting(false);
-    }
+  const handleDownload = (id) => {
+    const target = normalizedPrescriptions.find(p => p.id === id) || { id };
+    setDownloadData(target);
   };
 
-  const handleDownloadMultiple = async () => {
+  const handleDownloadMultiple = () => {
     if (selectedIds.length === 0) return;
-    setIsExporting(true);
-    const count = selectedIds.length;
-    showToast(`Generating combined PDF for ${count} prescriptions...`, 'info');
-    try {
-      const blob = await prescriptionService.exportMultiplePDF(selectedIds);
-      const url = window.URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.setAttribute('download', `combined_prescription_reports.pdf`);
-      document.body.appendChild(link);
-      link.click();
-      link.parentNode.removeChild(link);
-      showToast(`Successfully exported ${count} prescriptions to PDF!`, 'success');
-      setSelectedIds([]);
-
-      // Re-fetch action log to reflect bulk export
-      fetchPrescriptions();
-    } catch (error) {
-      console.error(error);
-      const friendlyMsg = getFriendlyErrorMessage(error, 'Failed to export bulk prescriptions PDF.');
-      showToast(friendlyMsg, 'error');
-    } finally {
-      setIsExporting(false);
-    }
+    const targets = selectedIds.map(id => normalizedPrescriptions.find(p => p.id === id) || { id });
+    setDownloadData(targets);
   };
 
   const handleDelete = async (id) => {
@@ -235,29 +158,6 @@ export default function HistoryPage() {
       console.error(error);
       const friendlyMsg = getFriendlyErrorMessage(error, 'Failed to delete prescription.');
       showToast(friendlyMsg, 'error');
-    }
-  };
-
-  const handleShareSubmit = async (e) => {
-    e.preventDefault();
-    if (!recipientEmail) return;
-    setIsSharing(true);
-    try {
-      const mainId = shareData.ids[0];
-      const result = await shareService.sharePrescription(mainId, recipientEmail);
-      const token = result.share_token || result.token;
-
-      setGeneratedShareToken(token);
-      showToast(`Prescription report successfully emailed to ${recipientEmail}!`, 'success');
-
-      // Re-fetch action log to reflect share
-      fetchPrescriptions();
-    } catch (error) {
-      console.error(error);
-      const friendlyMsg = getFriendlyErrorMessage(error, 'Failed to share prescription.');
-      showToast(friendlyMsg, 'error');
-    } finally {
-      setIsSharing(false);
     }
   };
 
@@ -779,102 +679,28 @@ export default function HistoryPage() {
         )}
       </AnimatePresence>
 
-      {/* Share Prescription Modal */}
-      <Modal
+      {/* Reusable Share Prescription Modal */}
+      <ShareModal
         isOpen={!!shareData}
-        onClose={() => {
-          setShareData(null);
-          setGeneratedShareToken(null);
-          setRecipientEmail('');
+        onClose={() => setShareData(null)}
+        prescription={shareData?.ids || null}
+        onSuccess={() => {
+          fetchPrescriptions();
         }}
-        title="Share Prescription Report"
-      >
-        {!generatedShareToken ? (
-          <form onSubmit={handleShareSubmit} className="flex flex-col gap-4 font-sans text-left">
-            <p className="text-xs text-slate-500 leading-relaxed">
-              We will generate a secure access token and email the medical audit details (including a PDF copy) directly to the recipient address below.
-            </p>
-            <div className="flex flex-col gap-1.5">
-              <label className="text-[11px] font-bold uppercase text-slate-400">Recipient Email Address</label>
-              <input
-                type="email"
-                placeholder="doctor@hospital.com"
-                value={recipientEmail}
-                onChange={(e) => setRecipientEmail(e.target.value)}
-                required
-                className="p-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-slate-950 dark:text-white focus:outline-none focus:border-indigo-500 text-sm transition-colors"
-              />
-            </div>
-            <div className="flex gap-3 justify-end pt-2 border-t border-slate-100 dark:border-slate-800">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setShareData(null)}
-                type="button"
-              >
-                Cancel
-              </Button>
-              <Button
-                variant="primary"
-                size="sm"
-                type="submit"
-                disabled={isSharing}
-                className="flex items-center gap-1.5 bg-indigo-600 hover:bg-indigo-500 text-white font-bold"
-              >
-                {isSharing ? (
-                  <div className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                ) : (
-                  <Send className="w-3.5 h-3.5" />
-                )}
-                <span>Email Report</span>
-              </Button>
-            </div>
-          </form>
-        ) : (
-          <div className="flex flex-col gap-4 text-left font-sans">
-            <div className="p-3 bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 rounded-xl text-xs flex items-center gap-2">
-              <span className="material-symbols-outlined text-[16px]">check_circle</span>
-              <span>Secure sharing record established successfully!</span>
-            </div>
-            <div className="bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl p-3">
-              <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Public Share Link</span>
-              <div className="flex items-center justify-between gap-2">
-                <span className="text-xs text-slate-700 dark:text-slate-350 truncate font-mono select-all">
-                  {`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/api/v1/share/share/${generatedShareToken}`}
-                </span>
-                <button
-                  onClick={() => {
-                    const link = `${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/api/v1/share/share/${generatedShareToken}`;
-                    navigator.clipboard.writeText(link);
-                    setShareLinkCopied(true);
-                    showToast('Link copied to clipboard!', 'success');
-                    setTimeout(() => setShareLinkCopied(false), 2000);
-                  }}
-                  className="p-1.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg text-slate-600 hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer shrink-0"
-                >
-                  {shareLinkCopied ? <Check className="w-3.5 h-3.5 text-emerald-500" /> : <Clipboard className="w-3.5 h-3.5" />}
-                </button>
-              </div>
-            </div>
-            <p className="text-[10px] text-slate-500 leading-normal">
-              Any person with this link will be able to retrieve the clinical prescription items directly from our database.
-            </p>
-            <div className="flex justify-end pt-2 border-t border-slate-100 dark:border-slate-800">
-              <Button
-                variant="primary"
-                size="sm"
-                onClick={() => {
-                  setShareData(null);
-                  setGeneratedShareToken(null);
-                  setRecipientEmail('');
-                }}
-              >
-                Close
-              </Button>
-            </div>
-          </div>
-        )}
-      </Modal>
+      />
+
+      {/* Reusable Download Prescription Modal */}
+      <DownloadModal
+        isOpen={!!downloadData}
+        onClose={() => setDownloadData(null)}
+        prescriptions={downloadData || []}
+        onSuccess={() => {
+          if (Array.isArray(downloadData) && downloadData.length > 1) {
+            setSelectedIds([]);
+          }
+          fetchPrescriptions();
+        }}
+      />
     </div>
   );
 }
