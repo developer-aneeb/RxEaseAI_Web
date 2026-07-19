@@ -340,7 +340,7 @@ export default function ResultPage() {
             <div className="lg:col-span-5 flex flex-col gap-6">
 
               {/* Prescription Preview Card */}
-              <Card variant="glass" className="p-5 rounded-3xl border border-slate-200 dark:border-slate-800 bg-white/70 dark:bg-slate-900/60 flex flex-col gap-4 relative overflow-hidden group">
+              {/* <Card variant="glass" className="p-5 rounded-3xl border border-slate-200 dark:border-slate-800 bg-white/70 dark:bg-slate-900/60 flex flex-col gap-4 relative overflow-hidden group">
                 <div className="flex justify-between items-center">
                   <div>
                     <h3 className="text-sm font-bold text-slate-900 dark:text-white">Original Document</h3>
@@ -365,7 +365,7 @@ export default function ResultPage() {
                     <img className="w-full h-full object-contain" src={currentPrescription} alt="Original Prescription Document" />
                   )}
                 </div>
-              </Card>
+              </Card> */}
 
               {/* Intelligence Summary */}
               <Card variant="glass" className="p-5 rounded-3xl border border-slate-200 dark:border-slate-800 bg-white/70 dark:bg-slate-900/60 flex flex-col gap-6 relative overflow-hidden">
