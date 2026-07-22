@@ -90,9 +90,13 @@ export default function RecommendationPage() {
     setIsGenerating(true);
     showToast('AI is auditing drug database for affordable generics...', 'info');
     try {
-      await recommendationService.generateAll(selectedPrescriptionId);
+      const response = await recommendationService.generateAll(selectedPrescriptionId);
       showToast('AI Smart Recommendations generated successfully!', 'success');
-      loadPrescriptionRecommendations(selectedPrescriptionId);
+      if (response && Array.isArray(response.results) && response.results.length > 0) {
+        setRecommendations(response.results);
+      } else {
+        loadPrescriptionRecommendations(selectedPrescriptionId);
+      }
     } catch (error) {
       console.error(error);
       const friendlyMsg = getFriendlyErrorMessage(error, 'Failed to generate recommendations.');
@@ -259,87 +263,167 @@ export default function RecommendationPage() {
               </div>
             ) : recommendations.length > 0 ? (
               <div className="flex flex-col gap-6">
-                {recommendations.map((recItem, idx) => (
-                  <Card key={idx} variant="glass" className="p-6 border border-slate-200 dark:border-slate-800 bg-white/70 dark:bg-slate-900/60 backdrop-blur-md flex flex-col gap-5">
-                    {/* Prescription Item Info Header */}
-                    <div className="flex justify-between items-start border-b border-slate-200/50 dark:border-slate-800/80 pb-4">
-                      <div>
-                        <span className="text-[9px] font-bold text-slate-450 uppercase tracking-wider">Prescribed Medicine</span>
-                        <h3 className="text-base font-extrabold text-slate-900 dark:text-white mt-0.5">{recItem.medicine_name}</h3>
-                        <p className="text-xs text-slate-500 mt-1">Confidence Match: {Math.round((recItem.validation?.validation_confidence || 0.8) * 100)}% ({recItem.validation?.level || 'Confirmed'})</p>
-                      </div>
-                      <div className="text-right">
-                        <span className="text-[9px] font-bold text-slate-450 uppercase tracking-wider block">Estimated Price</span>
-                        <span className="text-sm font-bold text-slate-700 dark:text-slate-350 line-through">
-                          {recItem.original?.price?.total_price ? `Rs. ${recItem.original.price.total_price}` : 'Pricing unavailable'}
-                        </span>
-                      </div>
-                    </div>
+                {recommendations.map((recItem, idx) => {
+                  const originalUnitPrice = Number(recItem.original?.unit_price ?? recItem.original?.price?.unit_price ?? recItem.recommendations?.[0]?.original_unit_price);
+                  const originalTotalPrice = Number(recItem.original?.total_price ?? recItem.original?.price?.total_price);
+                  const matchConfidence = Math.round(Number(recItem.validation?.validation_confidence ?? recItem.original_validation?.validation_confidence ?? 0.85) * 100);
+                  const level = recItem.validation?.level ?? recItem.original_validation?.level ?? (matchConfidence >= 90 ? 'confirmed' : matchConfidence >= 60 ? 'likely' : 'uncertain');
+                  const matchType = recItem.validation?.match_type ?? recItem.original_validation?.match_type ?? 'exact';
+                  const medicineName = recItem.medicine_name || recItem.original?.name || 'Prescribed Medicine';
 
-                    {/* Recommendation items list */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      {recItem.recommendations && recItem.recommendations.length > 0 ? (
-                        recItem.recommendations.map((alt, altIdx) => {
-                          const savingsPercent = recItem.original?.price?.total_price && alt.price?.total_price
-                            ? Math.round(((recItem.original.price.total_price - alt.price.total_price) / recItem.original.price.total_price) * 100)
-                            : 0;
-
-                          return (
-                            <Card
-                              key={altIdx}
-                              variant="glass"
-                              className="p-5 flex flex-col gap-4 border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/20 hover:border-emerald-500/20 relative overflow-hidden"
-                            >
-                              {altIdx === 0 && savingsPercent > 0 && (
-                                <div className="absolute top-0 right-0 bg-gradient-to-r from-emerald-500 to-teal-500 text-white px-3 py-1 rounded-bl-2xl text-[9px] font-black tracking-wider uppercase shadow-sm">
-                                  Best Savings
-                                </div>
+                  return (
+                    <Card key={idx} variant="glass" className="p-6 border border-slate-200 dark:border-slate-800 bg-white/70 dark:bg-slate-900/60 backdrop-blur-md flex flex-col gap-5">
+                      {/* Prescription Item Info Header */}
+                      <div className="flex justify-between items-start border-b border-slate-200/50 dark:border-slate-800/80 pb-4 gap-4 flex-wrap">
+                        <div>
+                          <div className="flex items-center gap-2">
+                            <span className="text-[9px] font-bold text-slate-450 uppercase tracking-wider">Prescribed Medicine</span>
+                            <Badge variant={level === 'confirmed' ? 'primary' : 'outline'} className="text-[9px] px-1.5 py-0.2">
+                              {matchType.toUpperCase()} MATCH
+                            </Badge>
+                          </div>
+                          <h3 className="text-base font-extrabold text-slate-900 dark:text-white mt-0.5">{medicineName}</h3>
+                          <p className="text-xs text-slate-500 mt-1">
+                            Validation Confidence: <span className="font-bold text-slate-700 dark:text-slate-300">{matchConfidence}%</span> ({level})
+                          </p>
+                          {recItem.raw_text && recItem.raw_text.toLowerCase() !== medicineName.toLowerCase() && (
+                            <p className="text-[10px] text-slate-400 font-mono mt-1 truncate">Original OCR: &ldquo;{recItem.raw_text}&rdquo;</p>
+                          )}
+                        </div>
+                        <div className="text-right">
+                          <span className="text-[9px] font-bold text-slate-450 uppercase tracking-wider block">Prescribed Brand Pricing</span>
+                          {Number.isFinite(originalUnitPrice) && originalUnitPrice > 0 ? (
+                            <div>
+                              <span className="text-base font-extrabold text-slate-900 dark:text-white">Rs. {originalUnitPrice.toFixed(2)}</span>
+                              <span className="text-xs text-slate-500"> / unit</span>
+                              {Number.isFinite(originalTotalPrice) && originalTotalPrice > 0 && (
+                                <span className="text-[10px] text-slate-400 block">Est. total: Rs. {originalTotalPrice}</span>
                               )}
+                            </div>
+                          ) : Number.isFinite(originalTotalPrice) && originalTotalPrice > 0 ? (
+                            <span className="text-base font-extrabold text-slate-900 dark:text-white">Rs. {originalTotalPrice} <span className="text-xs font-normal text-slate-500">total</span></span>
+                          ) : (
+                            <span className="text-xs font-bold text-slate-400 italic">Pricing N/A</span>
+                          )}
+                        </div>
+                      </div>
 
-                              <div className="flex justify-between items-start pr-12">
-                                <div>
-                                  <h4 className="text-sm font-bold text-slate-800 dark:text-slate-100">{alt.name}</h4>
-                                  <p className="text-[10px] text-slate-500 mt-0.5">{alt.brands?.name || 'Generic Alternative'}</p>
-                                </div>
-                                <div className="text-right">
-                                  <div className="text-xs font-bold text-slate-800 dark:text-slate-200">
-                                    {alt.price?.total_price ? `Rs. ${alt.price.total_price}` : 'Price unavailable'}
+                      {/* Recommendation items list */}
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        {recItem.recommendations && recItem.recommendations.length > 0 ? (
+                          recItem.recommendations.map((alt, altIdx) => {
+                            const name = alt.recommended_medicine?.name || alt.name || alt.recommended_medicine_name || 'Generic Alternative';
+                            const brand = alt.recommended_medicine?.brands?.name || alt.brand || 'Generic Pharmaceutical';
+                            const strength = alt.recommended_medicine?.composition?.strength || alt.strength || '';
+                            const unitPrice = Number(alt.recommended_unit_price ?? alt.unit_price ?? alt.recommended_medicine?.price?.unit_price);
+                            const totalPrice = Number(alt.total_price ?? alt.recommended_medicine?.price?.total_price);
+                            const savingPercent = Number(
+                              alt.price_saving_percent ??
+                              (Number.isFinite(originalUnitPrice) && Number.isFinite(unitPrice) && originalUnitPrice > 0
+                                ? ((originalUnitPrice - unitPrice) / originalUnitPrice) * 100
+                                : 0)
+                            );
+                            const recScore = Number(alt.recommendation_score ?? alt.affordability_score ?? 0);
+                            const matchScore = Number(alt.match_score ?? 0);
+                            const confidence = Number(alt.confidence ?? 0);
+                            const rank = alt.rank || altIdx + 1;
+                            const reason = alt.reason || 'verified generic alternative with lower unit price';
+
+                            return (
+                              <Card
+                                key={altIdx}
+                                variant="glass"
+                                className="p-5 flex flex-col justify-between gap-4 border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/20 hover:border-emerald-500/40 transition-all relative overflow-hidden shadow-sm"
+                              >
+                                {(rank === 1 || (altIdx === 0 && savingPercent > 0)) && (
+                                  <div className="absolute top-0 right-0 bg-gradient-to-r from-emerald-500 to-teal-500 text-white px-3 py-1 rounded-bl-2xl text-[9px] font-black tracking-wider uppercase shadow-sm z-10">
+                                    #{rank} Best Savings
                                   </div>
-                                  {savingsPercent > 0 && (
-                                    <div className="text-[8px] font-bold text-emerald-600 bg-emerald-500/10 px-1 rounded mt-0.5 inline-block">
-                                      -{savingsPercent}% Savings
+                                )}
+
+                                <div className="flex justify-between items-start gap-3 pr-20">
+                                  <div>
+                                    <div className="flex items-center gap-1.5 mb-1">
+                                      <span className="text-[10px] font-black bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 px-1.5 py-0.5 rounded border border-indigo-500/20">
+                                        Rank #{rank}
+                                      </span>
+                                      {strength && (
+                                        <span className="text-[10px] font-semibold text-slate-500 bg-slate-200/60 dark:bg-slate-800/60 px-1.5 py-0.5 rounded">
+                                          {strength}
+                                        </span>
+                                      )}
+                                    </div>
+                                    <h4 className="text-sm font-bold text-slate-900 dark:text-slate-100 leading-snug">{name}</h4>
+                                    <p className="text-[11px] text-slate-500 font-medium mt-0.5">{brand}</p>
+                                  </div>
+                                  <div className="text-right shrink-0">
+                                    {Number.isFinite(unitPrice) && unitPrice > 0 ? (
+                                      <div>
+                                        <span className="text-sm font-black text-slate-900 dark:text-white">Rs. {unitPrice.toFixed(2)}</span>
+                                        <span className="text-[10px] text-slate-500"> / unit</span>
+                                        {Number.isFinite(totalPrice) && totalPrice > 0 && (
+                                          <div className="text-[10px] text-slate-400">Rs. {totalPrice} total</div>
+                                        )}
+                                      </div>
+                                    ) : Number.isFinite(totalPrice) && totalPrice > 0 ? (
+                                      <div className="text-sm font-black text-slate-900 dark:text-white">Rs. {totalPrice}</div>
+                                    ) : (
+                                      <div className="text-xs font-bold text-slate-400">Pricing N/A</div>
+                                    )}
+                                    {savingPercent > 0 && (
+                                      <div className="text-[9px] font-extrabold text-emerald-600 dark:text-emerald-400 bg-emerald-500/15 border border-emerald-500/20 px-1.5 py-0.5 rounded mt-1 inline-block">
+                                        -{Math.round(savingPercent)}% Savings
+                                      </div>
+                                    )}
+                                  </div>
+                                </div>
+
+                                {/* Scoring & clinical justification */}
+                                <div className="bg-white/70 dark:bg-slate-900/70 rounded-xl p-2.5 border border-slate-200/60 dark:border-slate-800/60 flex flex-col gap-1.5">
+                                  <div className="flex items-center justify-between text-[10px]">
+                                    <span className="font-bold text-slate-600 dark:text-slate-400">Why recommended:</span>
+                                    {recScore > 0 && (
+                                      <span className="font-extrabold text-indigo-600 dark:text-indigo-400">
+                                        Score: {Math.round(recScore * 100)}%
+                                      </span>
+                                    )}
+                                  </div>
+                                  <p className="text-[11px] text-slate-700 dark:text-slate-300 leading-relaxed font-sans">{reason}</p>
+                                  {(matchScore > 0 || confidence > 0) && (
+                                    <div className="flex gap-3 text-[9px] text-slate-400 pt-1 border-t border-slate-100 dark:border-slate-800">
+                                      {matchScore > 0 && <span>Formulation Match: {Math.round(matchScore * 100)}%</span>}
+                                      {confidence > 0 && <span>AI Confidence: {Math.round(confidence * 100)}%</span>}
                                     </div>
                                   )}
                                 </div>
-                              </div>
 
-                              <div className="pt-2 flex items-center justify-between border-t border-slate-200/50 dark:border-slate-800/80">
-                                <div className="flex items-center gap-1">
-                                  <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
-                                  <span className="text-xs font-bold text-slate-800 dark:text-slate-200">4.8</span>
-                                  <span className="text-[10px] text-slate-400">(drap verified)</span>
+                                <div className="pt-2 flex items-center justify-between border-t border-slate-200/50 dark:border-slate-800/80">
+                                  <div className="flex items-center gap-1 text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold">
+                                    <CheckCircle className="w-3.5 h-3.5" />
+                                    <span>DRAP Registered & Verified</span>
+                                  </div>
+
+                                  <button
+                                    onClick={() => setRatingModalMed({ ...alt, name, brand })}
+                                    className="text-[10px] font-bold text-primary hover:underline flex items-center gap-1 cursor-pointer border-0 bg-transparent"
+                                  >
+                                    <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
+                                    <span>Rate Efficacy</span>
+                                  </button>
                                 </div>
-
-                                <button
-                                  onClick={() => setRatingModalMed(alt)}
-                                  className="text-[10px] font-bold text-primary hover:underline flex items-center gap-0.5 cursor-pointer border-0 bg-transparent"
-                                >
-                                  <Star className="w-3.5 h-3.5" />
-                                  <span>Efficacy Rating</span>
-                                </button>
-                              </div>
-                            </Card>
-                          );
-                        })
-                      ) : (
-                        <div className="col-span-2 py-6 text-center text-xs text-slate-500 bg-slate-100/50 dark:bg-slate-950/20 border border-slate-200/50 dark:border-slate-850/80 rounded-2xl flex items-center justify-center gap-2">
-                          <AlertTriangle className="w-4 h-4 text-amber-500" />
-                          <span>No cheaper alternative generic brands matching this item's formulation.</span>
-                        </div>
-                      )}
-                    </div>
-                  </Card>
-                ))}
+                              </Card>
+                            );
+                          })
+                        ) : (
+                          <div className="col-span-2 py-6 text-center text-xs text-slate-500 bg-slate-100/50 dark:bg-slate-950/20 border border-slate-200/50 dark:border-slate-850/80 rounded-2xl flex items-center justify-center gap-2">
+                            <AlertTriangle className="w-4 h-4 text-amber-500" />
+                            <span>No cheaper alternative generic brands matching this item&apos;s formulation.</span>
+                          </div>
+                        )}
+                      </div>
+                    </Card>
+                  );
+                })}
               </div>
             ) : (
               <div className="py-16 text-center text-slate-450 bg-white/70 dark:bg-slate-900/60 rounded-3xl border border-slate-200 dark:border-slate-800 flex flex-col items-center justify-center gap-2.5 shadow-sm">
