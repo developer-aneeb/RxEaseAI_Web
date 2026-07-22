@@ -126,4 +126,32 @@ export const authService = {
     const response = await apiClient.post('/auth/reactivate', { email, password });
     return response.data;
   },
+
+  // ── Two-Factor Authentication (2FA) ──
+
+  async get2FAStatus() {
+    const response = await apiClient.get('/auth/2fa/status');
+    return response.data;
+  },
+
+  async setup2FA() {
+    const response = await apiClient.post('/auth/2fa/setup');
+    return response.data;
+  },
+
+  async verify2FA(code) {
+    const response = await apiClient.post('/auth/2fa/verify', { code });
+    return response.data;
+  },
+
+  async disable2FA(data = {}) {
+    const response = await apiClient.post('/auth/2fa/disable', data);
+    return response.data;
+  },
+
+  async regenerateBackupCodes() {
+    const response = await apiClient.post('/auth/2fa/regenerate-backup-codes');
+    return response.data;
+  },
 };
+
