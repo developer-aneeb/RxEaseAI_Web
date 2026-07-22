@@ -34,7 +34,7 @@ export default function FaqSection() {
   const [faqOpenIndex, setFaqOpenIndex] = useState(0);
 
   return (
-    <Card id="faq-card" variant="glass" className="p-6 bg-white/70 dark:bg-slate-900/80 text-left border border-slate-200 dark:border-slate-800 shadow-md">
+    <Card id="faqs-card" variant="glass" className="p-6 bg-white/70 dark:bg-slate-900/80 text-left border border-slate-200 dark:border-slate-800 shadow-md">
       <div className="flex items-center gap-2 mb-6 border-b border-slate-100 dark:border-slate-800 pb-3">
         <HelpCircle className="w-5 h-5 text-primary" />
         <h3 className="text-sm font-bold text-slate-800 dark:text-white">Frequently Asked Questions</h3>
