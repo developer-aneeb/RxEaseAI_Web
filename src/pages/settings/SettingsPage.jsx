@@ -8,8 +8,9 @@ import Input from '../../components/ui/Input';
 import Spinner from '../../components/ui/Spinner';
 import { useForm } from 'react-hook-form';
 import { profileService } from '../../services/profileService';
+import { authService } from '../../services/authService';
 import { getFriendlyErrorMessage } from '../../utils/errorMessages';
-import { Bell, KeyRound } from 'lucide-react';
+import { Bell, KeyRound, ShieldCheck, Smartphone, AlertTriangle, RefreshCw, CheckCircle2 } from 'lucide-react';
 
 import FaqSection from './FaqSection';
 import FeedbackSection from './FeedbackSection';
@@ -56,6 +57,15 @@ export default function SettingsPage() {
     }
   });
 
+  // 2FA states
+  const [is2FAEnabled, setIs2FAEnabled] = useState(false);
+  const [is2FALoading, setIs2FALoading] = useState(false);
+  const [setupStep, setSetupStep] = useState(null); // null | 'setup' | 'backup_codes'
+  const [qrData, setQrData] = useState(null);
+  const [otpCodeInput, setOtpCodeInput] = useState('');
+  const [backupCodes, setBackupCodes] = useState([]);
+  const [isDeactivating, setIsDeactivating] = useState(false);
+
   const fetchProfileInfo = async () => {
     setIsLoading(true);
     try {
@@ -75,6 +85,14 @@ export default function SettingsPage() {
       // Fetch Notification Settings
       setEmailEnabled(profile.notification_preferences?.email_notifications ?? true);
       setPushEnabled(profile.notification_preferences?.security_alerts ?? true);
+
+      // Fetch 2FA status
+      try {
+        const twoFaRes = await authService.get2FAStatus();
+        setIs2FAEnabled(Boolean(twoFaRes?.data?.enabled || twoFaRes?.enabled || profile.is_2fa_enabled));
+      } catch (err) {
+        console.warn('2FA status check fallback:', err);
+      }
     } catch (error) {
       console.error(error);
       showToast('Failed to retrieve profile data from servers.', 'error');
@@ -127,6 +145,103 @@ export default function SettingsPage() {
       showToast(friendlyMsg, 'error');
     } finally {
       setIsUpdatingEmail(false);
+    }
+  };
+
+  // ── 2FA Handlers ──
+  const handleSetup2FA = async () => {
+    setIs2FALoading(true);
+    try {
+      const res = await authService.setup2FA();
+      if (res?.data || res?.secret || res?.qrCode) {
+        setQrData(res.data || res);
+        setSetupStep('setup');
+      } else {
+        showToast('2FA setup initiated. Check your authenticator app.', 'info');
+      }
+    } catch (err) {
+      console.error(err);
+      showToast('Failed to start 2FA setup. Make sure your account is verified.', 'error');
+    } finally {
+      setIs2FALoading(false);
+    }
+  };
+
+  const handleVerify2FA = async () => {
+    if (!otpCodeInput.trim()) {
+      showToast('Please enter the 6-digit code from your authenticator app.', 'warning');
+      return;
+    }
+    setIs2FALoading(true);
+    try {
+      const res = await authService.verify2FA(otpCodeInput.trim());
+      setIs2FAEnabled(true);
+      setSetupStep(null);
+      setOtpCodeInput('');
+      if (res?.data?.backupCodes || res?.backupCodes) {
+        setBackupCodes(res?.data?.backupCodes || res?.backupCodes || []);
+        setSetupStep('backup_codes');
+      }
+      showToast('Two-Factor Authentication verified and enabled!', 'success');
+    } catch (err) {
+      console.error(err);
+      showToast('Invalid verification code. Please try again.', 'error');
+    } finally {
+      setIs2FALoading(false);
+    }
+  };
+
+  const handleDisable2FA = async () => {
+    if (!window.confirm('Are you sure you want to disable Two-Factor Authentication? This decreases your account security.')) {
+      return;
+    }
+    setIs2FALoading(true);
+    try {
+      await authService.disable2FA();
+      setIs2FAEnabled(false);
+      showToast('Two-Factor Authentication disabled.', 'success');
+    } catch (err) {
+      console.error(err);
+      showToast('Failed to disable 2FA.', 'error');
+    } finally {
+      setIs2FALoading(false);
+    }
+  };
+
+  const handleRegenerateBackupCodes = async () => {
+    setIs2FALoading(true);
+    try {
+      const res = await authService.regenerateBackupCodes();
+      const codes = res?.data?.backupCodes || res?.backupCodes || [];
+      if (codes.length > 0) {
+        setBackupCodes(codes);
+        setSetupStep('backup_codes');
+        showToast('New backup codes generated successfully!', 'success');
+      } else {
+        showToast('Backup codes regenerated.', 'success');
+      }
+    } catch (err) {
+      console.error(err);
+      showToast('Failed to regenerate backup codes.', 'error');
+    } finally {
+      setIs2FALoading(false);
+    }
+  };
+
+  const handleAccountDeactivation = async () => {
+    if (!window.confirm('CRITICAL: Are you sure you want to deactivate your account? You will be logged out immediately.')) {
+      return;
+    }
+    setIsDeactivating(true);
+    try {
+      await authService.deactivateAccount();
+      showToast('Account deactivated successfully.', 'info');
+      logout();
+    } catch (err) {
+      console.error(err);
+      showToast('Failed to deactivate account.', 'error');
+    } finally {
+      setIsDeactivating(false);
     }
   };
 
@@ -195,11 +310,13 @@ export default function SettingsPage() {
                     <KeyRound className="w-5 h-5 text-primary" />
                     <div>
                       <h3 className="text-sm font-bold text-slate-800 dark:text-white">Security & Email Configuration</h3>
-                      <p className="text-[11px] text-slate-400 dark:text-slate-550">Update registered email (requires password confirmation)</p>
+                      <p className="text-[11px] text-slate-400 dark:text-slate-550">Update registered email address and manage multi-factor authentication</p>
                     </div>
                   </div>
 
-                  <form onSubmit={handleSecuritySubmit(onSecuritySave)} className="space-y-4">
+                  {/* Email Update Form */}
+                  <form onSubmit={handleSecuritySubmit(onSecuritySave)} className="space-y-4 mb-8">
+                    <h4 className="text-xs font-bold text-slate-800 dark:text-white uppercase tracking-wider">Change Email Address</h4>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <Input label="New Email Address" type="email" placeholder="new.email@hospital.com" error={securityErrors.newEmail?.message} {...registerSecurity('newEmail', { required: 'New email is required' })} />
                       <Input label="Current Password" type="password" placeholder="Confirm your password" error={securityErrors.currentPassword?.message} {...registerSecurity('currentPassword', { required: 'Password validation required' })} />
@@ -210,6 +327,165 @@ export default function SettingsPage() {
                       </Button>
                     </div>
                   </form>
+
+                  {/* Two-Factor Authentication (2FA) */}
+                  <div className="border-t border-slate-100 dark:border-slate-800 pt-6 space-y-4">
+                    <div className="flex justify-between items-start gap-4 flex-wrap">
+                      <div className="flex items-start gap-3">
+                        <div className="p-2.5 rounded-2xl bg-primary/10 text-primary mt-0.5">
+                          <Smartphone className="w-5 h-5" />
+                        </div>
+                        <div>
+                          <div className="flex items-center gap-2">
+                            <h4 className="text-xs font-extrabold text-slate-800 dark:text-white uppercase tracking-wider">Two-Factor Authentication (2FA)</h4>
+                            {is2FAEnabled ? (
+                              <span className="bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1">
+                                <CheckCircle2 className="w-3 h-3" /> Enabled
+                              </span>
+                            ) : (
+                              <span className="bg-slate-200 dark:bg-slate-800 text-slate-500 text-[10px] font-bold px-2 py-0.5 rounded-full">
+                                Disabled
+                              </span>
+                            )}
+                          </div>
+                          <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1">
+                            Add an extra layer of clinical security using TOTP apps (Google Authenticator, Authy).
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center gap-2">
+                        {is2FAEnabled ? (
+                          <>
+                            <Button
+                              type="button"
+                              onClick={handleRegenerateBackupCodes}
+                              disabled={is2FALoading}
+                              variant="outline"
+                              className="px-4 py-2 rounded-xl text-xs font-bold border-slate-200 dark:border-slate-800 cursor-pointer flex items-center gap-1.5"
+                            >
+                              <RefreshCw className={`w-3.5 h-3.5 ${is2FALoading ? 'animate-spin' : ''}`} />
+                              <span>Backup Codes</span>
+                            </Button>
+                            <Button
+                              type="button"
+                              onClick={handleDisable2FA}
+                              disabled={is2FALoading}
+                              className="bg-rose-500/10 hover:bg-rose-500 text-rose-500 hover:text-white px-4 py-2 rounded-xl text-xs font-bold transition-colors cursor-pointer border-0"
+                            >
+                              {is2FALoading ? 'Disabling...' : 'Disable 2FA'}
+                            </Button>
+                          </>
+                        ) : (
+                          <Button
+                            type="button"
+                            onClick={handleSetup2FA}
+                            disabled={is2FALoading}
+                            variant="primary"
+                            className="bg-primary text-white font-bold px-5 py-2 rounded-xl text-xs cursor-pointer flex items-center gap-1.5"
+                          >
+                            <ShieldCheck className="w-4 h-4" />
+                            <span>{is2FALoading ? 'Starting...' : 'Enable 2FA'}</span>
+                          </Button>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* 2FA Setup Step Modal/Section */}
+                    {setupStep === 'setup' && qrData && (
+                      <div className="p-4 bg-slate-50 dark:bg-slate-950/50 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-4 mt-4 animate-fade-in">
+                        <h5 className="text-xs font-bold text-slate-800 dark:text-white">Step 1: Scan QR Code or enter Secret</h5>
+                        <div className="flex flex-col sm:flex-row items-center gap-4">
+                          {qrData.qrCode || qrData.qrCodeUrl ? (
+                            <img src={qrData.qrCode || qrData.qrCodeUrl} alt="2FA QR Code" className="w-36 h-36 bg-white p-2 rounded-xl shadow border border-slate-200" />
+                          ) : null}
+                          <div className="text-xs text-slate-600 dark:text-slate-300 space-y-2">
+                            <p>Scan the QR code with your authenticator app, or manually enter this secret key:</p>
+                            {qrData.secret && (
+                              <code className="bg-slate-200 dark:bg-slate-900 px-3 py-1.5 rounded-lg text-primary font-mono font-bold block w-fit">
+                                {qrData.secret}
+                              </code>
+                            )}
+                          </div>
+                        </div>
+
+                        <div className="pt-3 border-t border-slate-200/50 dark:border-slate-800 space-y-3">
+                          <h5 className="text-xs font-bold text-slate-800 dark:text-white">Step 2: Enter 6-Digit Verification Code</h5>
+                          <div className="flex gap-3 items-center max-w-sm">
+                            <input
+                              type="text"
+                              maxLength="6"
+                              placeholder="e.g. 123456"
+                              value={otpCodeInput}
+                              onChange={(e) => setOtpCodeInput(e.target.value)}
+                              className="flex-1 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 text-sm text-center font-bold tracking-widest outline-none focus:border-primary"
+                            />
+                            <Button
+                              type="button"
+                              onClick={handleVerify2FA}
+                              disabled={is2FALoading}
+                              variant="primary"
+                              className="bg-primary text-white font-bold px-5 py-2 rounded-xl text-xs cursor-pointer"
+                            >
+                              {is2FALoading ? 'Verifying...' : 'Verify & Activate'}
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Backup Codes Modal/Section */}
+                    {setupStep === 'backup_codes' && backupCodes.length > 0 && (
+                      <div className="p-4 bg-amber-500/10 dark:bg-amber-500/5 rounded-2xl border border-amber-500/20 space-y-3 mt-4 animate-fade-in">
+                        <div className="flex items-center gap-2 text-amber-600 dark:text-amber-400 font-bold text-xs">
+                          <AlertTriangle className="w-4 h-4 shrink-0" />
+                          <span>Save Your Emergency Backup Codes</span>
+                        </div>
+                        <p className="text-[11px] text-slate-600 dark:text-slate-300">
+                          Store these single-use recovery codes in a secure vault. If you lose access to your phone, you can use one of these codes to sign in.
+                        </p>
+                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 py-2">
+                          {backupCodes.map((code, idx) => (
+                            <div key={idx} className="bg-white dark:bg-slate-900 px-2.5 py-1.5 rounded-lg border border-amber-500/20 text-center font-mono text-xs font-bold text-slate-800 dark:text-slate-200">
+                              {code}
+                            </div>
+                          ))}
+                        </div>
+                        <div className="flex justify-end">
+                          <Button
+                            type="button"
+                            onClick={() => setSetupStep(null)}
+                            variant="primary"
+                            className="bg-amber-600 hover:bg-amber-700 text-white font-bold px-4 py-1.5 rounded-xl text-xs cursor-pointer"
+                          >
+                            I've Saved My Codes
+                          </Button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Account Deactivation / Danger Zone */}
+                  <div className="border-t border-slate-100 dark:border-slate-800 pt-6 mt-6">
+                    <div className="flex justify-between items-center gap-4 flex-wrap p-4 bg-rose-500/5 dark:bg-rose-500/5 rounded-2xl border border-rose-500/20">
+                      <div>
+                        <h4 className="text-xs font-extrabold text-rose-600 dark:text-rose-400 uppercase tracking-wider flex items-center gap-1.5">
+                          <AlertTriangle className="w-4 h-4" /> Account Deactivation
+                        </h4>
+                        <p className="text-[11px] text-slate-600 dark:text-slate-400 mt-1">
+                          Temporarily disable your clinical workspace and revoke active API access tokens.
+                        </p>
+                      </div>
+                      <Button
+                        type="button"
+                        onClick={handleAccountDeactivation}
+                        disabled={isDeactivating}
+                        className="bg-rose-500 hover:bg-rose-600 text-white px-5 py-2 rounded-xl text-xs font-bold transition-colors cursor-pointer border-0 shrink-0"
+                      >
+                        {isDeactivating ? 'Deactivating...' : 'Deactivate Account'}
+                      </Button>
+                    </div>
+                  </div>
                 </Card>
 
                 {/* Notification preferences card */}
