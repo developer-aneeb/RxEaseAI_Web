@@ -1,8 +1,8 @@
-import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, Activity, ChevronRight, Sun, Moon, Bell } from 'lucide-react';
-import { useThemeStore } from '../../store/useThemeStore';
+import { AnimatePresence, motion } from 'framer-motion';
+import { Activity, Bell, Menu, Moon, Sun, X } from 'lucide-react';
+import { useEffect, useState } from 'react';
 import { useAuthStore } from '../../store/useAuthStore';
+import { useThemeStore } from '../../store/useThemeStore';
 import Button from '../ui/Button';
 
 export default function Navbar({ links }) {
@@ -58,7 +58,7 @@ export default function Navbar({ links }) {
                             <Activity className="w-5 h-5 text-white" />
                         </div>
                         <span className="font-bold text-xl tracking-tight bg-gradient-to-r from-slate-900 via-slate-800 to-slate-600 dark:from-white dark:via-slate-200 dark:to-slate-400 bg-clip-text text-transparent">
-                            RxEaseAI<span className="text-indigo-500">AI</span>
+                            RxEase<span className="text-indigo-500">AI</span>
                         </span>
                     </a>
                     {/* Desktop Nav Links */}
