@@ -38,12 +38,35 @@ export default function Navbar({ links }) {
     const defaultLinks = [
         { name: 'Features', href: '#features' },
         { name: 'Workflow', href: '#workflow' },
-        { name: 'Home', href: '#home' },
+        { name: 'Home', href: '#' },
         { name: 'Analytics', href: '#analytics' },
         { name: 'FAQ', href: '#faq' },
     ];
 
     const navLinks = links || defaultLinks;
+
+    const handleNavClick = (e, link) => {
+        if (link.onClick) {
+            link.onClick(e);
+        }
+        
+        // Prevent default to stop App.jsx from catching hash and resetting scroll to 0,0
+        if (link.href && link.href.startsWith('#') && !['#signin', '#signup', '#settings', '#notifications'].includes(link.href)) {
+            e.preventDefault();
+            
+            if (link.href === '#' || link.href === '#home') {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                window.history.pushState(null, '', '#');
+            } else {
+                const targetId = link.href.substring(1);
+                const element = document.getElementById(targetId);
+                if (element) {
+                    element.scrollIntoView({ behavior: 'smooth' });
+                    window.history.pushState(null, '', link.href);
+                }
+            }
+        }
+    };
 
     return (
         <nav
@@ -53,16 +76,11 @@ export default function Navbar({ links }) {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex items-center justify-between">
                     {/* Logo */}
-                    <a href="#" className="flex items-center gap-3 cursor-pointer group w-fit">
-                        <div className="relative flex items-center justify-center p-1.5 rounded-xl bg-white dark:bg-slate-900 shadow-sm border border-slate-200/60 dark:border-slate-800 group-hover:border-primary/50 transition-colors">
-                            <img src="/logo.png" alt="RxEaseAI Logo" className="h-10 w-auto object-contain" />
-                        </div>
+                    <a href="#" onClick={(e) => handleNavClick(e, { href: '#' })} className="flex items-center gap-3 cursor-pointer group w-fit">
+                        <img src="/logo.png" alt="RxEaseAI Logo" className="h-10 w-10 object-contain rounded-xl shadow-sm border border-slate-200 dark:border-slate-800" />
                         <span className="font-black text-xl tracking-tight text-slate-900 dark:text-white">
                             RxEase<span className="text-primary">AI</span>
                         </span>
-                        {/* <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/20">
-                            <Activity className="w-5 h-5 text-white" />
-                        </div> */}
                     </a>
                     {/* Desktop Nav Links */}
                     <div className="hidden md:flex items-center gap-8">
@@ -70,11 +88,7 @@ export default function Navbar({ links }) {
                             <a
                                 key={link.name}
                                 href={link.href}
-                                onClick={(e) => {
-                                    if (link.onClick) {
-                                        link.onClick(e);
-                                    }
-                                }}
+                                onClick={(e) => handleNavClick(e, link)}
                                 className="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-white transition-colors duration-200"
                             >
                                 {link.name}
@@ -196,9 +210,7 @@ export default function Navbar({ links }) {
                                     href={link.href}
                                     onClick={(e) => {
                                         setIsOpen(false);
-                                        if (link.onClick) {
-                                            link.onClick(e);
-                                        }
+                                        handleNavClick(e, link);
                                     }}
                                     className="block px-3 py-2.5 rounded-lg text-base font-medium text-slate-600 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-900/55 transition-colors"
                                 >
