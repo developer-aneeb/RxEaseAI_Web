@@ -82,11 +82,16 @@ export default function Navbar({ links }) {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex items-center justify-between">
                     {/* Logo */}
-                    <a href="#" onClick={(e) => handleNavClick(e, { href: '#' })} className="flex items-center gap-3 cursor-pointer group w-fit">
-                        <img src="/logo.png" alt="RxEaseAI Logo" className="h-10 w-10 object-contain rounded-xl shadow-sm border border-slate-200 dark:border-slate-800" />
+                    <a href="#" className="flex items-center gap-3 cursor-pointer group w-fit">
+                        <div className="relative flex items-center justify-center p-1.5 rounded-xl bg-white dark:bg-slate-900 shadow-sm border border-slate-200/60 dark:border-slate-800 group-hover:border-primary/50 transition-colors">
+                            <img src="/logo.png" alt="RxEaseAI Logo" className="h-10 w-auto object-contain" />
+                        </div>
                         <span className="font-black text-xl tracking-tight text-slate-900 dark:text-white">
                             RxEase<span className="text-primary">AI</span>
                         </span>
+                        {/* <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/20">
+                            <Activity className="w-5 h-5 text-white" />
+                        </div> */}
                     </a>
                     {/* Desktop Nav Links */}
                     <div className="hidden md:flex items-center gap-8">

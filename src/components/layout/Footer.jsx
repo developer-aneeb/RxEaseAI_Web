@@ -30,7 +30,9 @@ export default function Footer() {
           {/* Logo & Info */}
           <div className="sm:col-span-2 md:col-span-5 text-left space-y-4 md:space-y-5">
             <a href="#" className="flex items-center gap-3 cursor-pointer group w-fit">
-              <img src="/logo.png" alt="RxEaseAI Logo" className="h-10 w-10 object-contain rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 group-hover:border-primary/50 transition-colors" />
+              <div className="relative flex items-center justify-center p-1.5 rounded-xl bg-white dark:bg-slate-900 shadow-sm border border-slate-200/60 dark:border-slate-800 group-hover:border-primary/50 transition-colors">
+                <img src="/logo.png" alt="RxEaseAI Logo" className="h-10 w-auto object-contain" />
+              </div>
               <span className="font-black text-xl tracking-tight text-slate-900 dark:text-white">
                 RxEase<span className="text-primary">AI</span>
               </span>
