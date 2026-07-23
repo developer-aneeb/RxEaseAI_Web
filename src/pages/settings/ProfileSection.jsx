@@ -207,7 +207,7 @@ export default function ProfileSection({ profileData, avatar, setAvatar, onSaveS
           <div className="relative">
             <Input
               label="Email Address (Locked)"
-              placeholder="user@rxease.ai"
+              placeholder="user@rxeaseai.com"
               readOnly
               className="bg-slate-100 dark:bg-slate-950 text-slate-500 cursor-not-allowed pr-10"
               error={errors.email?.message}

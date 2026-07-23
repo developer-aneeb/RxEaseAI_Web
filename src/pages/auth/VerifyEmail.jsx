@@ -10,7 +10,7 @@ export default function VerifyEmail() {
   const theme = useThemeStore((state) => state.theme);
   const [timeLeft, setTimeLeft] = useState(42);
   const [particles, setParticles] = useState([]);
-  const [email, setEmail] = useState('doctor@hospital.com');
+  const [email, setEmail] = useState('user@rxeaseai.com');
   const showToast = useAppStore((state) => state.showToast);
 
   const [status, setStatus] = useState('pending'); // pending, success, error

@@ -1,24 +1,24 @@
-import { useState, useEffect } from 'react';
-import { useAppStore } from '../../store/useAppStore';
-import { useAuthStore } from '../../store/useAuthStore';
+import { AlertTriangle, Bell, CheckCircle2, KeyRound, RefreshCw, ShieldCheck, Smartphone } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import Navbar from '../../components/layout/Navbar';
 import Button from '../../components/ui/Button';
 import Card from '../../components/ui/Card';
-import Navbar from '../../components/layout/Navbar';
 import Input from '../../components/ui/Input';
 import Spinner from '../../components/ui/Spinner';
-import { useForm } from 'react-hook-form';
-import { profileService } from '../../services/profileService';
 import { authService } from '../../services/authService';
+import { profileService } from '../../services/profileService';
+import { useAppStore } from '../../store/useAppStore';
+import { useAuthStore } from '../../store/useAuthStore';
 import { getFriendlyErrorMessage } from '../../utils/errorMessages';
-import { Bell, KeyRound, ShieldCheck, Smartphone, AlertTriangle, RefreshCw, CheckCircle2 } from 'lucide-react';
 
-import FaqSection from './FaqSection';
-import FeedbackSection from './FeedbackSection';
-import SideNavbar from './SideNavbar';
-import ProfileSection from './ProfileSection';
-import MedicalInfoSection from './MedicalInfo';
 import AllergySection from './Allergy';
 import EmergencyContactSection from './EmergencyContact';
+import FaqSection from './FaqSection';
+import FeedbackSection from './FeedbackSection';
+import MedicalInfoSection from './MedicalInfo';
+import ProfileSection from './ProfileSection';
+import SideNavbar from './SideNavbar';
 
 export default function SettingsPage() {
   const logout = useAuthStore((state) => state.logout);
@@ -318,7 +318,7 @@ export default function SettingsPage() {
                   <form onSubmit={handleSecuritySubmit(onSecuritySave)} className="space-y-4 mb-8">
                     <h4 className="text-xs font-bold text-slate-800 dark:text-white uppercase tracking-wider">Change Email Address</h4>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <Input label="New Email Address" type="email" placeholder="new.email@hospital.com" error={securityErrors.newEmail?.message} {...registerSecurity('newEmail', { required: 'New email is required' })} />
+                      <Input label="New Email Address" type="email" placeholder="user@rxeaseai.com" error={securityErrors.newEmail?.message} {...registerSecurity('newEmail', { required: 'New email is required' })} />
                       <Input label="Current Password" type="password" placeholder="Confirm your password" error={securityErrors.currentPassword?.message} {...registerSecurity('currentPassword', { required: 'Password validation required' })} />
                     </div>
                     <div className="pt-2 flex justify-end">

@@ -1,16 +1,16 @@
-import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Activity, Sun, Moon, ArrowLeft, Mail, Lock, Shield, CheckCircle, ArrowRight } from 'lucide-react';
-import { useThemeStore } from '../../store/useThemeStore';
-import { useAppStore } from '../../store/useAppStore';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { motion } from 'framer-motion';
+import { Activity, ArrowLeft, CheckCircle, Mail, Moon, Sun } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { fadeInUp, staggerContainer } from '../../animations/variants';
 import Button from '../../components/ui/Button';
 import MaterialIcon from '../../components/ui/MaterialIcon';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { forgotPasswordSchema } from '../../utils/validation/zodSchemas';
-import { fadeInUp, fadeIn, staggerContainer } from '../../animations/variants';
 import { authService } from '../../services/authService';
+import { useAppStore } from '../../store/useAppStore';
+import { useThemeStore } from '../../store/useThemeStore';
 import { getFriendlyErrorMessage } from '../../utils/errorMessages';
+import { forgotPasswordSchema } from '../../utils/validation/zodSchemas';
 
 export default function ForgotPassword() {
   const theme = useThemeStore((state) => state.theme);
@@ -260,7 +260,7 @@ export default function ForgotPassword() {
                       <input
                         id="email"
                         type="email"
-                        placeholder="doctor@hospital.com"
+                        placeholder="user@rxeaseai.com"
                         className={`w-full pl-11 pr-4 py-3.5 rounded-xl border ${errors.email ? 'border-red-500 ring-1 ring-red-500' : 'border-outline-variant/50 dark:border-slate-800'} bg-white/50 dark:bg-slate-900/50 focus:bg-white dark:focus:bg-slate-900 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all text-on-surface dark:text-white`}
                         {...register('email')}
                       />

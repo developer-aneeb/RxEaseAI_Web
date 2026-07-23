@@ -83,8 +83,8 @@ export default function BillingPage() {
 
   // Team Seats states
   const [teamMembers, setTeamMembers] = useState([
-    { email: 'a.khan@rxease.ai', role: 'Staff Doctor' },
-    { email: 'm.ahmed@rxease.ai', role: 'Clinical Pharmacist' }
+    { email: 'user@rxeaseai.com', role: 'Staff Doctor' },
+    { email: 'user1@rxeaseai.com', role: 'Clinical Pharmacist' }
   ]);
   const [newMemberEmail, setNewMemberEmail] = useState('');
 
@@ -748,7 +748,7 @@ export default function BillingPage() {
                           <Mail className="w-4 h-4 text-slate-400 mr-2" />
                           <input
                             type="email"
-                            placeholder="collaborator@clinic.com"
+                            placeholder="user@rxeaseai.client.com"
                             value={newMemberEmail}
                             onChange={(e) => setNewMemberEmail(e.target.value)}
                             className="bg-transparent border-none outline-none text-xs w-full py-2.5 text-slate-800 dark:text-white placeholder:text-slate-450 focus:ring-0 p-0"

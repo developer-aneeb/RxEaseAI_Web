@@ -96,7 +96,7 @@ export default function ShareModal({
             </label>
             <input
               type="email"
-              placeholder="doctor@hospital.com or patient@example.com"
+              placeholder="user@rxeaseai.com"
               value={recipientEmail}
               onChange={(e) => setRecipientEmail(e.target.value)}
               required
