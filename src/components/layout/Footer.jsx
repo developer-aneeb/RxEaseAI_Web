@@ -1,4 +1,4 @@
-import { Activity, ArrowRight, Mail, ShieldCheck } from 'lucide-react';
+import { ArrowRight, Mail, ShieldCheck } from 'lucide-react';
 import Button from '../ui/Button';
 
 export default function Footer() {
@@ -11,54 +11,52 @@ export default function Footer() {
 
       {/* Footer Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-10 mb-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-12 gap-8 md:gap-10 mb-12">
 
-          {/* Logo & Info (5 cols) */}
-          <div className="md:col-span-5 text-left space-y-5">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-emerald-500 flex items-center justify-center shadow-lg shadow-primary/20">
-                <Activity className="w-5 h-5 text-white" />
-              </div>
-              <span className="font-black text-xl text-slate-900 dark:text-white tracking-tight">
-                RxEase<span className="text-primary">AI</span>
-              </span>
+          {/* Logo & Info */}
+          <div className="sm:col-span-2 md:col-span-5 text-left space-y-4 md:space-y-5">
+            <div className="flex items-center">
+              <img src="/logo.png" alt="RxEaseAI Logo" className="h-10 w-auto object-contain drop-shadow-sm circle" />
             </div>
+            <span className="font-black text-xl text-slate-900 dark:text-white tracking-tight">
+              RxEase<span className="text-primary">AI</span>
+            </span>
             <p className="text-xs text-slate-600 dark:text-slate-400 max-w-sm font-medium leading-relaxed">
               Automating clinical prescription ingestion with cutting-edge OCR line segmentation, dosage verification, and therapeutic recommendation systems.
             </p>
-            <div className="flex items-center gap-2 pt-2">
+            <div className="flex items-center gap-2 pt-1 md:pt-2">
               <ShieldCheck className="w-4 h-4 text-emerald-500" />
               <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">HIPAA Compliant Platform</span>
             </div>
           </div>
 
-          {/* Quick Links (3 cols) */}
-          <div className="md:col-span-3 text-left space-y-4">
+          {/* Quick Links */}
+          <div className="sm:col-span-1 md:col-span-3 text-left space-y-4">
             <h4 className="text-xs font-black text-slate-800 dark:text-white uppercase tracking-widest">Platform</h4>
             <ul className="space-y-2.5 text-xs font-semibold">
-              <li><a href="/#upload" className="text-slate-500 hover:text-primary dark:hover:text-primary transition-colors flex items-center gap-2"><ArrowRight className="w-3 h-3" /> Upload Prescription</a></li>
-              <li><a href="/#history" className="text-slate-500 hover:text-primary dark:hover:text-primary transition-colors flex items-center gap-2"><ArrowRight className="w-3 h-3" /> Patient History</a></li>
-              <li><a href="/#search" className="text-slate-500 hover:text-primary dark:hover:text-primary transition-colors flex items-center gap-2"><ArrowRight className="w-3 h-3" /> Medicine Search & Info</a></li>
-              <li><a href="/#settings" className="text-slate-500 hover:text-primary dark:hover:text-primary transition-colors flex items-center gap-2"><ArrowRight className="w-3 h-3" /> Settings</a></li>
+              <li><a href="#upload" className="text-slate-500 hover:text-primary dark:hover:text-primary transition-colors flex items-center gap-2"><ArrowRight className="w-3 h-3" /> Upload Prescription</a></li>
+              <li><a href="#history" className="text-slate-500 hover:text-primary dark:hover:text-primary transition-colors flex items-center gap-2"><ArrowRight className="w-3 h-3" /> Patient History</a></li>
+              <li><a href="#search" className="text-slate-500 hover:text-primary dark:hover:text-primary transition-colors flex items-center gap-2"><ArrowRight className="w-3 h-3" /> Drug Interactions</a></li>
+              <li><a href="#settings" className="text-slate-500 hover:text-primary dark:hover:text-primary transition-colors flex items-center gap-2"><ArrowRight className="w-3 h-3" /> Account Settings</a></li>
             </ul>
           </div>
 
-          {/* Newsletter / Updates (4 cols) */}
-          <div className="md:col-span-4 text-left space-y-4">
+          {/* Newsletter*/}
+          <div className="sm:col-span-1 md:col-span-4 text-left space-y-4">
             <h4 className="text-xs font-black text-slate-800 dark:text-white uppercase tracking-widest">Clinical Updates</h4>
             <p className="text-xs text-slate-500 leading-relaxed font-medium">
               Receive the latest news about OCR model improvements, security features, and compliance updates.
             </p>
-            <div className="flex gap-2">
+            <div className="flex flex-col xl:flex-row gap-2">
               <div className="relative flex-1">
                 <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                 <input
                   type="email"
                   placeholder="user@rxeaseai.com"
-                  className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl pl-9 pr-3 py-2.5 text-xs text-slate-800 dark:text-white focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all font-semibold"
+                  className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl pl-9 pr-3 py-2.5 text-xs text-slate-800 dark:text-white focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all font-semibold shadow-sm"
                 />
               </div>
-              <Button variant="primary" className="px-5 py-2.5 rounded-xl font-bold cursor-pointer shrink-0">
+              <Button variant="primary" className="px-5 py-2.5 rounded-xl font-bold cursor-pointer shrink-0 shadow-sm w-full xl:w-auto">
                 Join
               </Button>
             </div>
