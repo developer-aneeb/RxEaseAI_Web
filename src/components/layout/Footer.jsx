@@ -36,10 +36,10 @@ export default function Footer() {
           <div className="md:col-span-3 text-left space-y-4">
             <h4 className="text-xs font-black text-slate-800 dark:text-white uppercase tracking-widest">Platform</h4>
             <ul className="space-y-2.5 text-xs font-semibold">
-              <li><a href="/upload" className="text-slate-500 hover:text-primary dark:hover:text-primary transition-colors flex items-center gap-2"><ArrowRight className="w-3 h-3" /> Upload Prescription</a></li>
-              <li><a href="/history" className="text-slate-500 hover:text-primary dark:hover:text-primary transition-colors flex items-center gap-2"><ArrowRight className="w-3 h-3" /> Patient History</a></li>
-              <li><a href="/search" className="text-slate-500 hover:text-primary dark:hover:text-primary transition-colors flex items-center gap-2"><ArrowRight className="w-3 h-3" /> Drug Interactions</a></li>
-              <li><a href="/settings" className="text-slate-500 hover:text-primary dark:hover:text-primary transition-colors flex items-center gap-2"><ArrowRight className="w-3 h-3" /> Account Settings</a></li>
+              <li><a href="/#upload" className="text-slate-500 hover:text-primary dark:hover:text-primary transition-colors flex items-center gap-2"><ArrowRight className="w-3 h-3" /> Upload Prescription</a></li>
+              <li><a href="/#history" className="text-slate-500 hover:text-primary dark:hover:text-primary transition-colors flex items-center gap-2"><ArrowRight className="w-3 h-3" /> Patient History</a></li>
+              <li><a href="/#search" className="text-slate-500 hover:text-primary dark:hover:text-primary transition-colors flex items-center gap-2"><ArrowRight className="w-3 h-3" /> Medicine Search & Info</a></li>
+              <li><a href="/#settings" className="text-slate-500 hover:text-primary dark:hover:text-primary transition-colors flex items-center gap-2"><ArrowRight className="w-3 h-3" /> Settings</a></li>
             </ul>
           </div>
 
@@ -67,7 +67,7 @@ export default function Footer() {
             <div className="flex gap-3 pt-4">
               <a href="https://github.com/developer-aneeb/RxEaseAI_Web" target="_blank" rel="noopener noreferrer" aria-label="GitHub" className="w-9 h-9 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-primary hover:text-primary text-slate-400 flex items-center justify-center transition-all shadow-sm">
                 <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+                  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" />
                 </svg>
               </a>
               <a href="mailto:dev.aneeb.rehman@gmail.com" aria-label="Email" className="w-9 h-9 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-primary hover:text-primary text-slate-400 flex items-center justify-center transition-all shadow-sm">
