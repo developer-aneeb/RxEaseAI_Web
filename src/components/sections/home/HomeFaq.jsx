@@ -1,8 +1,8 @@
+import { AnimatePresence, motion } from 'framer-motion';
 import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import SectionHeader from '../../ui/SectionHeader';
 import Card from '../../ui/Card';
 import MaterialIcon from '../../ui/MaterialIcon';
+import SectionHeader from '../../ui/SectionHeader';
 
 export default function HomeFaq() {
   const [activeIndex, setActiveIndex] = useState(null);
@@ -10,7 +10,7 @@ export default function HomeFaq() {
   const faqs = [
     {
       q: 'How accurate is the handwriting recognition?',
-      a: 'Our specialized medical OCR model currently achieves 99.4% accuracy on standard physician handwriting. In cases of low confidence, the system flags the field for human review before proceeding.',
+      a: 'Our specialized medical OCR model currently achieves 74% accuracy on standard physician handwriting. In cases of low confidence, the system flags the field for human review before proceeding.',
     },
     {
       q: 'Does RxEaseAI integrate with my existing EHR?',
@@ -24,12 +24,12 @@ export default function HomeFaq() {
 
   return (
     <section id="faq" className="py-24 bg-slate-50 dark:bg-slate-950 transition-colors duration-300 relative overflow-hidden">
-      
+
       {/* Background Glow */}
       <div className="glow-spot top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-40 pointer-events-none" />
 
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        
+
         {/* Section Header */}
         <SectionHeader
           title="Frequently Asked Questions"
