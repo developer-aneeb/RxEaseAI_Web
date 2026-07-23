@@ -38,7 +38,7 @@ export default function Navbar({ links }) {
     const defaultLinks = [
         { name: 'Features', href: '#features' },
         { name: 'Workflow', href: '#workflow' },
-        { name: 'Home', href: '#' },
+        { name: 'Home', href: '#home' },
         { name: 'Analytics', href: '#analytics' },
         { name: 'FAQ', href: '#faq' },
     ];
@@ -50,17 +50,23 @@ export default function Navbar({ links }) {
             link.onClick(e);
         }
         
-        // Prevent default to stop App.jsx from catching hash and resetting scroll to 0,0
-        if (link.href && link.href.startsWith('#') && !['#signin', '#signup', '#settings', '#notifications'].includes(link.href)) {
-            e.preventDefault();
+        // Allow full navigation for these routes so App.jsx handles them
+        const routeLinks = ['#home', '#signin', '#signup', '#settings', '#notifications'];
+        
+        // Handle smooth scrolling for landing page sections
+        if (link.href && link.href.startsWith('#') && !routeLinks.includes(link.href)) {
             
-            if (link.href === '#' || link.href === '#home') {
+            if (link.href === '#') {
+                e.preventDefault();
                 window.scrollTo({ top: 0, behavior: 'smooth' });
                 window.history.pushState(null, '', '#');
             } else {
                 const targetId = link.href.substring(1);
                 const element = document.getElementById(targetId);
+                
                 if (element) {
+                    // Only prevent default if the element exists on the current page
+                    e.preventDefault();
                     element.scrollIntoView({ behavior: 'smooth' });
                     window.history.pushState(null, '', link.href);
                 }
