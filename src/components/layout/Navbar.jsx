@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from 'framer-motion';
-import { Activity, Bell, Menu, Moon, Sun, X } from 'lucide-react';
+import { Bell, Menu, Moon, Sun, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useAuthStore } from '../../store/useAuthStore';
 import { useThemeStore } from '../../store/useThemeStore';
@@ -53,13 +53,16 @@ export default function Navbar({ links }) {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex items-center justify-between">
                     {/* Logo */}
-                    <a href="#" className="flex items-center gap-2 cursor-pointer">
-                        <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/20">
-                            <Activity className="w-5 h-5 text-white" />
+                    <a href="#" className="flex items-center gap-3 cursor-pointer group w-fit">
+                        <div className="relative flex items-center justify-center p-1.5 rounded-xl bg-white dark:bg-slate-900 shadow-sm border border-slate-200/60 dark:border-slate-800 group-hover:border-primary/50 transition-colors">
+                            <img src="/logo.png" alt="RxEaseAI Logo" className="h-10 w-auto object-contain" />
                         </div>
-                        <span className="font-bold text-xl tracking-tight bg-gradient-to-r from-slate-900 via-slate-800 to-slate-600 dark:from-white dark:via-slate-200 dark:to-slate-400 bg-clip-text text-transparent">
-                            RxEase<span className="text-indigo-500">AI</span>
+                        <span className="font-black text-xl tracking-tight text-slate-900 dark:text-white">
+                            RxEase<span className="text-primary">AI</span>
                         </span>
+                        {/* <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/20">
+                            <Activity className="w-5 h-5 text-white" />
+                        </div> */}
                     </a>
                     {/* Desktop Nav Links */}
                     <div className="hidden md:flex items-center gap-8">

@@ -1,7 +1,21 @@
 import { ArrowRight, Mail, ShieldCheck } from 'lucide-react';
+import { useState } from 'react';
+import { useAppStore } from '../../store/useAppStore';
 import Button from '../ui/Button';
 
 export default function Footer() {
+  const [email, setEmail] = useState('');
+  const showToast = useAppStore((state) => state.showToast);
+
+  const handleSubscribe = (e) => {
+    e.preventDefault();
+    if (!email.trim()) return;
+
+    // Simulate API call for newsletter subscription
+    showToast('Subscribed to clinical updates successfully!', 'success');
+    setEmail('');
+  };
+
   return (
     <footer className="bg-slate-50/80 dark:bg-slate-950/80 border-t border-slate-200/60 dark:border-slate-800 backdrop-blur-xl pt-16 pb-8 relative overflow-hidden transition-colors duration-300">
 
@@ -15,12 +29,15 @@ export default function Footer() {
 
           {/* Logo & Info */}
           <div className="sm:col-span-2 md:col-span-5 text-left space-y-4 md:space-y-5">
-            <div className="flex items-center">
-              <img src="/logo.png" alt="RxEaseAI Logo" className="h-10 w-auto object-contain drop-shadow-sm circle" />
-            </div>
-            <span className="font-black text-xl text-slate-900 dark:text-white tracking-tight">
-              RxEase<span className="text-primary">AI</span>
-            </span>
+            <a href="#" className="flex items-center gap-3 cursor-pointer group w-fit">
+              <div className="relative flex items-center justify-center p-1.5 rounded-xl bg-white dark:bg-slate-900 shadow-sm border border-slate-200/60 dark:border-slate-800 group-hover:border-primary/50 transition-colors">
+                <img src="/logo.png" alt="RxEaseAI Logo" className="h-10 w-auto object-contain" />
+              </div>
+              <span className="font-black text-xl tracking-tight text-slate-900 dark:text-white">
+                RxEase<span className="text-primary">AI</span>
+              </span>
+            </a>
+            
             <p className="text-xs text-slate-600 dark:text-slate-400 max-w-sm font-medium leading-relaxed">
               Automating clinical prescription ingestion with cutting-edge OCR line segmentation, dosage verification, and therapeutic recommendation systems.
             </p>
@@ -41,25 +58,29 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Newsletter*/}
+          {/* Newsletter */}
           <div className="sm:col-span-1 md:col-span-4 text-left space-y-4">
             <h4 className="text-xs font-black text-slate-800 dark:text-white uppercase tracking-widest">Clinical Updates</h4>
             <p className="text-xs text-slate-500 leading-relaxed font-medium">
               Receive the latest news about OCR model improvements, security features, and compliance updates.
             </p>
-            <div className="flex flex-col xl:flex-row gap-2">
+
+            <form onSubmit={handleSubscribe} className="flex gap-2">
               <div className="relative flex-1">
                 <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                 <input
                   type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   placeholder="user@rxeaseai.com"
+                  required
                   className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl pl-9 pr-3 py-2.5 text-xs text-slate-800 dark:text-white focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all font-semibold shadow-sm"
                 />
               </div>
-              <Button variant="primary" className="px-5 py-2.5 rounded-xl font-bold cursor-pointer shrink-0 shadow-sm w-full xl:w-auto">
+              <Button type="submit" variant="primary" className="px-5 py-2.5 rounded-xl font-bold cursor-pointer shrink-0 shadow-sm">
                 Join
               </Button>
-            </div>
+            </form>
 
             {/* Social Icons */}
             <div className="flex gap-3 pt-4">
@@ -86,7 +107,6 @@ export default function Footer() {
             All Systems Operational
           </div>
         </div>
-
       </div>
     </footer>
   );
