@@ -8,6 +8,7 @@ import {
 } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import Navbar from '../../../components/layout/Navbar';
+import CameraView from './CameraView';
 import Badge from '../../../components/ui/Badge';
 import Button from '../../../components/ui/Button';
 import Card from '../../../components/ui/Card';
@@ -39,33 +40,10 @@ export default function UploadPage() {
   const showToast = useAppStore((state) => state.showToast);
 
   const [activeTab, setActiveTab] = useState('upload'); // 'upload' | 'camera'
-  const [cameraState, setCameraState] = useState('idle'); // 'idle' | 'starting' | 'streaming' | 'capturing' | 'captured'
   const [selectedSampleId, setSelectedSampleId] = useState(null);
   const [analysisError, setAnalysisError] = useState(null);
   const fileInputRef = useRef(null);
   const selectedFileRef = useRef(null); // Keep actual File object for upload
-
-  // Camera Refs
-  const videoRef = useRef(null);
-  const canvasRef = useRef(null);
-  const streamRef = useRef(null);
-
-  // Stop camera when unmounting or switching tabs
-  useEffect(() => {
-    return () => {
-      stopCamera();
-    };
-  }, [activeTab]);
-
-  const stopCamera = () => {
-    if (streamRef.current) {
-      streamRef.current.getTracks().forEach(track => track.stop());
-      streamRef.current = null;
-    }
-    if (videoRef.current) {
-      videoRef.current.srcObject = null;
-    }
-  };
 
   useEffect(() => {
     // Reset error on mount
@@ -126,54 +104,6 @@ export default function UploadPage() {
     setCurrentPrescription(sample.svg);
     setAiResult(sample);
     showToast(`Loaded sample prescription: ${sample.patient}`, 'success');
-  };
-
-  const startCamera = async () => {
-    setCameraState('starting');
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: 'environment' }
-      });
-      streamRef.current = stream;
-      if (videoRef.current) {
-        videoRef.current.srcObject = stream;
-        videoRef.current.play();
-      }
-      setCameraState('streaming');
-    } catch (err) {
-      console.error("Camera access denied or error:", err);
-      showToast("Could not access camera. Please check permissions.", "error");
-      setCameraState('idle');
-    }
-  };
-
-  const takeSnapshot = () => {
-    if (videoRef.current && canvasRef.current) {
-      setCameraState('capturing');
-      const video = videoRef.current;
-      const canvas = canvasRef.current;
-      canvas.width = video.videoWidth;
-      canvas.height = video.videoHeight;
-      const ctx = canvas.getContext('2d');
-      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-
-      const dataUrl = canvas.toDataURL('image/jpeg', 0.9);
-
-      // Convert DataURL to File object for backend upload
-      fetch(dataUrl)
-        .then(res => res.blob())
-        .then(blob => {
-          const file = new File([blob], "camera_capture.jpg", { type: "image/jpeg" });
-          selectedFileRef.current = file;
-
-          setCurrentPrescription(dataUrl);
-          setSelectedSampleId(null);
-          setAiResult(null); // Clear previous mock results
-          stopCamera();
-          setCameraState('captured');
-          showToast('Prescription captured successfully!', 'success');
-        });
-    }
   };
 
   const startAnalysis = async () => {
@@ -485,61 +415,18 @@ export default function UploadPage() {
 
                   {/* TAB 2: CAMERA VIEW CAPTURE */}
                   {activeTab === 'camera' && (
-                    <div className="flex-1 min-h-[300px] rounded-2xl bg-slate-950 border border-slate-850 flex flex-col items-center justify-center p-8 text-center relative overflow-hidden">
-                      {cameraState === 'idle' && (
-                        <>
-                          <Camera className="w-12 h-12 text-slate-500 mb-4 animate-pulse" />
-                          <h3 className="text-sm font-semibold text-slate-300 mb-2">Camera Capture</h3>
-                          <p className="text-xs text-slate-500 max-w-sm mb-6">Initiate secure scan capture using your integrated device camera.</p>
-                          <Button variant="primary" size="sm" icon={Play} onClick={startCamera}>
-                            Open Camera
-                          </Button>
-                        </>
-                      )}
-
-                      {cameraState === 'starting' && (
-                        <div className="flex flex-col items-center justify-center">
-                          <div className="w-12 h-12 rounded-full border-4 border-primary border-t-transparent animate-spin mb-4" />
-                          <p className="text-xs font-mono text-primary">ACCESSING CAMERA...</p>
-                        </div>
-                      )}
-
-                      {cameraState === 'streaming' && (
-                        <div className="w-full h-full flex flex-col items-center relative">
-                          <video ref={videoRef} className="w-full max-h-[350px] object-contain rounded-lg mb-4 bg-black shadow-inner" autoPlay playsInline muted />
-                          <canvas ref={canvasRef} className="hidden" />
-                          <Button variant="primary" size="sm" icon={Camera} onClick={takeSnapshot} className="absolute bottom-8 shadow-2xl shadow-black">
-                            Capture Prescription
-                          </Button>
-                        </div>
-                      )}
-
-                      {cameraState === 'capturing' && (
-                        <div className="flex flex-col items-center justify-center">
-                          <div className="w-20 h-20 rounded-full border-4 border-indigo-500 border-t-transparent animate-spin mb-4" />
-                          <p className="text-xs font-mono text-indigo-400">PROCESSING CAPTURE...</p>
-                        </div>
-                      )}
-
-                      {cameraState === 'captured' && (
-                        <div className="flex flex-col items-center w-full">
-                          <div className="w-32 h-40 md:w-48 md:h-64 rounded-lg border border-slate-800 overflow-hidden shadow-lg mb-4 bg-slate-905 relative">
-                            <img src={currentPrescription} alt="prescription thumbnail" className="w-full h-full object-cover" />
-                          </div>
-                          <h3 className="text-xs font-semibold text-slate-200">Prescription Snap Success</h3>
-                          <p className="text-[10px] text-slate-500 mt-1 mb-6">Image captured and attached for AI processing.</p>
-                          <div className="flex gap-2">
-                            <Button variant="outline" size="sm" icon={RefreshCw} onClick={() => {
-                              setCameraState('idle');
-                              setCurrentPrescription(null);
-                              selectedFileRef.current = null;
-                            }}>
-                              Retake Photo
-                            </Button>
-                          </div>
-                        </div>
-                      )}
-                    </div>
+                    <CameraView
+                      onCapture={(file, dataUrl) => {
+                        selectedFileRef.current = file;
+                        setCurrentPrescription(dataUrl);
+                        setSelectedSampleId(null);
+                        setAiResult(null);
+                      }}
+                      onRetake={() => {
+                        setCurrentPrescription(null);
+                        selectedFileRef.current = null;
+                      }}
+                    />
                   )}
 
 
