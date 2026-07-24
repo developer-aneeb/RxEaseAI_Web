@@ -85,6 +85,7 @@ export default function FollowUpCard({ item, onEdit, onDelete, onRefill, isRefil
 
         {/* Edit */}
         <button
+          type="button"
           onClick={() => onEdit(item)}
           className="p-1.5 text-slate-400 hover:text-emerald-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors border-0 bg-transparent cursor-pointer"
           title="Edit event"
@@ -94,6 +95,7 @@ export default function FollowUpCard({ item, onEdit, onDelete, onRefill, isRefil
 
         {/* Delete */}
         <button
+          type="button"
           onClick={() => onDelete(item.id)}
           className="p-1.5 text-slate-400 hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/40 rounded-lg transition-colors border-0 bg-transparent cursor-pointer"
           title="Delete event"
