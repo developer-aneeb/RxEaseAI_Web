@@ -136,7 +136,7 @@ export default function SignUp() {
         <div className="w-full flex flex-col lg:flex-row gap-stitch-lg md:gap-stitch-xl xl:gap-[80px] items-stretch">
 
           {/* Left Panel: Storytelling/Showcase (55%) */}
-          <div className="flex-1 lg:w-[55%] flex flex-col justify-center space-y-stitch-lg order-2 lg:order-1 pt-stitch-xl lg:pt-0">
+          <div className="hidden lg:flex flex-1 lg:w-[55%] flex-col justify-center space-y-stitch-lg order-2 lg:order-1 pt-stitch-xl lg:pt-0">
             <div className="space-y-md animate-fade-in-up">
               <div className="inline-flex items-center gap-stitch-xs px-stitch-sm py-stitch-xs rounded-full glass-panel border border-primary/20 text-primary dark:border-primary/30 relative">
                 <div className="w-2 h-2 rounded-full bg-primary animate-pulse-ring mr-1"></div>
