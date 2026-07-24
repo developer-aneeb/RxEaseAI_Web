@@ -36,6 +36,15 @@ export default function ForgotPassword() {
     // Scroll to top on mount
     window.scrollTo(0, 0);
 
+    const hash = window.location.hash;
+    if (hash.includes('?error=')) {
+      const errorMsg = new URLSearchParams(hash.split('?')[1]).get('error');
+      if (errorMsg) {
+        showToast(errorMsg, 'error');
+        window.history.replaceState(null, '', '#forgot-password');
+      }
+    }
+
     // Animate flow step icon indicators sequentially
     const flowInterval = setInterval(() => {
       setFlowStep((prev) => (prev + 1) % 4);
@@ -76,7 +85,7 @@ export default function ForgotPassword() {
             <Activity className="w-4.5 h-4.5 text-white" />
           </div>
           <span className="font-bold text-lg tracking-tight bg-gradient-to-r from-slate-900 via-slate-800 to-slate-600 dark:from-white dark:via-slate-200 dark:to-slate-400 bg-clip-text text-transparent">
-            RxEaseAI<span className="text-indigo-500">AI</span>
+            RxEase<span className="text-indigo-500">AI</span>
           </span>
         </a>
         <div className="flex items-center gap-4">
