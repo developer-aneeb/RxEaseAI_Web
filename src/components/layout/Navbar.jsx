@@ -49,13 +49,13 @@ export default function Navbar({ links }) {
         if (link.onClick) {
             link.onClick(e);
         }
-        
+
         // Allow full navigation for these routes so App.jsx handles them
         const routeLinks = ['#home', '#signin', '#signup', '#settings', '#notifications'];
-        
+
         // Handle smooth scrolling for landing page sections
         if (link.href && link.href.startsWith('#') && !routeLinks.includes(link.href)) {
-            
+
             if (link.href === '#') {
                 e.preventDefault();
                 window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -63,7 +63,7 @@ export default function Navbar({ links }) {
             } else {
                 const targetId = link.href.substring(1);
                 const element = document.getElementById(targetId);
-                
+
                 if (element) {
                     // Only prevent default if the element exists on the current page
                     e.preventDefault();
