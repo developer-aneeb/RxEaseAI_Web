@@ -14,7 +14,7 @@ export default function Analytics() {
 
   const stats = {
     efficiency: [
-      { label: 'Avg Ingestion Time', value: '4m', change: '-84% vs manual entry', icon: Sparkles },
+      { label: 'Avg Ingestion Time', value: '30 Secs', change: '-84% vs manual entry', icon: Sparkles },
       { label: 'Pharmacist Time Saved', value: '4.2 hrs', change: 'per shifts daily', icon: TrendingUp },
       { label: 'Queue Clearance Rate', value: '98.8%', change: '+14% improvement', icon: BarChart2 },
     ],
@@ -133,7 +133,7 @@ export default function Analytics() {
                 <circle cx="160" cy="30" r="4.5" fill="#a855f7" />
               </svg>
               <div className="absolute top-1 left-[165px] bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 px-2 py-0.5 rounded text-[9px] font-mono text-slate-705 dark:text-purple-400 transition-colors duration-300">
-                4m (Peak Load)
+                30 Secs (Peak Load)
               </div>
             </div>
           </div>

@@ -94,7 +94,7 @@ export default function Hero() {
               </div>
               <div className="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400 font-medium">
                 <Zap className="w-4.5 h-4.5 text-indigo-500 dark:text-indigo-400 shrink-0" />
-                4m Processing
+                30 Secs Processing
               </div>
             </motion.div>
           </motion.div>
@@ -170,7 +170,7 @@ export default function Hero() {
               </div>
               <div className="text-left">
                 <div className="text-[9px] text-slate-400 font-mono font-semibold">LATENCY</div>
-                <div className="text-xs font-bold text-slate-800 dark:text-white">4m average</div>
+                <div className="text-xs font-bold text-slate-800 dark:text-white">30 Secs average</div>
               </div>
             </motion.div>
 

@@ -83,8 +83,8 @@ export default function Navbar({ links }) {
                 <div className="flex items-center justify-between">
                     {/* Logo */}
                     <a href="#" className="flex items-center gap-3 cursor-pointer group w-fit">
-                        <div className="relative flex items-center justify-center p-1.5 rounded-xl bg-white dark:bg-slate-900 shadow-sm border border-slate-200/60 dark:border-slate-800 group-hover:border-primary/50 transition-colors">
-                            <img src="/logo.png" alt="RxEaseAI Logo" className="h-10 w-auto object-contain" />
+                        <div className="relative flex items-center justify-center rounded-full w-14 h-14 overflow-hidden bg-white shadow-md border-2 border-slate-700 dark:border-slate-600 group-hover:border-primary transition-colors">
+                            <img src="/logo.png" alt="RxEaseAI Logo" className="w-full h-full object-contain p-0.5" />
                         </div>
                         <span className="font-black text-xl tracking-tight text-slate-900 dark:text-white">
                             RxEase<span className="text-primary">AI</span>
