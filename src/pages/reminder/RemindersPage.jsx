@@ -43,8 +43,8 @@ export default function RemindersPage() {
   const [followUpCurrentPage, setFollowUpCurrentPage] = useState(1);
   const [followUpItemsPerPage, setFollowUpItemsPerPage] = useState(5);
 
-  const fetchData = async () => {
-    setIsLoading(true);
+  const fetchData = async (showLoader = true) => {
+    if (showLoader) setIsLoading(true);
     try {
       const [remindersRes, followupsRes] = await Promise.all([
         reminderService.list().catch((err) => {
@@ -64,7 +64,7 @@ export default function RemindersPage() {
       const friendlyMsg = getFriendlyErrorMessage(error, 'Failed to fetch reminder schedules.');
       showToast(friendlyMsg, 'error');
     } finally {
-      setIsLoading(false);
+      if (showLoader) setIsLoading(false);
     }
   };
 
@@ -86,7 +86,7 @@ export default function RemindersPage() {
       }
       setIsReminderModalOpen(false);
       setEditingReminder(null);
-      fetchData();
+      fetchData(false);
     } catch (error) {
       console.error(error);
       const friendlyMsg = getFriendlyErrorMessage(error, 'Failed to save reminder.');
@@ -100,7 +100,7 @@ export default function RemindersPage() {
     try {
       await reminderService.takeAction(id, action);
       showToast(`Medication dose marked as ${action === 'take' ? 'taken' : 'skipped'}!`, 'success');
-      fetchData();
+      fetchData(false);
     } catch (error) {
       console.error(error);
       showToast('Failed to record dose action.', 'error');
@@ -111,7 +111,7 @@ export default function RemindersPage() {
     try {
       await reminderService.snooze(id, minutes);
       showToast(`Reminder snoozed for ${minutes} minutes.`, 'success');
-      fetchData();
+      fetchData(false);
     } catch (error) {
       console.error(error);
       showToast('Failed to snooze reminder.', 'error');
@@ -123,7 +123,7 @@ export default function RemindersPage() {
     try {
       await reminderService.remove(id);
       showToast('Medication reminder deleted.', 'success');
-      fetchData();
+      fetchData(false);
     } catch (error) {
       console.error(error);
       showToast('Failed to delete reminder.', 'error');
@@ -144,7 +144,7 @@ export default function RemindersPage() {
       }
       setIsFollowUpModalOpen(false);
       setEditingFollowUp(null);
-      fetchData();
+      fetchData(false);
     } catch (error) {
       console.error(error);
       const friendlyMsg = getFriendlyErrorMessage(error, 'Failed to save follow-up event.');
@@ -159,7 +159,7 @@ export default function RemindersPage() {
     try {
       await followUpService.remove(id);
       showToast('Follow-up event deleted.', 'success');
-      fetchData();
+      fetchData(false);
     } catch (error) {
       console.error(error);
       showToast('Failed to delete follow-up task.', 'error');
