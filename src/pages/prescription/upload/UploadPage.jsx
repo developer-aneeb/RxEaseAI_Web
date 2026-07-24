@@ -1,17 +1,20 @@
-import { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import {
-  Upload, Camera, FileText, AlertTriangle,
-  ArrowLeft, RefreshCw, Lightbulb, Play
+  ArrowLeft,
+  Camera,
+  Lightbulb, Play,
+  RefreshCw,
+  Upload
 } from 'lucide-react';
-import { usePrescriptionStore } from '../../../store/usePrescriptionStore';
-import { useAppStore } from '../../../store/useAppStore';
+import { useEffect, useRef, useState } from 'react';
+import Navbar from '../../../components/layout/Navbar';
+import Badge from '../../../components/ui/Badge';
 import Button from '../../../components/ui/Button';
 import Card from '../../../components/ui/Card';
-import Badge from '../../../components/ui/Badge';
 import MaterialIcon from '../../../components/ui/MaterialIcon';
-import Navbar from '../../../components/layout/Navbar';
 import { prescriptionService } from '../../../services/prescriptionService';
+import { useAppStore } from '../../../store/useAppStore';
+import { usePrescriptionStore } from '../../../store/usePrescriptionStore';
 import { getFriendlyErrorMessage } from '../../../utils/errorMessages';
 
 // Mock SVG Prescription generator helper
@@ -41,7 +44,7 @@ export default function UploadPage() {
   const [analysisError, setAnalysisError] = useState(null);
   const fileInputRef = useRef(null);
   const selectedFileRef = useRef(null); // Keep actual File object for upload
-  
+
   // Camera Refs
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
@@ -60,7 +63,7 @@ export default function UploadPage() {
       streamRef.current = null;
     }
     if (videoRef.current) {
-        videoRef.current.srcObject = null;
+      videoRef.current.srcObject = null;
     }
   };
 
@@ -128,8 +131,8 @@ export default function UploadPage() {
   const startCamera = async () => {
     setCameraState('starting');
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ 
-        video: { facingMode: 'environment' } 
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: 'environment' }
       });
       streamRef.current = stream;
       if (videoRef.current) {
@@ -153,16 +156,16 @@ export default function UploadPage() {
       canvas.height = video.videoHeight;
       const ctx = canvas.getContext('2d');
       ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-      
+
       const dataUrl = canvas.toDataURL('image/jpeg', 0.9);
-      
+
       // Convert DataURL to File object for backend upload
       fetch(dataUrl)
         .then(res => res.blob())
         .then(blob => {
           const file = new File([blob], "camera_capture.jpg", { type: "image/jpeg" });
           selectedFileRef.current = file;
-          
+
           setCurrentPrescription(dataUrl);
           setSelectedSampleId(null);
           setAiResult(null); // Clear previous mock results
@@ -521,15 +524,15 @@ export default function UploadPage() {
                       {cameraState === 'captured' && (
                         <div className="flex flex-col items-center w-full">
                           <div className="w-32 h-40 md:w-48 md:h-64 rounded-lg border border-slate-800 overflow-hidden shadow-lg mb-4 bg-slate-905 relative">
-                             <img src={currentPrescription} alt="prescription thumbnail" className="w-full h-full object-cover" />
+                            <img src={currentPrescription} alt="prescription thumbnail" className="w-full h-full object-cover" />
                           </div>
                           <h3 className="text-xs font-semibold text-slate-200">Prescription Snap Success</h3>
                           <p className="text-[10px] text-slate-500 mt-1 mb-6">Image captured and attached for AI processing.</p>
                           <div className="flex gap-2">
                             <Button variant="outline" size="sm" icon={RefreshCw} onClick={() => {
-                                setCameraState('idle');
-                                setCurrentPrescription(null);
-                                selectedFileRef.current = null;
+                              setCameraState('idle');
+                              setCurrentPrescription(null);
+                              selectedFileRef.current = null;
                             }}>
                               Retake Photo
                             </Button>
