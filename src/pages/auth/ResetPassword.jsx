@@ -29,7 +29,24 @@ export default function ResetPassword() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [tokens, setTokens] = useState({ access_token: '', refresh_token: '' });
   const [isSuccess, setIsSuccess] = useState(false);
+  const [pageError, setPageError] = useState(null);
   const [countdown, setCountdown] = useState(5);
+
+  const startCloseTimer = () => {
+    let timer = 5;
+    const interval = setInterval(() => {
+      timer -= 1;
+      setCountdown(timer);
+      if (timer <= 0) {
+        clearInterval(interval);
+        try {
+          window.close();
+        } catch (e) {
+          console.error('Failed to close window', e);
+        }
+      }
+    }, 1000);
+  };
 
   useEffect(() => {
     // 1. Try reading from localStorage (saved by App.jsx redirect check)
@@ -38,8 +55,17 @@ export default function ResetPassword() {
 
     // 2. Try reading from current URL hash parameters
     const hash = window.location.hash || '';
+    const queryParams = new URLSearchParams(hash.split('?')[1] || '');
+    const errorMsg = queryParams.get('error');
+
+    if (errorMsg) {
+      setPageError(decodeURIComponent(errorMsg));
+      startCloseTimer();
+      return;
+    }
+
     if (!token && hash) {
-      const params = new URLSearchParams(hash.replace(/^#/, ''));
+      const params = new URLSearchParams(hash.replace(/^#.*?(\?|$)/, ''));
       const parsedToken = params.get('access_token') || params.get('token');
       if (parsedToken) {
         token = parsedToken;
@@ -50,11 +76,8 @@ export default function ResetPassword() {
     if (token) {
       setTokens({ access_token: token, refresh_token: rToken });
     } else {
-      showToast('Missing or invalid password reset link. Redirecting to sign in...', 'error');
-      // Redirect to signin after brief delay
-      setTimeout(() => {
-        window.location.hash = '#signin';
-      }, 3000);
+      setPageError('Missing or invalid password reset link.');
+      startCloseTimer();
     }
   }, [showToast]);
 
@@ -76,20 +99,7 @@ export default function ResetPassword() {
       localStorage.removeItem('rxease_reset_refresh_token');
 
       setIsSuccess(true);
-
-      let timer = 5;
-      const interval = setInterval(() => {
-        timer -= 1;
-        setCountdown(timer);
-        if (timer <= 0) {
-          clearInterval(interval);
-          try {
-            window.close();
-          } catch (e) {
-            console.error('Failed to close window', e);
-          }
-        }
-      }, 1000);
+      startCloseTimer();
 
     } catch (error) {
       console.error('Password reset failed:', error);
@@ -113,17 +123,7 @@ export default function ResetPassword() {
             border: 1px solid rgba(255, 255, 255, 0.05);
             box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
         }
-        .reset-password-page .bg-grid-pattern {
-            background-image: 
-                linear-gradient(to right, rgba(0,0,0,0.03) 1px, transparent 1px),
-                linear-gradient(to bottom, rgba(0,0,0,0.03) 1px, transparent 1px);
-            background-size: 40px 40px;
-        }
-        .dark .reset-password-page .bg-grid-pattern {
-            background-image: 
-                linear-gradient(to right, rgba(255,255,255,0.03) 1px, transparent 1px),
-                linear-gradient(to bottom, rgba(255,255,255,0.03) 1px, transparent 1px);
-        }
+
         .reset-password-page .ambient-glow-primary {
             background: radial-gradient(circle, rgba(0, 85, 201, 0.15) 0%, rgba(255,255,255,0) 70%);
         }
@@ -294,7 +294,26 @@ export default function ResetPassword() {
             {/* Decorative top edge glow */}
             <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary via-tertiary to-primary"></div>
 
-            {isSuccess ? (
+            {pageError ? (
+              <div className="text-center py-8 animate-fade-in-up">
+                <div className="w-20 h-20 rounded-full bg-rose-500/10 dark:bg-rose-500/20 flex items-center justify-center mx-auto mb-6 shadow-sm">
+                  <MaterialIcon name="error" className="text-rose-500 text-[40px]" size="none" />
+                </div>
+                <h2 className="font-headline-lg text-2xl text-on-surface dark:text-white mb-4">Link Invalid</h2>
+                <p className="font-body-md text-rose-500 dark:text-rose-400 mb-8 max-w-sm mx-auto font-medium">
+                  {pageError}
+                </p>
+                <div className="p-4 bg-surface-container dark:bg-slate-800/80 rounded-xl mb-8 border border-outline-variant/30 dark:border-slate-700">
+                  <p className="text-sm font-medium text-slate-600 dark:text-slate-300 flex items-center justify-center gap-2">
+                    <MaterialIcon name="hourglass_empty" size="sm" className="animate-pulse" />
+                    This window will auto-close in <span className="font-bold text-rose-500 text-lg">{countdown}</span> seconds
+                  </p>
+                </div>
+                <Button variant="outline" className="w-full justify-center" onClick={() => window.close()}>
+                  Close Window Now
+                </Button>
+              </div>
+            ) : isSuccess ? (
               <div className="text-center py-8 animate-fade-in-up">
                 <div className="w-20 h-20 rounded-full bg-emerald-500/10 dark:bg-emerald-500/20 flex items-center justify-center mx-auto mb-6 shadow-sm">
                   <MaterialIcon name="check_circle" className="text-emerald-500 text-[40px]" size="none" />
