@@ -1,15 +1,15 @@
-import { useState, useEffect } from 'react';
-import { useThemeStore } from '../../store/useThemeStore';
-import { useAppStore } from '../../store/useAppStore';
-import { Sun, Moon, ArrowLeft, Activity } from 'lucide-react';
-import Button from '../../components/ui/Button';
-import PasswordStrengthPanel from '../../components/auth/PasswordStrengthPanel';
-import MaterialIcon from '../../components/ui/MaterialIcon';
-import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { resetPasswordSchema } from '../../utils/validation/zodSchemas';
+import { Activity, ArrowLeft, Moon, Sun } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import PasswordStrengthPanel from '../../components/auth/PasswordStrengthPanel';
+import Button from '../../components/ui/Button';
+import MaterialIcon from '../../components/ui/MaterialIcon';
 import { authService } from '../../services/authService';
+import { useAppStore } from '../../store/useAppStore';
+import { useThemeStore } from '../../store/useThemeStore';
 import { getFriendlyErrorMessage } from '../../utils/errorMessages';
+import { resetPasswordSchema } from '../../utils/validation/zodSchemas';
 
 export default function ResetPassword() {
   const theme = useThemeStore((state) => state.theme);
@@ -28,6 +28,8 @@ export default function ResetPassword() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [tokens, setTokens] = useState({ access_token: '', refresh_token: '' });
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [countdown, setCountdown] = useState(5);
 
   useEffect(() => {
     // 1. Try reading from localStorage (saved by App.jsx redirect check)
@@ -68,15 +70,27 @@ export default function ResetPassword() {
         refresh_token: tokens.refresh_token,
         new_password: data.password
       });
-      showToast('Password reset successful! Redirecting to sign in...', 'success');
 
       // Clear reset tokens from localStorage
       localStorage.removeItem('rxease_reset_access_token');
       localStorage.removeItem('rxease_reset_refresh_token');
 
-      setTimeout(() => {
-        window.location.hash = '#signin';
-      }, 2000);
+      setIsSuccess(true);
+
+      let timer = 5;
+      const interval = setInterval(() => {
+        timer -= 1;
+        setCountdown(timer);
+        if (timer <= 0) {
+          clearInterval(interval);
+          try {
+            window.close();
+          } catch (e) {
+            console.error('Failed to close window', e);
+          }
+        }
+      }, 1000);
+
     } catch (error) {
       console.error('Password reset failed:', error);
       const friendlyMsg = getFriendlyErrorMessage(error, 'Failed to reset password. Please try again.');
@@ -280,66 +294,89 @@ export default function ResetPassword() {
             {/* Decorative top edge glow */}
             <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary via-tertiary to-primary"></div>
 
-            {/* Header */}
-            <div className="text-center mb-10">
-              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-surface to-surface-container-high dark:from-slate-800 dark:to-slate-700 mx-auto mb-6 flex items-center justify-center shadow-sm border border-white dark:border-slate-600 animate-glow">
-                <MaterialIcon name="lock_reset" className="text-primary dark:text-blue-400 text-[32px]" size="none" style={{ fontVariationSettings: "'FILL' 0" }} />
-              </div>
-              <h2 className="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface dark:text-white mb-4">Reset Password</h2>
-              <p className="font-body-md text-body-md text-on-surface-variant dark:text-slate-400">Create a strong password to secure your RxEaseAI workspace.</p>
-            </div>
-
-            {/* Form */}
-            <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
-              {/* Password Field */}
-              <div>
-                <div className="relative">
-                  <input className={`float-label-input w-full pl-4 pr-12 py-3 h-14 rounded-xl bg-white dark:bg-slate-900 border ${errors.password ? 'border-red-500 ring-1 ring-red-500' : 'border-outline-variant/50 dark:border-slate-800'} focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all font-body-md text-body-md text-on-surface dark:text-white peer placeholder-transparent`} id="new-password" placeholder="New Password" type={showPassword ? "text" : "password"} {...register('password')} />
-                  <label className="float-label absolute left-4 top-1/2 -translate-y-1/2 text-outline-variant dark:text-slate-500 font-body-md transition-all duration-200 pointer-events-none peer-focus:text-primary" htmlFor="new-password">New Password</label>
-                  <button className="absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant dark:text-slate-400 hover:text-primary dark:hover:text-blue-400 transition-colors focus:outline-none z-10 cursor-pointer" type="button" onClick={() => setShowPassword(!showPassword)}>
-                    <MaterialIcon name={showPassword ? 'visibility_off' : 'visibility'} className="text-[20px]" size="none" />
-                  </button>
+            {isSuccess ? (
+              <div className="text-center py-8 animate-fade-in-up">
+                <div className="w-20 h-20 rounded-full bg-emerald-500/10 dark:bg-emerald-500/20 flex items-center justify-center mx-auto mb-6 shadow-sm">
+                  <MaterialIcon name="check_circle" className="text-emerald-500 text-[40px]" size="none" />
                 </div>
-                {errors.password && <p className="text-red-500 text-xs mt-1 ml-1 font-medium">{errors.password.message}</p>}
-
-                <div className="mt-2">
-                  <PasswordStrengthPanel password={watch('password') || ''} />
+                <h2 className="font-headline-lg text-2xl text-on-surface dark:text-white mb-4">Password Updated!</h2>
+                <p className="font-body-md text-on-surface-variant dark:text-slate-400 mb-8 max-w-sm mx-auto">
+                  Your password has been successfully reset. You can now use your new password to sign in on your original tab or device.
+                </p>
+                <div className="p-4 bg-surface-container dark:bg-slate-800/80 rounded-xl mb-8 border border-outline-variant/30 dark:border-slate-700">
+                  <p className="text-sm font-medium text-slate-600 dark:text-slate-300 flex items-center justify-center gap-2">
+                    <MaterialIcon name="hourglass_empty" size="sm" className="animate-pulse" />
+                    This window will auto-close in <span className="font-bold text-primary dark:text-blue-400 text-lg">{countdown}</span> seconds
+                  </p>
                 </div>
+                <Button variant="outline" className="w-full justify-center" onClick={() => window.close()}>
+                  Close Window Now
+                </Button>
               </div>
+            ) : (
+              <>
+                {/* Header */}
+                <div className="text-center mb-10">
+                  <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-surface to-surface-container-high dark:from-slate-800 dark:to-slate-700 mx-auto mb-6 flex items-center justify-center shadow-sm border border-white dark:border-slate-600 animate-glow">
+                    <MaterialIcon name="lock_reset" className="text-primary dark:text-blue-400 text-[32px]" size="none" style={{ fontVariationSettings: "'FILL' 0" }} />
+                  </div>
+                  <h2 className="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface dark:text-white mb-4">Reset Password</h2>
+                  <p className="font-body-md text-body-md text-on-surface-variant dark:text-slate-400">Create a strong password to secure your RxEaseAI workspace.</p>
+                </div>
 
-              {/* Confirm Password Field */}
-              <div className="relative">
-                <input className={`float-label-input w-full pl-4 pr-12 py-3 h-14 rounded-xl bg-white dark:bg-slate-900 border ${errors.confirmPassword ? 'border-red-500 ring-1 ring-red-500' : 'border-outline-variant/50 dark:border-slate-800'} focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all font-body-md text-body-md text-on-surface dark:text-white peer placeholder-transparent`} id="confirm-password" placeholder="Confirm Password" type={showConfirmPassword ? "text" : "password"} {...register('confirmPassword')} />
-                <label className="float-label absolute left-4 top-1/2 -translate-y-1/2 text-outline-variant dark:text-slate-500 font-body-md transition-all duration-200 pointer-events-none peer-focus:text-primary" htmlFor="confirm-password">Confirm Password</label>
-                <button className="absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant dark:text-slate-400 hover:text-primary dark:hover:text-blue-400 transition-colors focus:outline-none z-10 cursor-pointer" type="button" onClick={() => setShowConfirmPassword(!showConfirmPassword)}>
-                  <MaterialIcon name={showConfirmPassword ? 'visibility_off' : 'visibility'} className="text-[20px]" size="none" />
-                </button>
-                {errors.confirmPassword && <p className="text-red-500 text-xs mt-1 ml-1 font-medium">{errors.confirmPassword.message}</p>}
-              </div>
+                {/* Form */}
+                <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
+                  {/* Password Field */}
+                  <div>
+                    <div className="relative">
+                      <input className={`float-label-input w-full pl-4 pr-12 py-3 h-14 rounded-xl bg-white dark:bg-slate-900 border ${errors.password ? 'border-red-500 ring-1 ring-red-500' : 'border-outline-variant/50 dark:border-slate-800'} focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all font-body-md text-body-md text-on-surface dark:text-white peer placeholder-transparent`} id="new-password" placeholder="New Password" type={showPassword ? "text" : "password"} {...register('password')} />
+                      <label className="float-label absolute left-4 top-1/2 -translate-y-1/2 text-outline-variant dark:text-slate-500 font-body-md transition-all duration-200 pointer-events-none peer-focus:text-primary" htmlFor="new-password">New Password</label>
+                      <button className="absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant dark:text-slate-400 hover:text-primary dark:hover:text-blue-400 transition-colors focus:outline-none z-10 cursor-pointer" type="button" onClick={() => setShowPassword(!showPassword)}>
+                        <MaterialIcon name={showPassword ? 'visibility_off' : 'visibility'} className="text-[20px]" size="none" />
+                      </button>
+                    </div>
+                    {errors.password && <p className="text-red-500 text-xs mt-1 ml-1 font-medium">{errors.password.message}</p>}
 
-              {/* Action Button */}
-              <Button
-                variant="custom"
-                size="none"
-                disabled={isSubmitting}
-                className="w-full h-14 rounded-xl bg-primary text-white font-label-md text-base font-semibold hover:bg-primary-container transition-all duration-300 transform hover:scale-[1.02] shadow-[0_4px_14px_rgba(0,85,201,0.3)] hover:shadow-[0_6px_20px_rgba(0,85,201,0.4)] flex items-center justify-center gap-2 group mt-10"
-                type="submit"
-              >
-                {isSubmitting ? 'Updating...' : 'Update Password'}
-                <MaterialIcon name="arrow_forward" size="md" className="group-hover:translate-x-1 transition-transform" />
-              </Button>
-            </form>
+                    <div className="mt-2">
+                      <PasswordStrengthPanel password={watch('password') || ''} />
+                    </div>
+                  </div>
 
-            {/* Secondary Actions */}
-            <div className="mt-10 flex flex-col items-center gap-3">
-              <a className="font-label-md text-sm text-on-surface-variant dark:text-slate-400 hover:text-primary dark:hover:text-blue-400 transition-colors flex items-center gap-1" href="#signin">
-                <span className="material-symbols-outlined text-[16px]">arrow_back</span>
-                Back To Sign In
-              </a>
-              <a className="font-label-md text-xs text-outline dark:text-slate-500 hover:text-on-surface dark:hover:text-slate-300 transition-colors underline decoration-outline/30 underline-offset-4" href="#">
-                Need Help? Contact Support
-              </a>
-            </div>
+                  {/* Confirm Password Field */}
+                  <div className="relative">
+                    <input className={`float-label-input w-full pl-4 pr-12 py-3 h-14 rounded-xl bg-white dark:bg-slate-900 border ${errors.confirmPassword ? 'border-red-500 ring-1 ring-red-500' : 'border-outline-variant/50 dark:border-slate-800'} focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all font-body-md text-body-md text-on-surface dark:text-white peer placeholder-transparent`} id="confirm-password" placeholder="Confirm Password" type={showConfirmPassword ? "text" : "password"} {...register('confirmPassword')} />
+                    <label className="float-label absolute left-4 top-1/2 -translate-y-1/2 text-outline-variant dark:text-slate-500 font-body-md transition-all duration-200 pointer-events-none peer-focus:text-primary" htmlFor="confirm-password">Confirm Password</label>
+                    <button className="absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant dark:text-slate-400 hover:text-primary dark:hover:text-blue-400 transition-colors focus:outline-none z-10 cursor-pointer" type="button" onClick={() => setShowConfirmPassword(!showConfirmPassword)}>
+                      <MaterialIcon name={showConfirmPassword ? 'visibility_off' : 'visibility'} className="text-[20px]" size="none" />
+                    </button>
+                    {errors.confirmPassword && <p className="text-red-500 text-xs mt-1 ml-1 font-medium">{errors.confirmPassword.message}</p>}
+                  </div>
+
+                  {/* Action Button */}
+                  <Button
+                    variant="custom"
+                    size="none"
+                    disabled={isSubmitting}
+                    className="w-full h-14 rounded-xl bg-primary text-white font-label-md text-base font-semibold hover:bg-primary-container transition-all duration-300 transform hover:scale-[1.02] shadow-[0_4px_14px_rgba(0,85,201,0.3)] hover:shadow-[0_6px_20px_rgba(0,85,201,0.4)] flex items-center justify-center gap-2 group mt-10"
+                    type="submit"
+                  >
+                    {isSubmitting ? 'Updating...' : 'Update Password'}
+                    <MaterialIcon name="arrow_forward" size="md" className="group-hover:translate-x-1 transition-transform" />
+                  </Button>
+                </form>
+
+                {/* Secondary Actions */}
+                <div className="mt-10 flex flex-col items-center gap-3">
+                  <a className="font-label-md text-sm text-on-surface-variant dark:text-slate-400 hover:text-primary dark:hover:text-blue-400 transition-colors flex items-center gap-1" href="#signin">
+                    <span className="material-symbols-outlined text-[16px]">arrow_back</span>
+                    Back To Sign In
+                  </a>
+                  <a className="font-label-md text-xs text-outline dark:text-slate-500 hover:text-on-surface dark:hover:text-slate-300 transition-colors underline decoration-outline/30 underline-offset-4" href="#">
+                    Need Help? Contact Support
+                  </a>
+                </div>
+              </>
+            )}
 
             {/* Mobile Trust Badges (Hidden on MD+) */}
             <div className="mt-16 pt-10 border-t border-outline-variant/30 dark:border-slate-700 flex md:hidden flex-wrap justify-center gap-x-4 gap-y-2">
