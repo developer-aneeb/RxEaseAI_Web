@@ -54,7 +54,7 @@ function MainRouter() {
             const errorDesc = params.get('error_description');
 
             if (errorDesc) {
-                window.location.href = `${window.location.origin}/#forgot-password?error=${encodeURIComponent(errorDesc.replace(/\+/g, ' '))}`;
+                window.location.href = `${window.location.origin}/#reset-password?error=${encodeURIComponent(errorDesc.replace(/\+/g, ' '))}`;
                 return;
             } else if (accessToken) {
                 localStorage.setItem('rxease_reset_access_token', accessToken);
@@ -115,73 +115,75 @@ function MainRouter() {
         return <Spinner fullPage={true} />;
     }
 
+    const hashPath = currentHash.split('?')[0];
+
     // Public Auth Routes (Redirects to home if already logged in)
-    if (currentHash === '#signup') {
+    if (hashPath === '#signup') {
         return <PublicRoute><SignUp /></PublicRoute>;
     }
 
-    if (currentHash === '#signin') {
+    if (hashPath === '#signin') {
         return <PublicRoute><SignIn /></PublicRoute>;
     }
 
-    if (currentHash === '#forgot-password') {
+    if (hashPath === '#forgot-password') {
         return <PublicRoute><ForgotPassword /></PublicRoute>;
     }
 
-    if (currentHash === '#reset-password') {
+    if (hashPath === '#reset-password') {
         return <PublicRoute><ResetPassword /></PublicRoute>;
     }
 
-    if (currentHash === '#verify-email') {
+    if (hashPath === '#verify-email') {
         return <PublicRoute><VerifyEmail /></PublicRoute>;
     }
 
     // Protected Routes (Redirects to signin if NOT logged in)
-    if (currentHash === '#home') {
+    if (hashPath === '#home') {
         return <ProtectedRoute><HomePage /></ProtectedRoute>;
     }
 
-    if (currentHash === '#upload') {
+    if (hashPath === '#upload') {
         return <ProtectedRoute><UploadPage /></ProtectedRoute>;
     }
 
-    if (currentHash === '#result') {
+    if (hashPath === '#result') {
         return <ProtectedRoute><ResultPage /></ProtectedRoute>;
     }
 
-    if (currentHash === '#history') {
+    if (hashPath === '#history') {
         return <ProtectedRoute><HistoryPage /></ProtectedRoute>;
     }
 
-    if (currentHash === '#recommendations') {
+    if (hashPath === '#recommendations') {
         return <ProtectedRoute><RecommendationPage /></ProtectedRoute>;
     }
 
-    if (currentHash === '#search') {
+    if (hashPath === '#search') {
         return <ProtectedRoute><SearchPage /></ProtectedRoute>;
     }
 
-    if (currentHash === '#analytics') {
+    if (hashPath === '#analytics') {
         return <ProtectedRoute><AnalyticsPage /></ProtectedRoute>;
     }
 
-    if (currentHash === '#settings') {
+    if (hashPath === '#settings') {
         return <ProtectedRoute><SettingsPage /></ProtectedRoute>;
     }
 
-    if (currentHash === '#reminders') {
+    if (hashPath === '#reminders') {
         return <ProtectedRoute><RemindersPage /></ProtectedRoute>;
     }
 
-    if (currentHash === '#notifications') {
+    if (hashPath === '#notifications') {
         return <ProtectedRoute><NotificationsPage /></ProtectedRoute>;
     }
 
-    if (currentHash === '#prescription-analytics') {
+    if (hashPath === '#prescription-analytics') {
         return <ProtectedRoute><PrescriptionAnalytics /></ProtectedRoute>;
     }
 
-    if (currentHash === '#billing') {
+    if (hashPath === '#billing') {
         return <ProtectedRoute><BillingPage /></ProtectedRoute>;
     }
 
