@@ -158,7 +158,7 @@ export default function SignUp() {
                 <span className="font-label-sm text-[11px] text-on-surface-variant dark:text-slate-400 uppercase tracking-wider">Accuracy</span>
               </div>
               <div className="flex flex-col">
-                <span className="text-[28px] font-bold text-on-surface dark:text-white font-headline-lg">4m</span>
+                <span className="text-[28px] font-bold text-on-surface dark:text-white font-headline-lg">30 Secs</span>
                 <span className="font-label-sm text-[11px] text-on-surface-variant dark:text-slate-400 uppercase tracking-wider">Processing</span>
               </div>
               <div className="flex flex-col">

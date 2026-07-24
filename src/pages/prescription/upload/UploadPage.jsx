@@ -283,7 +283,7 @@ export default function UploadPage() {
                       <MaterialIcon name="bolt" size="sm" style={{ fontVariationSettings: "'FILL' 1" }} />
                     </div>
                     <div>
-                      <div className="text-lg font-bold text-slate-900 dark:text-white">&lt; 4m</div>
+                      <div className="text-lg font-bold text-slate-900 dark:text-white">&lt; 30 Secs</div>
                       <div className="text-[11px] text-slate-550 font-medium mt-0.5">Analysis Speed</div>
                     </div>
                   </Card>
