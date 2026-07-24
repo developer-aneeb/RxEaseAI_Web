@@ -108,6 +108,7 @@ export default function ReminderCard({ item, onTakeAction, onSnooze, onEdit, onD
             {/* Take Button */}
             {!isTaken && !isInactive && (
               <button
+                type="button"
                 onClick={() => onTakeAction(item.id, 'take')}
                 className="px-3 py-1.5 bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-xs rounded-xl transition-all shadow-sm flex items-center gap-1.5 cursor-pointer border-0 active:scale-95"
                 title="Mark dose as taken"
@@ -121,6 +122,7 @@ export default function ReminderCard({ item, onTakeAction, onSnooze, onEdit, onD
             {!isInactive && (
               <div className="relative">
                 <button
+                  type="button"
                   onClick={() => {
                     setShowSnoozeMenu(!showSnoozeMenu);
                     setShowMenu(false);
@@ -143,6 +145,7 @@ export default function ReminderCard({ item, onTakeAction, onSnooze, onEdit, onD
                     ].map((opt) => (
                       <button
                         key={opt.mins}
+                        type="button"
                         onClick={() => {
                           onSnooze(item.id, opt.mins);
                           setShowSnoozeMenu(false);
