@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useThemeStore } from '../../store/useThemeStore';
 import { useAppStore } from '../../store/useAppStore';
-import { Sun, Moon, ArrowLeft } from 'lucide-react';
+import { Sun, Moon, ArrowLeft, Activity } from 'lucide-react';
 import Button from '../../components/ui/Button';
 import PasswordStrengthPanel from '../../components/auth/PasswordStrengthPanel';
 import MaterialIcon from '../../components/ui/MaterialIcon';
@@ -155,26 +155,36 @@ export default function ResetPassword() {
         }
       `}</style>
 
-      {/* Floating Theme Toggle and Navigation */}
-      <div className="absolute top-4 right-4 z-50 flex items-center gap-4">
-        <a
-          href="#signin"
-          className="inline-flex items-center gap-1 text-xs font-semibold text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white transition-colors"
-        >
-          <ArrowLeft className="w-3.5 h-3.5" />
-          Back to Sign In
+      {/* Header */}
+      <header className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 flex items-center justify-between relative z-50">
+        <a href="#" className="flex items-center gap-2 cursor-pointer group">
+          <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-600 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/20 group-hover:scale-105 transition-transform duration-200">
+            <Activity className="w-4.5 h-4.5 text-white" />
+          </div>
+          <span className="font-bold text-lg tracking-tight bg-gradient-to-r from-slate-900 via-slate-800 to-slate-600 dark:from-white dark:via-slate-200 dark:to-slate-400 bg-clip-text text-transparent">
+            RxEase<span className="text-indigo-500">AI</span>
+          </span>
         </a>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={toggleTheme}
-          animate={true}
-          aria-label="Toggle Theme"
-          className="p-2.5! bg-surface/80 dark:bg-slate-900/80 backdrop-blur-md"
-        >
-          {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
-        </Button>
-      </div>
+        <div className="flex items-center gap-4">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={toggleTheme}
+            animate={true}
+            aria-label="Toggle Theme"
+            className="p-2.5! bg-surface/80 dark:bg-slate-900/80 backdrop-blur-md"
+          >
+            {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+          </Button>
+          <a
+            href="#signin"
+            className="inline-flex items-center gap-1 text-xs font-semibold text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white transition-colors"
+          >
+            <ArrowLeft className="w-3.5 h-3.5" />
+            <span className="hidden sm:inline">Back to Sign In</span>
+          </a>
+        </div>
+      </header>
 
       {/* Ambient Background Elements */}
       <div className="fixed inset-0 pointer-events-none z-0">
