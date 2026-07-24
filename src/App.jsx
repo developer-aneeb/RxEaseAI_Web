@@ -44,20 +44,32 @@ function MainRouter() {
     }, [initializeAuth]);
 
     useEffect(() => {
-        if (pathname === '/reset-password') {
-            const params = new URLSearchParams(window.location.hash.substring(1));
+        const hash = window.location.hash || '';
+
+        // Handle recovery links and expired/used links
+        if (pathname === '/reset-password' || hash.includes('type=recovery') || hash.includes('error_description=')) {
+            const params = new URLSearchParams(hash.substring(1));
             const accessToken = params.get('access_token');
             const refreshToken = params.get('refresh_token');
-            if (accessToken) {
+            const errorDesc = params.get('error_description');
+
+            if (errorDesc) {
+                window.location.href = `${window.location.origin}/#forgot-password?error=${encodeURIComponent(errorDesc.replace(/\+/g, ' '))}`;
+                return;
+            } else if (accessToken) {
                 localStorage.setItem('rxease_reset_access_token', accessToken);
                 if (refreshToken) {
                     localStorage.setItem('rxease_reset_refresh_token', refreshToken);
                 }
                 window.location.href = `${window.location.origin}/#reset-password`;
-            } else {
-                window.location.href = `${window.location.origin}/#signin`;
+                return;
+            } else if (pathname === '/reset-password') {
+                window.location.href = `${window.location.origin}/#forgot-password`;
+                return;
             }
-        } else if (pathname === '/verify-email') {
+        }
+        
+        if (pathname === '/verify-email') {
             const params = new URLSearchParams(window.location.hash.substring(1));
             const accessToken = params.get('access_token');
             const refreshToken = params.get('refresh_token');
