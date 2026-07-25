@@ -3,6 +3,7 @@ import Lenis from 'lenis';
 import Navbar from '../components/layout/Navbar';
 import Footer from '../components/layout/Footer';
 import Hero from '../components/sections/landing/Hero';
+import DemoVideoSection from '../components/sections/DemoVideoSection';
 import Features from '../components/sections/landing/Features';
 import Workflow from '../components/sections/landing/Workflow';
 import Dashboard from '../components/sections/landing/Dashboard';
@@ -20,6 +21,9 @@ export default function LandingPage() {
       smoothWheel: true,
     });
 
+    // Expose lenis globally for scroll buttons
+    window.lenis = lenis;
+
     function raf(time) {
       lenis.raf(time);
       requestAnimationFrame(raf);
@@ -29,6 +33,7 @@ export default function LandingPage() {
 
     return () => {
       lenis.destroy();
+      delete window.lenis;
     };
   }, []);
 
@@ -39,6 +44,9 @@ export default function LandingPage() {
 
       {/* Hero Section */}
       <Hero />
+
+      {/* Demo Video Section */}
+      <DemoVideoSection />
 
       {/* Features List Section */}
       <Features />

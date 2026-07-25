@@ -3,6 +3,7 @@ import Lenis from 'lenis';
 import Navbar from '../components/layout/Navbar';
 import Footer from '../components/layout/Footer';
 import HomeHero from '../components/sections/home/HomeHero';
+import DemoVideoSection from '../components/sections/DemoVideoSection';
 import HomeWorkflow from '../components/sections/home/HomeWorkflow';
 import HomeFeatures from '../components/sections/home/HomeFeatures';
 import HomeSecurity from '../components/sections/home/HomeSecurity';
@@ -19,6 +20,9 @@ export default function HomePage() {
       gestureOrientation: 'vertical',
       smoothWheel: true,
     });
+    
+    // Expose lenis globally for scroll buttons
+    window.lenis = lenis;
 
     function raf(time) {
       lenis.raf(time);
@@ -29,14 +33,19 @@ export default function HomePage() {
 
     return () => {
       lenis.destroy();
+      delete window.lenis;
     };
   }, []);
 
   const handleLinkClick = (e, id) => {
     e.preventDefault();
-    const element = document.getElementById(id);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
+    if (window.lenis) {
+      window.lenis.scrollTo(`#${id}`);
+    } else {
+      const element = document.getElementById(id);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
     }
   };
 
@@ -57,6 +66,9 @@ export default function HomePage() {
 
       {/* Hero Section */}
       <HomeHero />
+
+      {/* Demo Video Section */}
+      <DemoVideoSection />
 
       {/* Intelligent Workflow Section */}
       <HomeWorkflow />
