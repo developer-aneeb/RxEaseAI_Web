@@ -26,6 +26,12 @@ export default function SignIn() {
     resolver: zodResolver(signInSchema),
   });
 
+  const labelClasses = "absolute left-11 px-1 font-medium transition-all duration-200 pointer-events-none " +
+    "-top-2.5 text-xs text-on-surface-variant dark:text-slate-400 bg-surface dark:bg-slate-900 " +
+    "peer-placeholder-shown:top-4 peer-placeholder-shown:text-base peer-placeholder-shown:bg-transparent " +
+    "peer-focus:!-top-2.5 peer-focus:!text-xs peer-focus:!text-primary peer-focus:!bg-surface dark:peer-focus:!bg-slate-900 " +
+    "peer-autofill:!-top-2.5 peer-autofill:!text-xs peer-autofill:!bg-surface dark:peer-autofill:!bg-slate-900";
+
   const login = useAuthStore((state) => state.login);
   const showToast = useAppStore((state) => state.showToast);
 
@@ -334,7 +340,7 @@ export default function SignIn() {
                     />
                     <label
                       htmlFor="email"
-                      className="absolute left-11 -top-2.5 px-1 bg-surface dark:bg-slate-900 text-xs font-medium text-on-surface-variant dark:text-slate-400 transition-all peer-placeholder-shown:text-base peer-placeholder-shown:top-4 peer-focus:-top-2.5 peer-focus:text-xs peer-focus:text-primary pointer-events-none"
+                      className={labelClasses}
                     >
                       Email Address
                     </label>
@@ -353,7 +359,7 @@ export default function SignIn() {
                     />
                     <label
                       htmlFor="password"
-                      className="absolute left-11 -top-2.5 px-1 bg-surface dark:bg-slate-900 text-xs font-medium text-on-surface-variant dark:text-slate-400 transition-all peer-placeholder-shown:text-base peer-placeholder-shown:top-4 peer-focus:-top-2.5 peer-focus:text-xs peer-focus:text-primary pointer-events-none"
+                      className={labelClasses}
                     >
                       Password
                     </label>

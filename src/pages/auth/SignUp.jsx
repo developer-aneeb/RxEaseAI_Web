@@ -26,6 +26,12 @@ export default function SignUp() {
     resolver: zodResolver(signUpSchema),
   });
 
+  const labelClasses = "absolute left-[48px] px-1 font-medium transition-all duration-200 pointer-events-none " +
+    "-top-2.5 text-xs text-on-surface-variant dark:text-slate-400 bg-white dark:bg-slate-950 " +
+    "peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-placeholder-shown:bg-transparent " +
+    "peer-focus:!-top-2.5 peer-focus:!text-xs peer-focus:!text-primary peer-focus:!bg-white dark:peer-focus:!bg-slate-950 " +
+    "peer-autofill:!-top-2.5 peer-autofill:!text-xs peer-autofill:!bg-white dark:peer-autofill:!bg-slate-950";
+
   const login = useAuthStore((state) => state.login);
   const showToast = useAppStore((state) => state.showToast);
 
@@ -343,7 +349,7 @@ export default function SignUp() {
                       type="email"
                       {...register('email')}
                     />
-                    <label className="float-label absolute left-[48px] top-1/2 -translate-y-1/2 text-outline-variant dark:text-slate-500 font-body-md transition-all duration-200 pointer-events-none peer-focus:text-primary" htmlFor="email">Email</label>
+                    <label className={labelClasses} htmlFor="email">Email</label>
                   </div>
                   {errors.email && <p className="text-red-500 text-xs mt-1 ml-1 font-medium">{errors.email.message}</p>}
 
@@ -357,7 +363,7 @@ export default function SignUp() {
                       type={showPassword ? "text" : "password"}
                       {...register('password')}
                     />
-                    <label className="float-label absolute left-[48px] top-1/2 -translate-y-1/2 text-outline-variant dark:text-slate-500 font-body-md transition-all duration-200 pointer-events-none peer-focus:text-primary" htmlFor="password">Password</label>
+                    <label className={labelClasses} htmlFor="password">Password</label>
                     <button
                       className="absolute right-4 top-1/2 -translate-y-1/2 text-outline-variant dark:text-slate-500 hover:text-on-surface dark:hover:text-white transition-colors focus:outline-none z-10 cursor-pointer"
                       onClick={() => setShowPassword(!showPassword)}
@@ -381,7 +387,7 @@ export default function SignUp() {
                       type={showConfirmPassword ? "text" : "password"}
                       {...register('confirmPassword')}
                     />
-                    <label className="float-label absolute left-[48px] top-1/2 -translate-y-1/2 text-outline-variant dark:text-slate-500 font-body-md transition-all duration-200 pointer-events-none peer-focus:text-primary" htmlFor="confirmPassword">Confirm Password</label>
+                    <label className={labelClasses} htmlFor="confirmPassword">Confirm Password</label>
                     <button
                       className="absolute right-4 top-1/2 -translate-y-1/2 text-outline-variant dark:text-slate-500 hover:text-on-surface dark:hover:text-white transition-colors focus:outline-none z-10 cursor-pointer"
                       onClick={() => setShowConfirmPassword(!showConfirmPassword)}
