@@ -75,8 +75,13 @@ export default function HomeHero() {
                 variant="secondary"
                 size="lg"
                 className="bg-white/80 dark:bg-slate-900/80 hover:bg-slate-100 dark:hover:bg-slate-800 text-primary border border-slate-200 dark:border-slate-800 font-semibold flex items-center justify-center gap-2 cursor-pointer w-full sm:w-auto px-6 py-3 rounded-lg"
-                onClick={() => {
-                  document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' });
+                onClick={(e) => {
+                  e.preventDefault();
+                  if (window.lenis) {
+                    window.lenis.scrollTo('#demo');
+                  } else {
+                    document.getElementById('demo')?.scrollIntoView({ behavior: 'smooth' });
+                  }
                 }}
               >
                 <span>View Demo</span>

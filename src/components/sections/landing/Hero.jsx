@@ -63,7 +63,11 @@ export default function Hero() {
               className="flex flex-wrap gap-4 pt-2"
             >
               <Button
-                href="#workflow"
+                onClick={(e) => {
+                  e.preventDefault();
+                  if (window.lenis) window.lenis.scrollTo('#demo');
+                  else document.getElementById('demo')?.scrollIntoView({ behavior: 'smooth' });
+                }}
                 variant="primary"
                 size="lg"
                 icon={ArrowRight}
@@ -71,7 +75,11 @@ export default function Hero() {
                 Try Interactive Demo
               </Button>
               <Button
-                href="#features"
+                onClick={(e) => {
+                  e.preventDefault();
+                  if (window.lenis) window.lenis.scrollTo('#features');
+                  else document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' });
+                }}
                 variant="secondary"
                 size="lg"
               >
