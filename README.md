@@ -23,12 +23,28 @@
 
 ---
 
+## One-line summary
+
+- RxEaseAI is a modern UI that simulates OCR ingestion, dosage safety checks, operational analytics, and secure authentication for Patient.
+
+---
+
+## Key facts (quick)
+
+- Target: sub-20s ingestion and 74% OCR accuracy (validated dataset)
+- YOLO-based segmentation with medical OCR concepts
+- FHIR/HL7-ready structured output
+- React 19, Vite 8, Tailwind CSS v4, Framer Motion
+- Full Authentication Flows with interactive form validation (React Hook Form + Zod)
+- Protected Routing and global mock session state (AuthContext)
+
+---
+
 ## 🎯 Scope & Purpose
 
 This directory contains the **React 19 Frontend Web Client** for the RxEaseAI ecosystem. 
 
 Unlike previous iterations, **this is no longer just a UI mockup.** This is a fully integrated, production-ready frontend that securely communicates with the RxEaseAI Node.js Backend (Express) and the Python AI Microservice (FastAPI + Vision Models). It handles real JWT authentication, live state management, and real-time multipart image uploads for OCR analysis.
-
 ---
 
 ## ✨ Features and Capabilities
