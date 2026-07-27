@@ -91,7 +91,6 @@ npm run preview
 You must create a `.env` file in the `frontend` directory for the client to know where the backend lives:
 ```env
 # Point this to your local Node.js backend (or production URL)
-VITE_API_URL=http://localhost:3000/api/v1
 ```
 
 ---
@@ -124,9 +123,23 @@ src/
 
 ---
 
-## 👨‍💻 Maintainer
+## Compliance and security (design goals)
+
+- HIPAA-ready ingestion workflow with client-encrypted upload concepts
+- SOC 2-style audit logging visuals for pharmacist verification actions
+- Robust client-side validation and secure password-strength requirements on all Auth forms
+
+---
+
+## Contributing
+
+- This repo is structured for a single front-end experience.
+- Use branches for content updates and open a PR for major layout changes.
+---
+
+## Contact
 
 **ANEEB UR REHMAN — Full Stack AI Engineer**  
 Email: dev.aneeb.rehman@gmail.com  
-GitHub: [developer-aneeb](https://github.com/developer-aneeb)  
-LinkedIn: [Aneeb ur Rehman](https://www.linkedin.com/in/aneeb-ur-rehman-528a50299/)
+GitHub: https://github.com/developer-aneeb
+LinkedIn: https://www.linkedin.com/in/aneeb-ur-rehman-528a50299/
