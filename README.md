@@ -1,4 +1,4 @@
-# RxEaseAI — Web Client ✨
+# RxEaseAI - AI-Powered Prescription Ingestion ✨
 
 <div align="center">
 
@@ -19,7 +19,7 @@
 
 ## 🌐 Live Application
 
-- 🚀 **Live Production Environment:** [rx-ease-ai-web.vercel.app](https://rx-ease-ai-web.vercel.app/)
+- 🚀 **Live RxEaseAI Website:** [rx-ease-ai-web.vercel.app](https://rx-ease-ai-web.vercel.app/)
 
 ---
 
