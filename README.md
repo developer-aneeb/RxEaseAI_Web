@@ -45,6 +45,7 @@
 This directory contains the **React 19 Frontend Web Client** for the RxEaseAI ecosystem. 
 
 Unlike previous iterations, **this is no longer just a UI mockup.** This is a fully integrated, production-ready frontend that securely communicates with the RxEaseAI Node.js Backend (Express) and the Python AI Microservice (FastAPI + Vision Models). It handles real JWT authentication, live state management, and real-time multipart image uploads for OCR analysis.
+
 ---
 
 ## ✨ Features and Capabilities
