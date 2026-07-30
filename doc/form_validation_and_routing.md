@@ -1,43 +1,82 @@
 # Form Validation & Routing Architecture
 
-To ensure a highly performant and scalable architecture, RxEaseAI leverages industry-standard tools for form state management, schema validation, and access control.
+This document describes the form validation strategy and route management system powering the RxEaseAI frontend application.
 
-## 1. Form Management (React Hook Form)
-Instead of managing form state manually with dozens of `useState` hooks, all authentication and user-input forms utilize **React Hook Form**.
+---
 
-**Benefits:**
-- Reduces re-renders by adopting an uncontrolled component architecture.
-- Simplifies submission logic and loading states.
-- Cleanly integrates with validation schemas.
+## 1. Form Validation Strategy (React Hook Form + Zod)
 
-## 2. Schema Validation (Zod & Custom Helpers)
-All validation logic is decoupled from the UI components and centralized into strict schemas and helper functions.
-- **Location:** `src/utils/validation/zodSchemas.js` & `src/utils/validation/authValidation.js`
+To ensure high performance, prevent unnecessary re-renders, and enforce strict type safety, all forms utilize **React Hook Form** coupled with **Zod** schema validation via `@hookform/resolvers/zod`.
 
-**Supported Schemas:**
-1. **Authentication Schemas**: `signInSchema`, `signUpSchema` (with terms agreement and confirm password matching), `forgotPasswordSchema`, `resetPasswordSchema`.
-2. **Clinical & Reminder Schemas**:
-   - `reminderSchema`: Enforces medicine name, meal timing, and strict future date/time scheduling using `.superRefine()`.
-   - **Future Date Validation (`validateReminderDateTime`)**: Evaluates the combined Date and Time inputs against `new Date()`. If a reminder is scheduled in the past or present, Zod immediately flags both inputs with custom error strings.
-3. **Settings & Feedback Schemas**:
-   - `profileSchema`: Enforces clinician full name, email, phone, and medical specialty.
-   - `feedbackSchema`: Validates 1-5 star ratings and minimum 10-character clinical feedback notes.
-   - `supportTicketSchema`: Enforces subject and description length for technical support requests.
+### Validation Schemas (`src/utils/validation/zodSchemas.js`)
 
-**How it works:**
-1. A Zod schema defines the exact types, requirements, and custom error messages for every field.
-2. The schema is passed to React Hook Form via the `@hookform/resolvers/zod` package.
-3. If the user violates a rule (e.g., setting a reminder in the past, leaving a required field empty), Zod instantly blocks submission and returns the exact error string directly to the UI layer (rendered cleanly under `<Input />`).
+Centralizing validation schemas ensures consistent validation logic across the entire application:
 
-## 3. Error Message Mapping (`errorMessages.js`)
-To prevent exposing raw database errors or technical HTTP status strings to healthcare professionals, all API catches pass through `getFriendlyErrorMessage(error)`.
-- **Location:** `src/utils/errorMessages.js`
-- **Functionality:** Intercepts Axios network exceptions (`ERR_NETWORK`), OAuth errors, and standard HTTP error codes (`401`, `409 Conflict`, `429 Rate Limit`), mapping them to clean, human-readable instructions in English.
+- **`signInSchema`**: Validates email format and non-empty password strings.
+- **`signUpSchema`**: Enforces strict password requirements (min 8 chars, uppercase, lowercase, numbers, special symbols) and mandatory Terms of Service acceptance.
+- **`forgotPasswordSchema`**: Validates email input format.
+- **`resetPasswordSchema`**: Enforces password strength rules and matches password confirmation fields.
+- **`reminderSchema`**: Validates medicine names, dosage formats, and future date/time constraints (`validateReminderDateTime`).
 
-## 4. Route Guarding Strategy
-Because RxEaseAI uses a custom Hash Router (`App.jsx`), routing is protected via higher-order components.
+### Integration Example (`SignIn.jsx`)
 
-- **`ProtectedRoute`**: Listens to `useAuthStore`. If `isAuthenticated` is false, it redirects to the Sign-In page (`/#signin`). Used for all clinical workspace views (`#home`, `#upload`, `#history`, `#history-dashboard`, `#billing`, `#reminders`, etc.).
-- **`PublicRoute`**: The inverse of ProtectedRoute. It prevents authenticated users from accidentally returning to the Sign-In or Sign-Up pages by redirecting them back to their secure workspace (`/#home`). It also contains logic to enforce that unverified authenticated users are correctly redirected to the email verification page (`/#verify-email`).
+```jsx
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { signInSchema } from '../../utils/validation/zodSchemas';
+import { Input } from '../../components/ui/Input';
 
-These guards ensure that the client-side routing behaves exactly like a production SPA, cleanly separating public marketing/auth flows from the secure clinical workspace.
+export function SignIn() {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting }
+  } = useForm({
+    resolver: zodResolver(signInSchema)
+  });
+
+  const onSubmit = async (data) => {
+    // Submits validated data to API
+  };
+
+  return (
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <Input
+        label="Email Address"
+        error={errors.email?.message}
+        {...register('email')}
+      />
+    </form>
+  );
+}
+```
+
+---
+
+## 2. Friendly Error Translation (`getFriendlyErrorMessage`)
+
+To prevent raw network status strings or backend stack traces from confusing end users, all form error catches pass through `getFriendlyErrorMessage(error)` in `src/utils/errorMessages.js`:
+
+- Intercepts network disconnections (`ERR_NETWORK`).
+- Maps HTTP status codes (`401`, `403`, `409`, `422`, `429`, `503`, `500+`).
+- Returns human-readable instructional messages.
+
+---
+
+## 3. Client-Side Hash Routing & Route Guards
+
+Routing is driven by a lightweight **Hash Navigator** in `App.jsx`, providing SPA behavior without server-side rewrite dependencies.
+
+### Route Guard Components (`src/components/auth/`)
+
+- **`ProtectedRoute.jsx`**: Listens to `useAuthStore`. If `isAuthenticated` is false, it redirects unauthenticated requests to `/#signin`.
+- **`PublicRoute.jsx`**: Prevents logged-in users from returning to Auth pages by redirecting them back to their workspace (`/#home`). Unverified users are directed to `/#verify-email`.
+
+```jsx
+// App.jsx snippet
+{currentHash === '#home' && (
+  <ProtectedRoute>
+    <HomePage />
+  </ProtectedRoute>
+)}
+```
