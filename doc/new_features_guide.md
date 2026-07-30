@@ -1,120 +1,71 @@
-# New Feature Development & Contributing Guide
+# Developer Playbook: Adding New Features
 
-This guide provides a step-by-step architectural checklist for frontend engineers building new features, screens, or workflows in RxEaseAI. Adhering to this workflow guarantees consistency across reusable UI components, form validation, and Zustand global state persistence.
+This playbook outlines the step-by-step process for implementing new features or workspaces in the RxEaseAI React 19 frontend application.
 
 ---
 
-## Step 1: Define Form Schema & Validation Rules (Zod)
+## Workflow Step-by-Step
 
-Never manage raw input validation inside UI components. Start by defining strict validation schemas in `src/utils/validation/zodSchemas.js` or helper functions in `src/utils/validation/authValidation.js`.
+### 1. Define Form Validation Schemas
+Always define validation rules before building UI components.
+- **Path**: `src/utils/validation/zodSchemas.js`
+- Create a new Zod schema exporting necessary fields and message rules.
 
-### Example Checklist:
-1. Add your new schema export in `zodSchemas.js`:
 ```javascript
-export const clinicalNoteSchema = z.object({
-  patientId: z.string().min(1, 'Patient ID is required'),
-  note: z.string().min(10, 'Clinical notes must be at least 10 characters'),
-  category: z.enum(['routine', 'urgent', 'followup']),
-  date: z.string().min(1, 'Please select a note date')
-}).superRefine((data, ctx) => {
-  // Use superRefine for custom multi-field rules or future-dating checks
-  if (new Date(data.date) > new Date()) {
-    ctx.addIssue({
-      code: z.ZodIssueCode.custom,
-      message: 'Note date cannot be set in the future.',
-      path: ['date']
-    });
-  }
+import { z } from 'zod';
+
+export const newFeatureSchema = z.object({
+  title: z.string().min(3, 'Title must be at least 3 characters.'),
+  category: z.string().nonempty('Category is required.')
 });
 ```
 
 ---
 
-## Step 2: Assemble UI Using Atomic Primitives
+### 2. Create the Domain Service Module
+Add necessary API endpoint calls in a dedicated service module.
+- **Path**: `src/services/newFeatureService.js`
 
-Build your screen using our standardized primitives located in `src/components/ui/`. Avoid raw `<button>`, `<input>`, or ad-hoc Tailwind styling where a component already exists.
-
-### Key Components to Integrate:
-- **`<Input>`**: Automatically binds to `react-hook-form` via `{...register('fieldName')}` and displays inline validation errors when `error={errors.fieldName?.message}` is provided.
-- **`<Button>`**: Supports built-in Framer Motion micro-animations, standard sizes (`sm`, `md`, `lg`), and variants (`primary`, `secondary`, `glass`, `outline`).
-- **`<Card>`**: Provides glassmorphic containers (`variant="glass"`) with optional hover elevation (`hoverEffect={true}`).
-- **`<Modal>`**: Wraps dialog forms with Framer Motion entry/exit animations and backdrop click handling.
-- **`<Badge>`**: High-impact status chips (`variant="success"`, `variant="warning"`, etc.) with optional pulsing indicator dots (`dot={true}`).
-
----
-
-## Step 3: Manage Global State with Zustand Persistence
-
-If your feature requires shared data across routes or data persistence across browser reloads, extend or create a store in `src/store/`.
-
-### Rules for Zustand Stores:
-1. **Always wrap persistent state in `persist` middleware**:
 ```javascript
-import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import apiClient from './apiClient';
+import { getFriendlyErrorMessage } from '../utils/errorMessages';
 
-export const useClinicalStore = create(
-  persist(
-    (set) => ({
-      notes: [],
-      addNote: (note) => set((state) => ({ notes: [note, ...state.notes] })),
-      clearNotes: () => set({ notes: [] })
-    }),
-    {
-      name: 'rxease-clinical-storage',
-      partialize: (state) => ({ notes: state.notes }) // Only persist necessary fields
+export const newFeatureService = {
+  createRecord: async (payload) => {
+    try {
+      const response = await apiClient.post('/new-feature', payload);
+      return response.data;
+    } catch (error) {
+      throw new Error(getFriendlyErrorMessage(error, 'Failed to create feature record.'));
     }
-  )
-);
-```
-2. **Granular Selectors**: In your React components, select individual store properties to avoid component-wide re-renders:
-```javascript
-const notes = useClinicalStore((state) => state.notes);
-const addNote = useClinicalStore((state) => state.addNote);
+  }
+};
 ```
 
 ---
 
-## Step 4: Register Route & Guarding (`App.jsx`)
+### 3. Integrate Zustand Global State (Optional)
+If state needs to persist or be shared across pages:
+- **Path**: `src/store/useNewFeatureStore.js`
+- Use Zustand with optional `persist` middleware.
 
-1. Open `src/App.jsx`.
-2. Add your new hash string (e.g. `#clinical-notes`) to the hash matching logic.
-3. Wrap authenticated workspaces in `<ProtectedRoute>`:
+---
+
+### 4. Build UI Components & Workspace Page
+- Create reusable components in `src/components/` and the main view in `src/pages/`.
+- Use primitive components (`<Button>`, `<Input>`, `<Card>`, `<Badge>`).
+- Use React Hook Form + Zod for forms.
+
+---
+
+### 5. Register Hash Route in `App.jsx`
+Register the hash route and wrap it in `<ProtectedRoute>` or `<PublicRoute>`:
+
 ```jsx
-if (currentHash === '#clinical-notes') {
-  return (
-    <ProtectedRoute>
-      <ClinicalNotesPage />
-    </ProtectedRoute>
-  );
-}
+// src/App.jsx
+{currentHash === '#new-feature' && (
+  <ProtectedRoute>
+    <NewFeaturePage />
+  </ProtectedRoute>
+)}
 ```
-
----
-
-## Step 5: Integrate Navigation (`SideNavbar.jsx` & `Navbar.jsx`)
-
-All post-authentication views must display the responsive sidebar (`SideNavbar.jsx`) to maintain workspace continuity.
-
-1. In `src/components/layout/SideNavbar.jsx`, add your route to the `navItems` array:
-```javascript
-{ name: 'Clinical Notes', href: '#clinical-notes', icon: 'note_add' }
-```
-2. Ensure your page layout wraps content inside the standard workspace container alongside `<SideNavbar />`:
-```jsx
-return (
-  <div className="flex min-h-screen bg-surface dark:bg-slate-950 text-on-surface dark:text-white">
-    <SideNavbar />
-    <main className="flex-1 lg:pl-64 flex flex-col min-h-screen">
-      {/* Page Header & Content */}
-    </main>
-  </div>
-);
-```
-
----
-
-## Step 6: Error Handling & User Feedback
-
-- For all API requests, catch errors and pass them through `getFriendlyErrorMessage(error)` (`src/utils/errorMessages.js`).
-- Display user alerts via `useAppStore.getState().showToast(message, type)` or the `useToast()` context hook.
