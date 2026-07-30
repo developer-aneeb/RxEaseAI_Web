@@ -1,13 +1,20 @@
 # Architecture Overview
 
-This document outlines the high-level architecture of the RxEaseAI frontend application. The project is built using modern web standards to ensure high performance, maintainability, and a seamless developer experience.
+This document outlines the high-level architecture of the RxEaseAI frontend application. The project is built using modern web standards to ensure high performance, maintainability, security, and a seamless developer experience.
+
+---
 
 ## Core Technologies
-- **React 19**: The core UI library used for building interactive components.
-- **Vite 8**: The extremely fast build tool and development server.
+
+- **React 19**: The core UI library used for building interactive, component-driven clinical interfaces.
+- **Vite 8**: The lightning-fast build tool and local development server.
 - **Tailwind CSS v4**: A utility-first CSS framework for rapid UI styling, customized heavily via CSS-first directives (`@theme`).
+- **Zustand 5**: Fast, scalable state management with native `persist` middleware.
+- **Axios**: Centralized HTTP client configured with JWT interceptors, automatic error handling, and timeout controls.
 - **Framer Motion**: Used across the application for smooth, physics-based animations, page transitions, and micro-interactions.
 - **Lucide & Material Symbols**: Scalable vector icons used consistently across UI components.
+
+---
 
 ## Folder Structure
 
@@ -18,62 +25,65 @@ src/
 ├── animations/        # Reusable Framer Motion variants (staggerContainer, fadeInUp, etc.)
 ├── components/        # Reusable React components
 │   ├── auth/          # Authentication-specific components and route guards
-│   ├── layout/        # Macro-level layout components (Navbar, Footer)
+│   ├── layout/        # Macro-level layout components (Navbar, Footer, Sidebar, Topbar)
 │   ├── sections/      # Large page sections (Hero, Features, Analytics)
-│   └── ui/            # Micro-level primitives (Button, Card, Badge, MaterialIcon)
+│   └── ui/            # Micro-level primitives (Button, Card, Badge, MaterialIcon, Modal, Input)
 ├── contexts/          # Context providers (ToastContext)
-├── store/             # Zustand global state stores (useAuthStore, useThemeStore, etc.)
-├── pages/             # Top-level route components (LandingPage, auth/)
-├── services/          # API layer (apiClient.js, authService.js)
+├── store/             # Zustand global state stores (useAuthStore, useThemeStore, usePrescriptionStore, useAppStore)
+├── pages/             # Top-level route components (LandingPage, auth/, prescription/, etc.)
+├── services/          # API Service layer (apiClient.js, authService.js, prescriptionService.js, etc.)
 ├── styles/            # Shared style utilities or specific complex CSS modules
-├── utils/             # Helpers (errorMessages.js, zodSchemas.js)
+├── utils/             # Helpers (errorMessages.js, zodSchemas.js, authValidation.js)
 ├── App.jsx            # Main router and state container
 ├── index.css          # Tailwind entry point and global styles
 └── main.jsx           # React mount point
 ```
 
-### Routing Strategy
-Currently, the application employs a **Hash-based Routing System** managed inside `App.jsx`. Access to specific routes is enforced using Higher-Order Components (Guards) which query the auth store directly:
+---
 
-- **`ProtectedRoute`**: Ensures the user is authenticated via `useAuthStore`. If not, they are redirected to `/#signin`.
-- **`PublicRoute`**: Ensures logged-in users cannot access auth pages. They are redirected to `/#home`.
+## Routing & Access Control
+
+The application utilizes a **Hash-based Routing System** managed inside `App.jsx`. Access to secure clinical workflows is enforced using higher-order Route Guard components:
+
+- **`ProtectedRoute`**: Queries `isAuthenticated` from `useAuthStore`. If false, it redirects unauthenticated users to `/#signin`.
+- **`PublicRoute`**: Prevents logged-in users from accessing Sign-In/Sign-Up pages by redirecting them to `/#home`. Also ensures unverified users are directed to `/#verify-email`.
 
 ```javascript
-// App.jsx snippet
-const [currentHash, setCurrentHash] = useState(window.location.hash);
-
-// Example Guarded Route
+// App.jsx Guard Example
 if (currentHash === '#home') {
     return <ProtectedRoute><HomePage /></ProtectedRoute>;
 }
 ```
 
-### Supported Routes:
-- `/` (or no hash): `LandingPage`
-- `#signin`: `SignIn`
-- `#signup`: `SignUp`
-- `#forgot-password`: `ForgotPassword`
-- `#reset-password`: `ResetPassword`
-- `#verify-email`: `VerifyEmail`
-- `#home`: `HomePage` (Protected Dashboard)
+### Supported Routes
+
+- `/` (or no hash): `LandingPage` (Public Marketing View)
+- `#signin`: `SignIn` (Authentication)
+- `#signup`: `SignUp` (Account Registration)
+- `#forgot-password`: `ForgotPassword` (Password Recovery Request)
+- `#reset-password`: `ResetPassword` (Password Reset Confirmation)
+- `#verify-email`: `VerifyEmail` (Email Verification Instructions)
+- `#home`: `HomePage` (Protected Application Dashboard)
 - `#upload`: `UploadPage` (Prescription Upload & AI Scan)
-- `#history`: `HistoryPage` (Prescription History List, single & bulk PDF report export with browser fallback, action audit logs, and secure sharing via `ShareModal`)
-- `#history-dashboard`: `HistoryDashboardPage` (Prescription Analytics & Verification Dashboard)
+- `#result`: `ResultPage` (AI OCR & Clinical Extraction View)
+- `#history`: `HistoryPage` (Prescription Archive & PDF Reports)
+- `#history-dashboard`: `HistoryDashboardPage` (Analytics & Verification Summary)
 - `#recommendations`: `RecommendationPage` (AI Smart Alternatives & Savings)
 - `#search`: `SearchPage` (Drug Interaction & Clinical Search Engine)
 - `#analytics`: `AnalyticsPage` (Clinical Trends & Intelligence Summary)
 - `#reminders`: `RemindersPage` (Medication Reminder Center)
 - `#notifications`: `NotificationsPage` (System & Clinical Alert Center)
-- `#billing`: `BillingPage` (Localized PK Premium Billing & Subscription OS)
-- `#settings`: `SettingsPage` (Profile, Feedback & Support Tickets)
+- `#billing`: `BillingPage` (Localized Subscriptions & Payment OS)
+- `#settings`: `SettingsPage` (Profile, Preferences & Support)
 
-> **Note for Future Scaling**: As the application grows to include more complex protected workflows, it is recommended to replace this hash-based system with `react-router-dom` to support nested routing, layout wrappers, and robust route guarding.
+---
 
-## State Management
-- **Local State**: Managed via React's `useState` for UI toggles, while form states are handled efficiently by **React Hook Form**.
-- **Global State (Zustand with Persistence)**: 
-  - All shared state is managed via Zustand stores under `src/store/` (`useAuthStore`, `useThemeStore`, `usePrescriptionStore`, `useAppStore`). See the [State Management Guide](file:///d:/projects/RxEaseAI_Web/frontend/doc/state_management.md) for details.
-  - **Zustand Persist Middleware**: To prevent data loss across page reloads and browser sessions, `useAuthStore` (`rxease-auth-storage`), `useAppStore` (`rxease-app-storage`), and `usePrescriptionStore` (`rxease-prescription-storage`) utilize Zustand's native `persist` middleware with tailored `partialize` configuration.
-  - **Notifications**: Toast queues are populated inside `useAppStore` and consumed by the `ToastContext` wrapper to display floating alerts across the page.
-- **Future Backend State**: When integrated with a real backend, consider introducing a data-fetching library like `React Query` or `RTK Query` to handle API caching and loading states rather than manual `useEffect` chains.
+## State & API Integration Architecture
 
+- **Local State**: Managed via React's `useState` for transient UI toggles; form input states are handled by **React Hook Form**.
+- **Global State (Zustand with Persistence)**:
+  - Domain state is segmented into dedicated stores: `useAuthStore` (`rxease-auth-storage`), `usePrescriptionStore` (`rxease-prescription-storage`), `useThemeStore`, and `useAppStore` (`rxease-app-storage`).
+  - Native `persist` middleware ensures user sessions, theme settings, and prescription history survive browser reloads.
+- **REST API Integration**:
+  - Outbound requests flow through `src/services/apiClient.js`, configured with automatic Bearer token injection and global `401 Unauthorized` session cleanup.
+  - Communicates directly with the Node.js Express Gateway (`/api/v1`), which orchestrates requests to the Python AI Microservice for image classification and OCR extraction.
