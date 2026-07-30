@@ -142,5 +142,5 @@ src/
 
 **ANEEB UR REHMAN — Full Stack AI Engineer**  
 Email: dev.aneeb.rehman@gmail.com  
-GitHub: https://github.com/developer-aneeb
+GitHub: https://github.com/developer-aneeb  
 LinkedIn: https://www.linkedin.com/in/aneeb-ur-rehman-528a50299/
