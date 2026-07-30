@@ -1,62 +1,61 @@
-# Theming System (Light / Dark Mode)
+# Theme Engine & Styling Architecture
 
-RxEaseAI features a robust, flicker-free dark mode system powered by Tailwind CSS v4 and native DOM APIs.
+This document describes the design tokens, theme system, and dark mode implementation powering the RxEaseAI user interface.
 
-## How it works
+---
 
-The theming system is divided into two primary parts to prevent Flash of Unstyled Content (FOUC):
+## 1. Core Framework: Tailwind CSS v4
 
-### 1. The FOUC Prevention Script
-In `index.html`, a synchronous blocking `<script>` runs before React mounts. It checks `localStorage` or the user's OS preference (`prefers-color-scheme`) and injects the `.dark` class directly onto the `<html>` root element. 
+RxEaseAI uses **Tailwind CSS v4**. Theme colors and typography tokens are configured using Tailwind's CSS-first directives in `src/index.css`.
 
-This ensures that the page background is rendered with the correct color before any JavaScript bundles are parsed.
-
-### 2. The `useThemeStore` Zustand Store
-Located at `src/store/useThemeStore.js`, this global store allows components to read and toggle the current theme.
+### FOUC (Flash of Unstyled Content) Prevention
+To prevent bright light-mode flashes when a user in dark mode reloads the page, an inline script is injected in the `<head>` of `index.html`:
 
 ```javascript
-import { create } from 'zustand';
-
-export const useThemeStore = create((set) => ({
-  theme: localStorage.getItem('theme') || 
-         (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'),
-  toggleTheme: () => set((state) => {
-    const nextTheme = state.theme === 'dark' ? 'light' : 'dark';
-    const root = document.documentElement;
-    if (nextTheme === 'dark') {
-      root.classList.add('dark');
-    } else {
-      root.classList.remove('dark');
-    }
-    localStorage.setItem('theme', nextTheme);
-    return { theme: nextTheme };
-  }),
-}));
+(function () {
+  const storedTheme = localStorage.getItem('theme');
+  const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  if (storedTheme === 'dark' || (!storedTheme && systemDark)) {
+    document.documentElement.classList.add('dark');
+  } else {
+    document.documentElement.classList.remove('dark');
+  }
+})();
 ```
 
-Using it in components:
-```javascript
-const theme = useThemeStore((state) => state.theme);
-const toggleTheme = useThemeStore((state) => state.toggleTheme);
-```
-
-## Styling for Dark Mode
-
-Tailwind CSS v4 configures dark mode slightly differently than v3. In `src/index.css`, we use the `@custom-variant` directive to tell Tailwind to look for the `.dark` class anywhere in the DOM tree above the element:
+### Tailwind v4 Dark Mode Variant Directive
+In `src/index.css`, dark mode styles are enabled via:
 
 ```css
-/* index.css */
-@theme { ... }
 @custom-variant dark (&:where(.dark, .dark *));
 ```
 
-### Implementing in Components
-When writing JSX, simply append the `dark:` prefix to any utility class you want applied when dark mode is active.
+---
 
-```jsx
-<div className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white">
-  This card adapts to the theme!
-</div>
+## 2. Theme State Store (`useThemeStore.js`)
+
+Theme toggling is managed globally via Zustand (`src/store/useThemeStore.js`):
+
+```javascript
+export const useThemeStore = create((set) => ({
+  theme: localStorage.getItem('theme') || 'dark',
+  toggleTheme: () => set((state) => {
+    const newTheme = state.theme === 'light' ? 'dark' : 'light';
+    localStorage.setItem('theme', newTheme);
+    if (newTheme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+    return { theme: newTheme };
+  })
+}));
 ```
 
-**Design Principle:** Avoid hardcoding black or white colors. Utilize the custom CSS variables configured in `index.css` (e.g., `text-on-surface`, `bg-surface-container`) which automatically adjust their hex values based on the theme context, greatly reducing the amount of `dark:` classes required.
+---
+
+## 3. Glassmorphic Design Guidelines
+
+RxEaseAI heavily utilizes modern glassmorphism UI elements:
+- Use `backdrop-blur-md` or `backdrop-blur-lg` for card backgrounds and overlays.
+- Ensure text contrast is verified in both Light (`bg-white/80 text-slate-900`) and Dark (`dark:bg-slate-900/80 dark:text-white`) modes.
