@@ -1,140 +1,72 @@
 # Reusable UI Components Architecture
 
-To ensure extreme visual consistency, avoid code duplication, and maintain a centralized design language, RxEaseAI relies on a suite of generic, highly-reusable UI primitives located in `src/components/ui/`.
+To maintain visual consistency, eliminate duplication, and enforce design tokens across views, RxEaseAI relies on atomic UI primitives located in `src/components/ui/`.
 
-## Component Overview
+---
 
-When building new features, always prioritize using these components over raw HTML elements.
+## Component Taxonomy & API Reference
+
+When building new features, always utilize these primitives rather than raw HTML elements.
 
 ### 1. `<Button>`
-The primary interactive element. Supports extensive variants, icons, and built-in Framer Motion interactions.
+Primary interactive button primitive. Supports Framer Motion micro-interactions and extensive variants.
 
 **Props:**
 - `variant` (string): `primary`, `secondary`, `accent`, `glass`, `outline`, `ghost`, or `custom`.
 - `size` (string): `sm`, `md`, `lg`, or `none`.
-- `icon` (Lucide React Component): Renders an icon alongside the text.
-- `iconPosition` (string): `left` or `right`.
-- `animate` (boolean): Default `true`. Disables Framer Motion hover/tap scaling if `false`.
-- `href` (string): If provided, renders an `<a>` tag instead of a `<button>`.
-- `className` (string): Appends custom Tailwind classes.
+- `icon` (Lucide Icon Component): Renders an optional icon.
+- `iconPosition` (string): `left` | `right`.
+- `animate` (boolean): Default `true`. Enables tap/hover scaling animations.
+- `href` (string): Renders an `<a>` tag instead of `<button>` when provided.
+- `className` (string): Custom Tailwind class overrides.
 
-**Usage:**
-```jsx
-<Button variant="primary" icon={ArrowRight}>
-  Submit Data
-</Button>
-```
-
-> **The `custom` Variant:**
-> Use `variant="custom"` and `size="none"` when you need entirely custom styling (e.g., specific Auth gradients) while still maintaining the Button's underlying structure and animation capabilities.
+---
 
 ### 2. `<MaterialIcon>`
-A wrapper for Google's Material Symbols Outlined font. Provides consistent sizing and color hooks without writing raw spans.
+Wrapper for Google Material Symbols Outlined icons.
 
 **Props:**
-- `name` (string): The exact string name of the Material Symbol (e.g., `verified_user`).
-- `size` (string): `xs` (12px), `sm` (14px), `md` (16px), `lg` (18px), `xl` (20px), `2xl` (24px), `3xl` (30px), or `none` (to bypass preset class).
-- `color` (string): Tailwind text color class (e.g., `text-primary`).
-- `className` (string): Custom CSS classes.
+- `name` (string): Material Symbol icon name (e.g. `verified_user`, `sanitizer`).
+- `size` (string): `xs` (12px), `sm` (14px), `md` (16px), `lg` (18px), `xl` (20px), `2xl` (24px), `3xl` (30px).
+- `color` (string): Tailwind text color class (e.g. `text-emerald-500`).
 
-**Usage:**
-```jsx
-<MaterialIcon name="health_and_safety" size="2xl" color="text-blue-500" />
-```
+---
 
 ### 3. `<Card>`
-A container component utilized extensively for home views, feature lists, and background panels.
+Glassmorphic container component for feature cards, metrics, and background panels.
 
 **Props:**
-- `variant` (string): `glass`, `glassLight`, or `flat`. (Defaults to `glass`).
-- `animate` (boolean): Applies entry fade/slide transition.
-- `hoverEffect` (boolean): Enables shadow and border highlights on hover.
-- `onClick` (function): Optional click event callback.
-- `className` (string): Custom CSS class wrapper.
+- `variant` (string): `glass`, `glassLight`, or `flat` (Default: `glass`).
+- `animate` (boolean): Applies entry fade/slide animations.
+- `hoverEffect` (boolean): Enables hover border and shadow highlights.
 
-**Usage:**
-```jsx
-<Card variant="glass" hoverEffect={true} className="p-6">
-  <h2>Patient Details</h2>
-</Card>
-```
+---
 
 ### 4. `<Badge>`
-A small tag/chip used for categorizing, highlighting statuses, or displaying numbers.
+Status chip used for categorizing items, showing confidence scores, or highlighting flags.
 
 **Props:**
 - `variant` (string): `primary`, `success`, `warning`, `error`, `neutral`.
-- `icon` (Lucide React Component): Optional leading icon.
+- `icon` (Lucide Icon Component): Optional leading icon.
 - `dot` (boolean): Adds a pulsing status dot.
 
-**Usage:**
-```jsx
-<Badge variant="success" dot={true}>
-  System Online
-</Badge>
-```
+---
 
-### 5. `<SectionHeader>`
-A macro-component designed specifically for the Landing Page to ensure all sections (Features, Analytics, FAQ) share the exact same title taxonomy.
+### 5. `<Input>`
+Atomic `forwardRef`-compliant input component built for React Hook Form + Zod schema validation.
 
 **Props:**
-- `badgeText` (string): Text for the top eyebrow badge.
-- `badgeIcon` (Lucide React Component): Icon for the eyebrow badge.
-- `title` (string): Main section `<h2>` heading.
-- `subtitle` (string): Paragraph descriptor below the title.
+- `label` (string): Header text above the input field.
+- `error` (string): Inline error message string. Automatically applies rose-colored borders when present.
+- `type` (string): `text`, `email`, `password`, `time`, `date`, `number`.
 
-**Usage:**
-```jsx
-<SectionHeader
-  badgeText="Support"
-  badgeIcon={HelpCircle}
-  title="Frequently Asked Questions"
-  subtitle="Everything you need to know about RxEaseAI."
-/>
-```
+---
 
-### 6. `<Input>`
-An atomic, `forwardRef`-compliant input primitive designed to integrate seamlessly with React Hook Form and Zod validation schemas.
+### 6. `<Modal>`
+Accessible dialog overlay utilizing Framer Motion for backdrop fading and panel scale animations.
 
 **Props:**
-- `label` (string): Standard input field header text.
-- `error` (string): Inline error message string (e.g. from `errors.fieldName?.message`). Automatically applies error styling (rose borders and rings) when present.
-- `type` (string): `text`, `email`, `password`, `time`, `date`, or `number`.
-- `className` (string): Additional Tailwind classes.
-- All standard HTML input props (`placeholder`, `min`, `max`, `onChange`, `onBlur`, `disabled`, etc.).
-
-**Usage:**
-```jsx
-<Input
-  label="Medicine Name"
-  placeholder="e.g. Lisinopril 10mg"
-  error={errors.name?.message}
-  {...register('name')}
-/>
-```
-
-### 7. `<Modal>`
-A centralized dialog overlay utilizing Framer Motion for smooth physics-based animations (backdrop fade and scale transitions).
-
-**Props:**
-- `isOpen` (boolean): Controls visibility of the modal dialog.
-- `onClose` (function): Callback triggered when clicking the close button (`X`) or the backdrop.
-- `title` (React Node | string): Dialog header title or element.
-- `children` (React Node): Form or content body inside the dialog panel.
-- `className` (string): Custom panel sizing or layout classes.
-
-**Usage:**
-```jsx
-<AnimatePresence>
-  <Modal
-    isOpen={isModalOpen}
-    onClose={() => setIsModalOpen(false)}
-    title="Schedule New Reminder"
-  >
-    <form onSubmit={handleSubmit(onSubmit)}>
-      {/* Form inputs */}
-    </form>
-  </Modal>
-</AnimatePresence>
-```
-
+- `isOpen` (boolean): Controls modal visibility.
+- `onClose` (function): Callback triggered on close button (`X`) or backdrop click.
+- `title` (string | React Node): Modal header title.
+- `children` (React Node): Dialog content body.
