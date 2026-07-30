@@ -1,17 +1,17 @@
 # API & Services Layer Reference
 
-RxEaseAI organizes network communication and external backend interaction into a structured, decoupled Service Layer located under `src/services/`. This architecture isolates HTTP networking concerns, authentication headers, and token refresh mechanisms from React components.
+RxEaseAI organizes network communication and external backend interaction into a structured, decoupled Service Layer located under `src/services/`. This architecture isolates HTTP networking concerns, authentication headers, and error translation from React UI components.
 
 ---
 
 ## 1. Centralized HTTP Client (`apiClient.js`)
 
-All outbound network requests must pass through our configured Axios instance exported from `src/services/apiClient.js`.
+All outbound network requests pass through our configured Axios instance exported from `src/services/apiClient.js`.
 
 ### Key Capabilities:
-- **Base URL Configuration**: Automatically defaults to `import.meta.env.VITE_API_URL` or fallback `http://localhost:8000/api/v1`.
+- **Base URL Configuration**: Automatically defaults to `import.meta.env.VITE_API_URL` or fallback `http://localhost:3000/api/v1`.
 - **Dynamic JWT Injection (Request Interceptor)**:
-  Before any request is transmitted, the interceptor checks `localStorage` for authentication state. It reads from Zustand's persisted storage (`rxease-auth-storage`) or plain fallback tokens (`rxease_token`), automatically injecting the `Authorization: Bearer <token>` header.
+  Before any request is transmitted, the interceptor checks `localStorage` for authentication state. It reads from Zustand's persisted storage (`rxease-auth-storage`) or plain fallback tokens (`rxease_token`), automatically injecting the `Authorization: Bearer <JWT_ACCESS_TOKEN>` header.
 - **Global Unauthorized Interceptor (Response Interceptor)**:
   If a backend API returns an HTTP `401 Unauthorized` status code, the interceptor automatically:
   1. Purges local token storage (`localStorage.removeItem('rxease_token')`).
@@ -22,7 +22,7 @@ All outbound network requests must pass through our configured Axios instance ex
 
 ## 2. Domain Service Modules (`src/services/`)
 
-RxEaseAI encapsulates all HTTP communications within specialized domain services. Each service consumes `apiClient` and automatically maps API exceptions into friendly user copy via `getFriendlyErrorMessage`.
+RxEaseAI encapsulates all HTTP communications within specialized domain services. Each service consumes `apiClient` and automatically maps API exceptions into user-friendly messages via `getFriendlyErrorMessage`.
 
 ### Authentication & Profile Services
 - **`authService.js`**:
@@ -35,6 +35,8 @@ RxEaseAI encapsulates all HTTP communications within specialized domain services
   - `updateProfile(profileData)`: Updates account preferences and clinical profile attributes.
 
 ### Prescription Ingestion, History & Export (`prescriptionService.js`)
+- `uploadAndAnalyze(file, options)`: Sends multipart image payload to `/ai/analyze` for full vision OCR analysis.
+- `validateImage(file)`: Runs gate check validation on prescription images (`/ai/validate-image`).
 - `listPrescriptions(params)`: Retrieves paginated list of ingested prescriptions (`/prescriptions`).
 - `getHistory()`: Retrieves comprehensive audit log history for prescription events (`/prescriptions/history`).
 - `exportPDF(id)`: Requests server-rendered PDF audit report (`/prescriptions/:id/export`). Returns a Blob.
@@ -43,16 +45,16 @@ RxEaseAI encapsulates all HTTP communications within specialized domain services
 
 ### Secure Prescription Sharing (`shareService.js`)
 - `createShareLink(prescriptionId, options)`: Generates a secure access token and shareable URL (`/share/token`).
-- `shareViaEmail(prescriptionId, email, options)`: Directly sends a prescription audit link to a clinical recipient or patient (`/share/email`).
+- `shareViaEmail(prescriptionId, email, options)`: Directly sends a prescription audit link to a clinical recipient (`/share/email`).
 - `getSharedPrescription(token)`: Retrieves shared prescription details using a valid access token (`/share/view/:token`).
 
 ### Medication Adherence & Follow-ups
 - **`reminderService.js`**:
-  - `listReminders(params)`: Retrieves active medication schedules and dosage timings.
-  - `createReminder(data)`: Schedules a new medication reminder alert.
+  - `listReminders(params)`: Retrieves active medication schedules and dosage timings (`/reminders`).
+  - `createReminder(data)`: Schedules a new medication reminder alert (`/reminders`).
   - `updateReminder(id, data)` / `deleteReminder(id)`: Manages existing reminders.
 - **`followUpService.js`**:
-  - `getFollowUps()`: Retrieves scheduled follow-up appointments and doctor check-ins.
+  - `getFollowUps()`: Retrieves scheduled follow-up appointments (`/followups`).
   - `scheduleFollowUp(data)`: Creates a new clinical follow-up task.
 
 ### Clinical Analytics & Intelligence
@@ -63,15 +65,13 @@ RxEaseAI encapsulates all HTTP communications within specialized domain services
 - **`searchService.js`**:
   - `searchInteractions(query)`: Searches drug interaction database and clinical safety guidelines.
 - **`feedbackService.js`**:
-  - `submitFeedback(payload)`: Transmits user feedback or bug reports to support services.
+  - `submitFeedback(payload)`: Transmits user feedback or support tickets to backend support queues.
 
 ---
 
 ## 3. Human-Readable Error Translation (`errorMessages.js`)
 
-Never display raw API exception strings or database stack traces to end users. All network catches must pass through our error mapping utility:
-- **Location**: `src/utils/errorMessages.js`
-- **Method**: `getFriendlyErrorMessage(error)`
+All network catches pass through our error mapping utility (`src/utils/errorMessages.js`) via `getFriendlyErrorMessage(error)` to prevent raw stack traces from reaching the user.
 
 ### Mapping Rules:
 | Error Condition | Raw / Axios Status | Translated Friendly Copy |
@@ -81,13 +81,15 @@ Never display raw API exception strings or database stack traces to end users. A
 | **Forbidden** | `403 Forbidden` | *"You do not have permission to perform this action."* |
 | **Duplicate Account** | `409 Conflict` | *"An account with this email already exists."* |
 | **Rate Limited** | `429 Too Many Requests`| *"Too many requests. Please wait a few moments before trying again."* |
-| **Server Error** | `500+ Internal Error` | *"RxEase AI cloud service encountered an error. Our clinical team is notified."* |
+| **Unprocessable Content** | `422 Unprocessable` | *"The uploaded image does not appear to be a handwritten prescription. Please provide a clear, handwritten prescription image."* |
+| **Service Unavailable** | `503 Unavailable` | *"We are having trouble analyzing the image. Please ensure it is a clear handwritten prescription and try again."* |
+| **Server Error** | `500+ Internal Error` | *"RxEase AI cloud service encountered an error. Our clinical team has been notified."* |
 
 ---
 
 ## 4. Best Practices for Service Module Extensions
 
-When building new domain services, follow this standard pattern:
+When creating new domain service files under `src/services/`, adhere to this standardized pattern:
 
 ```javascript
 import apiClient from './apiClient';
