@@ -143,13 +143,36 @@ Below are the primary REST endpoints consumed by the frontend service layer (`sr
 - **Body**: `{ "prescriptionId": "RX1001", "recipientEmail": "doctor@example.com", "notes": "Please review prescription." }`
 - **Response (`200 OK`)**: `{ "status": "sent" }`
 
----
-
-### Reminders & Analytics (`reminderService.js`, `analyticsService.js`)
-
-#### **POST `/reminders`**
-- **Body**: `{ "medicineName": "Augmentin", "dosage": "625mg", "frequency": "Daily", "time": "08:00" }`
-- **Response (`201 Created`)**: `{ "id": "rem_101", "status": "scheduled" }`
+### Analytics (`analyticsService.js`)
 
 #### **GET `/analytics/user`**
 - **Response (`200 OK`)**: `{ "totalPrescriptions": 12, "accuracyRate": 98.4, "savingsTotalPKR": 4500 }`
+
+#### Medication Reminders
+- **POST `/reminders`**
+  - Body: `{ "medicineName": "Lisinopril", "dosage": "10mg", "frequency": "Daily", "time": "08:00", "date": "2026-07-10", "mealTiming": "after_meal" }`
+  - Response: `201 Created`
+- **GET `/reminders`**
+  - Response: `200 OK`, `{ "reminders": [ ... ] }`
+
+#### Billing & Subscriptions (Pakistan Localized OS)
+- **GET `/billing/subscription`**
+  - Response: `200 OK`, `{ "plan": "pro", "pricePKR": 2499, "status": "active", "renewalDate": "2026-08-01" }`
+- **POST `/billing/subscription`**
+  - Body: `{ "planId": "team", "billingCycle": "monthly" }`
+  - Response: `200 OK`
+- **POST `/billing/payment-methods`**
+  - Body: `{ "type": "easypaisa", "accountNumber": "03001234567" }` (or `card`, `jazzcash`, `bank_transfer`)
+  - Response: `201 Created`
+- **PUT `/billing/ntn-profile`**
+  - Body: `{ "companyName": "City Clinic", "ntnNumber": "1234567-8", "address": "Karachi, Pakistan" }`
+  - Response: `200 OK`
+
+---
+
+## Integrating the AI Core & WebSockets
+
+When integrating the actual Vision OCR logic:
+1. Ensure the backend endpoint handles `multipart/form-data`.
+2. Provide Server-Sent Events (SSE) or WebSockets (`/ws/ocr`) to stream line-by-line segmentation progress back to `usePrescriptionStore` to power the "Laser Scanning" animations in real-time.
+3. The expected output to the frontend should be structured FHIR/HL7 JSON that automatically hydrates `usePrescriptionStore.getState().addHistoryEntry()`.
