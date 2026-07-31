@@ -24,9 +24,11 @@ Manages authentication credentials and persists session state via Zustand's `per
 - `user`: Object containing `{ id, email, fullName }` (or `null` if unauthenticated).
 - `token`: JWT Access token string.
 - `refreshToken`: Refresh token string.
-- `isAuthenticated`: Boolean status flag.
+- `isAuthenticated`: Boolean status indicating if a valid session exists.
+- `isLoading`: Boolean loading indicator for initialization.
 
 #### **Actions:**
+- `initializeAuth()`: Reads tokens from persistent storage and validates/restores the user session on startup. Includes fallback absorption for plain `localStorage` tokens set during OAuth redirects.
 - `login(userData, accessToken, refreshToken)`: Hydrates user credentials and JWT tokens into Zustand state.
 - `logout()`: Terminates the session, purges cached tokens, and redirects the browser to `/#signin`.
 - `updateUser(partialData)`: Updates user profile attributes in state.
