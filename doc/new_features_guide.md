@@ -11,12 +11,23 @@ Always define validation rules before building UI components.
 - **Path**: `src/utils/validation/zodSchemas.js`
 - Create a new Zod schema exporting necessary fields and message rules.
 
+### Example Checklist:
+1. Add your new schema export in `zodSchemas.js`:
 ```javascript
-import { z } from 'zod';
-
-export const newFeatureSchema = z.object({
-  title: z.string().min(3, 'Title must be at least 3 characters.'),
-  category: z.string().nonempty('Category is required.')
+export const clinicalNoteSchema = z.object({
+  patientId: z.string().min(1, 'Patient ID is required'),
+  note: z.string().min(10, 'Clinical notes must be at least 10 characters'),
+  category: z.enum(['routine', 'urgent', 'followup']),
+  date: z.string().min(1, 'Please select a note date')
+}).superRefine((data, ctx) => {
+  // Use superRefine for custom multi-field rules or future-dating checks
+  if (new Date(data.date) > new Date()) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: 'Note date cannot be set in the future.',
+      path: ['date']
+    });
+  }
 });
 ```
 
