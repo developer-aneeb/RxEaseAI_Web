@@ -25,9 +25,31 @@ This document details the backend integration specifications and REST API contra
 └────────────────────────────────────────────────────────┘
 ```
 
+## General Integration Principles
+
+### 1. API Client Setup & Token Persistence
+The project includes a centralized API client powered by `axios`.
+- **Location**: `src/services/apiClient.js`
+- **Zustand Persist Compatibility**: Because `useAuthStore` utilizes Zustand's `persist` middleware under the key `rxease-auth-storage`, `apiClient.js` includes custom request interceptor logic that parses `localStorage.getItem('rxease-auth-storage')` (JSON containing `{ state: { token, user, ... } }`) or fallbacks to plain `rxease_token` to attach the JWT `Bearer` token to outbound requests.
+- **Error Interceptors**: Automatically handles global `401 Unauthorized` responses by clearing storage, invoking `useAuthStore.getState().logout()`, and redirecting to `#signin`.
+
+### 2. The Service Layer
+Rather than putting API calls directly into React components, the project uses the service pattern.
+- **Location**: `src/services/authService.js`
+- **Current State**: Contains fully pre-built asynchronous functions for `login`, `signup`, `resetPassword`, `getProfile`, etc.
+
+### 3. Environment Variables
+API Base URLs are managed via Vite environment variables. Create a `.env` file at the root of the frontend folder:
+```
+VITE_API_URL=http://localhost:8000/api/v1
+```
+
 ---
 
-## 2. API Client Setup & Token Persistence
+## Integrating Authentication
+
+All authentication forms (`SignIn`, `SignUp`, `ForgotPassword`, `ResetPassword`) currently simulate a network delay using `setTimeout` or point to standard endpoint stubs. You must replace these with live backend services.
+## API Client Setup & Token Persistence
 
 Network requests originate from the centralized Axios client exported from `src/services/apiClient.js`.
 
