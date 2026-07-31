@@ -23,7 +23,7 @@ Primary interactive button primitive. Supports Framer Motion micro-interactions 
 ---
 
 ### 2. `<MaterialIcon>`
-Wrapper for Google Material Symbols Outlined icons.
+A wrapper for Google's Material Symbols Outlined font. Provides consistent sizing and color hooks without writing raw spans.
 
 **Props:**
 - `name` (string): Material Symbol icon name (e.g. `verified_user`, `sanitizer`).
