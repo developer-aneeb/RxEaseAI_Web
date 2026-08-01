@@ -23,6 +23,7 @@ import SideNavbar from './SideNavbar';
 
 export default function SettingsPage() {
   const logout = useAuthStore((state) => state.logout);
+  const refreshToken = useAuthStore((state) => state.refreshToken);
   const showToast = useAppStore((state) => state.showToast);
 
   const [isLoading, setIsLoading] = useState(true);
@@ -67,6 +68,7 @@ export default function SettingsPage() {
   const [is2FALoading, setIs2FALoading] = useState(false);
   const [setupStep, setSetupStep] = useState(null); // null | 'setup' | 'backup_codes'
   const [qrData, setQrData] = useState(null);
+  const [currentFactorId, setCurrentFactorId] = useState(null);
   const [otpCodeInput, setOtpCodeInput] = useState('');
   const [backupCodes, setBackupCodes] = useState([]);
   const [isDeactivating, setIsDeactivating] = useState(false);
@@ -95,6 +97,9 @@ export default function SettingsPage() {
       try {
         const twoFaRes = await authService.get2FAStatus();
         setIs2FAEnabled(Boolean(twoFaRes?.data?.enabled || twoFaRes?.enabled || profile.is_2fa_enabled));
+        if (twoFaRes?.data?.factors && twoFaRes.data.factors.length > 0) {
+          setCurrentFactorId(twoFaRes.data.factors[0].id);
+        }
       } catch (err) {
         console.warn('2FA status check fallback:', err);
       }
@@ -180,16 +185,18 @@ export default function SettingsPage() {
   const handleSetup2FA = async () => {
     setIs2FALoading(true);
     try {
-      const res = await authService.setup2FA();
+      const res = await authService.setup2FA(refreshToken);
       if (res?.data || res?.secret || res?.qrCode) {
         setQrData(res.data || res);
+        setCurrentFactorId(res?.data?.factorId || res?.factorId || null);
         setSetupStep('setup');
       } else {
         showToast('2FA setup initiated. Check your authenticator app.', 'info');
       }
     } catch (err) {
       console.error(err);
-      showToast('Failed to start 2FA setup. Make sure your account is verified.', 'error');
+      const friendlyMsg = getFriendlyErrorMessage(err, 'Failed to start 2FA setup. Make sure your account is verified.');
+      showToast(friendlyMsg, 'error');
     } finally {
       setIs2FALoading(false);
     }
@@ -202,7 +209,7 @@ export default function SettingsPage() {
     }
     setIs2FALoading(true);
     try {
-      const res = await authService.verify2FA(otpCodeInput.trim());
+      const res = await authService.verify2FA(otpCodeInput.trim(), currentFactorId, refreshToken);
       setIs2FAEnabled(true);
       setSetupStep(null);
       setOtpCodeInput('');
@@ -225,7 +232,7 @@ export default function SettingsPage() {
     }
     setIs2FALoading(true);
     try {
-      await authService.disable2FA();
+      await authService.disable2FA(currentFactorId, refreshToken);
       setIs2FAEnabled(false);
       showToast('Two-Factor Authentication disabled.', 'success');
     } catch (err) {
