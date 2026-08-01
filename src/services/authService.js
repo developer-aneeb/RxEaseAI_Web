@@ -134,18 +134,18 @@ export const authService = {
     return response.data;
   },
 
-  async setup2FA() {
-    const response = await apiClient.post('/auth/2fa/setup');
+  async setup2FA(refreshToken) {
+    const response = await apiClient.post('/auth/2fa/setup', { refresh_token: refreshToken });
     return response.data;
   },
 
-  async verify2FA(code) {
-    const response = await apiClient.post('/auth/2fa/verify', { code });
+  async verify2FA(code, factorId, refreshToken) {
+    const response = await apiClient.post('/auth/2fa/verify', { code, factorId, refresh_token: refreshToken });
     return response.data;
   },
 
-  async disable2FA(data = {}) {
-    const response = await apiClient.post('/auth/2fa/disable', data);
+  async disable2FA(factorId, refreshToken) {
+    const response = await apiClient.post('/auth/2fa/disable', { factorId, refresh_token: refreshToken });
     return response.data;
   },
 
