@@ -42,6 +42,12 @@ export default function SignIn() {
   const [deactivatedCredentials, setDeactivatedCredentials] = useState(null);
   const [isReactivating, setIsReactivating] = useState(false);
 
+  // 2FA Challenge state
+  const [is2FAChallenge, setIs2FAChallenge] = useState(false);
+  const [challengeData, setChallengeData] = useState(null);
+  const [otpCodeInput, setOtpCodeInput] = useState('');
+  const [isVerifying2FA, setIsVerifying2FA] = useState(false);
+
   // Stats Counter State
   const [prescriptions, setPrescriptions] = useState(0);
   const [verifications, setVerifications] = useState(0);
@@ -123,6 +129,17 @@ export default function SignIn() {
   const onSubmit = async (data) => {
     try {
       const response = await authService.login(data.email, data.password);
+      
+      if (response.data.require2FA) {
+        setChallengeData({
+           challengeId: response.data.challengeId,
+           factorId: response.data.factorId,
+           session: response.data.session
+        });
+        setIs2FAChallenge(true);
+        return;
+      }
+      
       showToast('Successfully signed in!', 'success');
       setIsSuccess(true);
 
@@ -174,6 +191,36 @@ export default function SignIn() {
       setDeactivatedCredentials(null);
     } finally {
       setIsReactivating(false);
+    }
+  };
+
+  const handleVerify2FALogin = async () => {
+    if (!otpCodeInput.trim() || otpCodeInput.length < 6) {
+      showToast('Please enter the 6-digit code', 'warning');
+      return;
+    }
+    setIsVerifying2FA(true);
+    try {
+      const response = await authService.loginVerify2FA(
+        challengeData.challengeId,
+        challengeData.factorId,
+        otpCodeInput.trim(),
+        challengeData.session
+      );
+      
+      setIs2FAChallenge(false);
+      showToast('Successfully signed in!', 'success');
+      setIsSuccess(true);
+      
+      const { user: userData, session } = response.data;
+      setTimeout(() => {
+        login(userData, session.access_token, session.refresh_token);
+      }, 1500);
+    } catch (error) {
+      console.error(error);
+      showToast(getFriendlyErrorMessage(error, 'Invalid 2FA code.'), 'error');
+    } finally {
+      setIsVerifying2FA(false);
     }
   };
 
@@ -376,6 +423,48 @@ export default function SignIn() {
                         setDeactivatedCredentials(null);
                       }}
                       disabled={isReactivating}
+                    >
+                      Cancel
+                    </Button>
+                  </div>
+                </div>
+              ) : is2FAChallenge ? (
+                <div className="flex flex-col gap-4 py-4 animate-fade-in text-center relative z-10">
+                  <div className="w-16 h-16 bg-primary/20 dark:bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-2">
+                    <MaterialIcon name="lock" className="text-primary text-3xl" />
+                  </div>
+                  <h3 className="text-xl font-bold text-on-surface dark:text-white">Two-Factor Authentication</h3>
+                  <p className="text-on-surface-variant dark:text-slate-400 text-sm mb-4">
+                    Please enter the 6-digit code from your authenticator app.
+                  </p>
+                  
+                  <input
+                    type="text"
+                    value={otpCodeInput}
+                    onChange={(e) => setOtpCodeInput(e.target.value.replace(/\D/g, '').slice(0, 6))}
+                    placeholder="000000"
+                    className="w-full text-center tracking-[0.5em] font-mono text-2xl py-4 rounded-xl border border-outline-variant dark:border-slate-800 bg-surface/50 dark:bg-slate-900/50 focus:border-primary outline-none text-on-surface dark:text-white placeholder:tracking-normal placeholder:opacity-50"
+                  />
+
+                  <div className="flex flex-col gap-3 mt-4">
+                    <Button 
+                      variant="custom"
+                      size="none"
+                      onClick={handleVerify2FALogin}
+                      disabled={isVerifying2FA || otpCodeInput.length < 6}
+                      className="w-full py-3.5 rounded-xl bg-gradient-btn text-white font-semibold flex justify-center items-center transition-all duration-300 hover:shadow-[0_10px_25px_-5px_rgba(0,85,201,0.4)]"
+                    >
+                      {isVerifying2FA ? 'Verifying...' : 'Verify Code'}
+                    </Button>
+                    <Button
+                      variant="outline"
+                      className="w-full py-3.5"
+                      onClick={() => {
+                        setIs2FAChallenge(false);
+                        setOtpCodeInput('');
+                        setChallengeData(null);
+                      }}
+                      disabled={isVerifying2FA}
                     >
                       Cancel
                     </Button>

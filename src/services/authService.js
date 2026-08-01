@@ -28,6 +28,19 @@ export const authService = {
   },
 
   /**
+   * Verifies 2FA code during login
+   */
+  async loginVerify2FA(challengeId, factorId, code, session) {
+    const response = await apiClient.post('/auth/login/verify-2fa', { 
+      challengeId, 
+      factorId, 
+      code,
+      session
+    });
+    return response.data;
+  },
+
+  /**
    * Logout
    * POST /auth/logout → 200
    */
