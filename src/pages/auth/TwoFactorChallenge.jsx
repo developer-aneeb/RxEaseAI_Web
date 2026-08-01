@@ -1,6 +1,6 @@
 import React from 'react';
-import { MaterialIcon } from '../../components/common/MaterialIcon';
-import Button from '../../components/common/Button';
+import MaterialIcon from '../../components/ui/MaterialIcon';
+import Button from '../../components/ui/Button';
 
 export default function TwoFactorChallenge({ 
   otpCodeInput, 
