@@ -38,6 +38,9 @@ export default function SignIn() {
   const [rememberMe, setRememberMe] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [isDeactivated, setIsDeactivated] = useState(false);
+  const [deactivatedCredentials, setDeactivatedCredentials] = useState(null);
+  const [isReactivating, setIsReactivating] = useState(false);
 
   // Stats Counter State
   const [prescriptions, setPrescriptions] = useState(0);
@@ -129,17 +132,48 @@ export default function SignIn() {
       }, 1500);
     } catch (error) {
       console.error('Sign in failed:', error);
+      const errMsg = error.response?.data?.message || error.response?.data?.error || '';
+      
+      if (errMsg.toLowerCase().includes('deactivated')) {
+        setIsDeactivated(true);
+        setDeactivatedCredentials({ email: data.email, password: data.password });
+        showToast('Your account is deactivated.', 'error');
+        return;
+      }
+      
       const friendlyMsg = getFriendlyErrorMessage(error, 'Invalid email or password.');
       showToast(friendlyMsg, 'error');
 
       // If email is not verified, redirect to verify-email page
-      const errMsg = error.response?.data?.message || '';
       if (errMsg.toLowerCase().includes('verify') || errMsg.toLowerCase().includes('confirmed')) {
         localStorage.setItem('rxease_registered_email', data.email);
         setTimeout(() => {
           window.location.hash = '#verify-email';
         }, 2000);
       }
+    }
+  };
+
+  const handleReactivate = async () => {
+    if (!deactivatedCredentials) return;
+    setIsReactivating(true);
+    try {
+      await authService.reactivateAccount(deactivatedCredentials.email, deactivatedCredentials.password);
+      showToast('Account reactivated successfully! Signing in...', 'success');
+      
+      const response = await authService.login(deactivatedCredentials.email, deactivatedCredentials.password);
+      setIsSuccess(true);
+      
+      const { user: userData, session } = response.data;
+      setTimeout(() => {
+        login(userData, session.access_token, session.refresh_token);
+      }, 1500);
+    } catch (error) {
+      showToast(getFriendlyErrorMessage(error, 'Failed to reactivate account.'), 'error');
+      setIsDeactivated(false);
+      setDeactivatedCredentials(null);
+    } finally {
+      setIsReactivating(false);
     }
   };
 
@@ -315,7 +349,39 @@ export default function SignIn() {
                 <p className="font-body-md text-body-md text-on-surface-variant dark:text-slate-400">Secure access to your intelligent healthcare workspace.</p>
               </div>
 
-              {isSuccess ? (
+              {isDeactivated ? (
+                <div className="flex flex-col gap-4 py-4 animate-fade-in text-center relative z-10">
+                  <div className="w-16 h-16 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center mx-auto mb-2">
+                    <MaterialIcon name="person_off" className="text-red-500 dark:text-red-400 text-3xl" />
+                  </div>
+                  <h3 className="text-xl font-bold text-on-surface dark:text-white">Account Deactivated</h3>
+                  <p className="text-on-surface-variant dark:text-slate-400 text-sm">
+                    Your account has been deactivated. Would you like to reactivate it and restore your access?
+                  </p>
+                  <div className="flex flex-col gap-3 mt-4">
+                    <Button 
+                      variant="custom"
+                      size="none"
+                      onClick={handleReactivate}
+                      disabled={isReactivating}
+                      className="w-full py-3.5 px-stitch-lg rounded-xl bg-gradient-btn text-white font-label-md text-[16px] font-semibold transition-all duration-300 transform hover:-translate-y-1 hover:shadow-[0_10px_25px_-5px_rgba(0,85,201,0.4)] flex justify-center items-center"
+                    >
+                      {isReactivating ? 'Reactivating...' : 'Reactivate Account'}
+                    </Button>
+                    <Button
+                      variant="outline"
+                      className="w-full py-3.5"
+                      onClick={() => {
+                        setIsDeactivated(false);
+                        setDeactivatedCredentials(null);
+                      }}
+                      disabled={isReactivating}
+                    >
+                      Cancel
+                    </Button>
+                  </div>
+                </div>
+              ) : isSuccess ? (
                 <div className="flex flex-col items-center justify-center py-10 text-center relative z-10 animate-fade-in-up">
                   <div className="w-16 h-16 rounded-full bg-secondary/20 flex items-center justify-center text-secondary mb-4">
                     <CheckCircle className="w-10 h-10" />
