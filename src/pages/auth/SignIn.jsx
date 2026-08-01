@@ -130,11 +130,11 @@ export default function SignIn() {
     try {
       const response = await authService.login(data.email, data.password);
       
-      if (response.data.require2FA) {
+      if (response.require2FA) {
         setChallengeData({
-           challengeId: response.data.challengeId,
-           factorId: response.data.factorId,
-           session: response.data.session
+           challengeId: response.challengeId,
+           factorId: response.factorId,
+           session: response.session
         });
         setIs2FAChallenge(true);
         return;
@@ -179,6 +179,17 @@ export default function SignIn() {
       showToast('Account reactivated successfully! Signing in...', 'success');
       
       const response = await authService.login(deactivatedCredentials.email, deactivatedCredentials.password);
+      
+      if (response.require2FA) {
+        setChallengeData({
+           challengeId: response.challengeId,
+           factorId: response.factorId,
+           session: response.session
+        });
+        setIs2FAChallenge(true);
+        return;
+      }
+      
       setIsSuccess(true);
       
       const { user: userData, session } = response.data;
