@@ -27,6 +27,15 @@ export const profileService = {
     return response.data;
   },
 
+  /**
+   * PUT /profile/password
+   * Body: { current_password, new_password }
+   */
+  async updatePassword(data) {
+    const response = await apiClient.put('/profile/password', data);
+    return response.data;
+  },
+
   // ── Profile Image ──
 
   /**

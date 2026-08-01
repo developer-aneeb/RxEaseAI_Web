@@ -12,6 +12,7 @@ import { useAppStore } from '../../store/useAppStore';
 import { useAuthStore } from '../../store/useAuthStore';
 import { getFriendlyErrorMessage } from '../../utils/errorMessages';
 
+import PasswordStrengthPanel from '../../components/auth/PasswordStrengthPanel';
 import AllergySection from './Allergy';
 import EmergencyContactSection from './EmergencyContact';
 import FaqSection from './FaqSection';
@@ -48,14 +49,18 @@ export default function SettingsPage() {
   const {
     register: registerSecurity,
     handleSubmit: handleSecuritySubmit,
-    reset: resetSecurity,
-    formState: { errors: securityErrors }
-  } = useForm({
-    defaultValues: {
-      newEmail: '',
-      currentPassword: ''
-    }
-  });
+    formState: { errors: securityErrors },
+    reset: resetSecurity
+  } = useForm();
+  
+  const {
+    register: registerPassword,
+    handleSubmit: handlePasswordSubmit,
+    formState: { errors: passwordErrors },
+    reset: resetPassword,
+    watch: watchPassword
+  } = useForm();
+  const [isUpdatingPassword, setIsUpdatingPassword] = useState(false);
 
   // 2FA states
   const [is2FAEnabled, setIs2FAEnabled] = useState(false);
@@ -145,6 +150,25 @@ export default function SettingsPage() {
       showToast(friendlyMsg, 'error');
     } finally {
       setIsUpdatingEmail(false);
+    }
+  };
+
+  // Password update
+  const onPasswordSave = async (data) => {
+    setIsUpdatingPassword(true);
+    try {
+      await profileService.updatePassword({
+        current_password: data.currentPasswordForUpdate,
+        new_password: data.newPassword
+      });
+      showToast('Password updated successfully.', 'success');
+      resetPassword();
+    } catch (error) {
+      console.error(error);
+      const friendlyMsg = getFriendlyErrorMessage(error, 'Failed to update password.');
+      showToast(friendlyMsg, 'error');
+    } finally {
+      setIsUpdatingPassword(false);
     }
   };
 
@@ -324,6 +348,23 @@ export default function SettingsPage() {
                     <div className="pt-2 flex justify-end">
                       <Button type="submit" disabled={isUpdatingEmail} variant="primary" className="bg-primary text-white font-bold px-6 py-2.5 rounded-xl cursor-pointer">
                         {isUpdatingEmail ? 'Updating...' : 'Update Email Address'}
+                      </Button>
+                    </div>
+                  </form>
+
+                  {/* Password Update Form */}
+                  <form onSubmit={handlePasswordSubmit(onPasswordSave)} className="space-y-4 mb-8 pt-6 border-t border-slate-100 dark:border-slate-800">
+                    <h4 className="text-xs font-bold text-slate-800 dark:text-white uppercase tracking-wider">Change Password</h4>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <Input label="Current Password" type="password" placeholder="Enter current password" error={passwordErrors.currentPasswordForUpdate?.message} {...registerPassword('currentPasswordForUpdate', { required: 'Current password is required' })} />
+                      <div className="flex flex-col gap-2">
+                        <Input label="New Password" type="password" placeholder="Enter new password" error={passwordErrors.newPassword?.message} {...registerPassword('newPassword', { required: 'New password is required', minLength: { value: 8, message: 'Must be at least 8 characters' } })} />
+                        <PasswordStrengthPanel password={watchPassword('newPassword') || ''} />
+                      </div>
+                    </div>
+                    <div className="pt-2 flex justify-end">
+                      <Button type="submit" disabled={isUpdatingPassword} variant="primary" className="bg-primary text-white font-bold px-6 py-2.5 rounded-xl cursor-pointer">
+                        {isUpdatingPassword ? 'Updating...' : 'Update Password'}
                       </Button>
                     </div>
                   </form>
