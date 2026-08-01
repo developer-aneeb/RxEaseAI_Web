@@ -35,33 +35,39 @@ export default function ResultPage() {
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const [isDownloadModalOpen, setIsDownloadModalOpen] = useState(false);
 
-  // Sync with actual DB prescription items and recommendations when arriving on ResultPage
   useEffect(() => {
     if (!aiResult) return;
     const pId = aiResult.prescription_id || aiResult.prescriptionId || aiResult.id;
-    // If we have a real DB prescription ID, fetch fresh details to ensure all prescription_items & recommendations are loaded
-    if (pId && pId !== 'MOCK-SAMPLE' && pId !== 'UNKNOWN' && typeof pId === 'string' && pId.startsWith('RX')) {
-      // Check if we need to enrich DB items
-      const hasDbItems = Array.isArray(aiResult.prescription_items) && aiResult.prescription_items.length > 0;
-      const hasRecommendations = hasDbItems && aiResult.prescription_items.some(i => i.recommendations?.length > 0);
-      
-      if (!hasDbItems || !hasRecommendations) {
-        setIsSyncing(true);
-        prescriptionService.getPrescriptionDetails(pId)
-          .then((details) => {
-            if (details && (details.prescription_items || details.id)) {
-              setAiResult(details);
-            }
-          })
-          .catch((err) => {
-            console.warn('Could not sync background prescription details:', err.message);
-          })
-          .finally(() => {
-            setIsSyncing(false);
-          });
-      }
+    
+    if (!pId || pId === 'MOCK-SAMPLE' || pId === 'UNKNOWN' || typeof pId !== 'string' || !pId.startsWith('RX')) {
+      return;
     }
-  }, [aiResult?.prescription_id, aiResult?.prescriptionId, aiResult?.id, aiResult, setAiResult]);
+
+    const hasDbItems = Array.isArray(aiResult.prescription_items) && aiResult.prescription_items.length > 0;
+    const hasRecommendations = hasDbItems && aiResult.prescription_items.some(i => i.recommendations?.length > 0);
+    
+    if (hasDbItems && hasRecommendations) {
+      return; // Stop polling once we have the data
+    }
+
+    const timeoutId = setTimeout(() => {
+      setIsSyncing(true);
+      prescriptionService.getPrescriptionDetails(pId)
+        .then((details) => {
+          if (details && (details.prescription_items || details.id)) {
+            setAiResult(details);
+          }
+        })
+        .catch((err) => {
+          console.warn('Could not sync background prescription details:', err.message);
+        })
+        .finally(() => {
+          setIsSyncing(false);
+        });
+    }, 5000); // Wait 5 seconds between polls
+
+    return () => clearTimeout(timeoutId);
+  }, [aiResult]);
 
   // Helper to interpret confidence
   const interpretConfidence = (conf) => {
