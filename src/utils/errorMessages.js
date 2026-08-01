@@ -124,13 +124,7 @@ export const getFriendlyErrorMessage = (error, defaultMessage = 'An unexpected e
   const responseData = error.response?.data;
   const status = error.response?.status;
 
-  // Try matching the error code first (more specific)
-  const errorCode = responseData?.error || responseData?.code;
-  if (errorCode && typeof errorCode === 'string' && ERROR_MAP[errorCode]) {
-    return ERROR_MAP[errorCode];
-  }
-
-  // Then try matching the message
+  // First try matching the message as it is usually more descriptive
   const backendMessage = responseData?.message || responseData?.error || error.message;
   if (backendMessage && typeof backendMessage === 'string') {
     const matched = Object.entries(ERROR_MAP).find(([key]) =>
@@ -140,8 +134,17 @@ export const getFriendlyErrorMessage = (error, defaultMessage = 'An unexpected e
 
     // If backend returned a readable message, use it directly
     if (backendMessage.length < 200 && !backendMessage.startsWith('[')) {
-      return backendMessage;
+      // Exclude generic HTTP text like "Unauthorized" if errorCode is more helpful
+      if (backendMessage !== 'Unauthorized' && backendMessage !== 'Forbidden') {
+        return backendMessage;
+      }
     }
+  }
+
+  // Then try matching the error code (more generic, like AUTH_REQUIRED)
+  const errorCode = responseData?.error || responseData?.code;
+  if (errorCode && typeof errorCode === 'string' && ERROR_MAP[errorCode]) {
+    return ERROR_MAP[errorCode];
   }
 
   // Status-code-based fallbacks
