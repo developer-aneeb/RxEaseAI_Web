@@ -142,8 +142,10 @@ export default function SettingsPage() {
         email: data.newEmail,
         current_password: data.currentPassword
       });
-      showToast('Re-verification email sent to your new address.', 'success');
+      showToast('Email changed successfully. Please sign in again and verify your new email.', 'success');
       resetSecurity();
+      logout();
+      window.location.hash = '#signin';
     } catch (error) {
       console.error(error);
       const friendlyMsg = getFriendlyErrorMessage(error, 'Failed to update email address.');
@@ -161,8 +163,10 @@ export default function SettingsPage() {
         current_password: data.currentPasswordForUpdate,
         new_password: data.newPassword
       });
-      showToast('Password updated successfully.', 'success');
+      showToast('Password changed successfully. Please sign in with your new password.', 'success');
       resetPassword();
+      logout();
+      window.location.hash = '#signin';
     } catch (error) {
       console.error(error);
       const friendlyMsg = getFriendlyErrorMessage(error, 'Failed to update password.');
