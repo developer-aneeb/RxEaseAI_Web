@@ -83,21 +83,27 @@ function MainRouter() {
                 window.location.href = `${window.location.origin}/#verify-email`;
             }
         } else if (pathname.startsWith('/auth/oauth/success')) {
-            const params = new URLSearchParams(window.location.search);
-            const accessToken = params.get('access_token');
-            const refreshToken = params.get('refresh_token');
+            const hashParams = new URLSearchParams(window.location.hash.substring(1));
+            const searchParams = new URLSearchParams(window.location.search);
+            
+            const accessToken = hashParams.get('access_token') || searchParams.get('access_token');
+            const refreshToken = hashParams.get('refresh_token') || searchParams.get('refresh_token');
             if (accessToken) {
                 localStorage.setItem('rxease_token', accessToken);
                 if (refreshToken) {
                     localStorage.setItem('rxease_refresh_token', refreshToken);
                 }
-                window.location.href = `${window.location.origin}/#home`;
+                // Initialize auth immediately so the store fetches the user profile using the new token
+                initializeAuth().then(() => {
+                    window.location.href = `${window.location.origin}/#home`;
+                });
             } else {
                 window.location.href = `${window.location.origin}/#signin`;
             }
         } else if (pathname.startsWith('/auth/oauth/error')) {
-            const params = new URLSearchParams(window.location.search);
-            const error = params.get('error') || 'oauth_failed';
+            const hashParams = new URLSearchParams(window.location.hash.substring(1));
+            const searchParams = new URLSearchParams(window.location.search);
+            const error = hashParams.get('error_description') || searchParams.get('error') || 'oauth_failed';
             window.location.href = `${window.location.origin}/#signin?error=${encodeURIComponent(error)}`;
         }
     }, [pathname]);
