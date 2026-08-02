@@ -11,6 +11,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { signInSchema } from '../../utils/validation/zodSchemas';
 import { authService } from '../../services/authService';
+import { oauthService } from '../../services/oauthService';
 import { getFriendlyErrorMessage } from '../../utils/errorMessages';
 
 export default function SignIn() {
@@ -560,7 +561,7 @@ export default function SignIn() {
                 type="button"
                 onClick={async () => {
                   try {
-                    await authService.initiateGoogleOAuth();
+                    await oauthService.signInWithGoogle();
                   } catch (error) {
                     showToast(getFriendlyErrorMessage(error), 'error');
                   }
