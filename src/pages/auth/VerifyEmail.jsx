@@ -24,28 +24,33 @@ export default function VerifyEmail() {
       setEmail(savedEmail);
     }
 
-    // Check for verification tokens in URL hash (Supabase style)
-    const hash = window.location.hash || '';
-    if (hash.includes('access_token') || hash.includes('error_code')) {
-      const hashParams = new URLSearchParams(hash.replace(/^#/, ''));
-      const accessToken = hashParams.get('access_token');
-      const type = hashParams.get('type');
-      const errorCode = hashParams.get('error_code');
-      const errorDesc = hashParams.get('error_description');
+    // After the App.jsx redirect, Supabase params arrive as query params on the hash route:
+    // /#verify-email?access_token=...&type=signup
+    // window.location.search captures everything after the pathname but before '#',
+    // so we need to parse from the hash itself when using hash-based routing.
+    const fullHash = window.location.hash || '';
+    // fullHash looks like: #verify-email?access_token=...
+    const queryIndex = fullHash.indexOf('?');
+    const paramString = queryIndex !== -1 ? fullHash.substring(queryIndex + 1) : '';
+    const params = new URLSearchParams(paramString);
 
-      if (errorCode) {
-        setStatus('error');
-        setErrorMessage(errorDesc ? decodeURIComponent(errorDesc).replace(/\+/g, ' ') : 'Verification failed.');
-        return;
-      }
+    const accessToken = params.get('access_token');
+    const type = params.get('type');
+    const errorCode = params.get('error_code');
+    const errorDesc = params.get('error_description');
 
-      if (accessToken && (type === 'signup' || type === 'invite' || type === 'recovery')) {
-        setStatus('success');
-        return;
-      }
+    if (errorCode) {
+      setStatus('error');
+      setErrorMessage(errorDesc ? decodeURIComponent(errorDesc).replace(/\+/g, ' ') : 'Verification failed.');
+      return;
     }
 
-    // Check for standard query params
+    if (accessToken && (type === 'signup' || type === 'invite')) {
+      setStatus('success');
+      return;
+    }
+
+    // Fallback: standard ?token= query param
     const queryParams = new URLSearchParams(window.location.search);
     const token = queryParams.get('token');
     if (token) {

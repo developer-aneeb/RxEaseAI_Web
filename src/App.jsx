@@ -70,11 +70,15 @@ function MainRouter() {
         }
         
         if (pathname === '/verify-email') {
-            // Preserve the hash so VerifyEmail.jsx can detect the access_token / error_code
-            // and show the success / error state with the auto-close countdown.
-            // Do NOT redirect to #home here – that bypasses the confirmation screen.
-            const hash = window.location.hash || '';
-            window.location.href = `${window.location.origin}/#verify-email${hash}`;
+            // Move the Supabase hash params to query params on the #verify-email hash route
+            // so VerifyEmail.jsx can read them and show the success / error state.
+            const rawHash = window.location.hash || '';
+            const hashParams = rawHash.startsWith('#') ? rawHash.substring(1) : rawHash;
+            if (hashParams) {
+                window.location.href = `${window.location.origin}/#verify-email?${hashParams}`;
+            } else {
+                window.location.href = `${window.location.origin}/#verify-email`;
+            }
         } else if (pathname.startsWith('/auth/oauth/success')) {
             const hashParams = new URLSearchParams(window.location.hash.substring(1));
             const searchParams = new URLSearchParams(window.location.search);
