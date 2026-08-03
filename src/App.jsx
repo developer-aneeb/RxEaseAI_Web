@@ -46,8 +46,11 @@ function MainRouter() {
     useEffect(() => {
         const hash = window.location.hash || '';
 
-        // Handle recovery links and expired/used links
-        if (pathname === '/reset-password' || hash.includes('type=recovery') || hash.includes('error_description=')) {
+        // Handle password-recovery links (and bare /reset-password path).
+        // Scope this ONLY to reset-password pathname or type=recovery hash — NOT to
+        // generic error_description= which can also appear on verify-email links.
+        const isRecoveryFlow = pathname === '/reset-password' || hash.includes('type=recovery');
+        if (isRecoveryFlow) {
             const params = new URLSearchParams(hash.substring(1));
             const accessToken = params.get('access_token');
             const refreshToken = params.get('refresh_token');
@@ -68,7 +71,7 @@ function MainRouter() {
                 return;
             }
         }
-        
+
         if (pathname === '/verify-email') {
             // Move the Supabase hash params to query params on the #verify-email hash route
             // so VerifyEmail.jsx can read them and show the success / error state.
