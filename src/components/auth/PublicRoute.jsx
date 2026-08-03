@@ -15,15 +15,11 @@ export default function PublicRoute({ children }) {
           window.location.hash = '#verify-email';
         }
       } else {
-        // If on verify-email with an error param, let VerifyEmail render the error state.
-        // Otherwise (success screen or plain verify-email), don't interfere — VerifyEmail
-        // handles its own redirect logic.
-        const hasError = currentHash.includes('error_code') || currentHash.includes('error=');
+        // Don't redirect away from #verify-email — the component handles its own
+        // flow (success countdown, error display, or redirect to #signin).
         if (!currentHash.startsWith('#verify-email') && !currentHash.startsWith('#home')) {
           window.location.hash = '#home';
         }
-        // suppress the unused variable warning — hasError used as guard above
-        void hasError;
       }
     }
   }, [isAuthenticated, user]);
