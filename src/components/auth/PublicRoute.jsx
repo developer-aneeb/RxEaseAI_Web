@@ -15,8 +15,8 @@ export default function PublicRoute({ children }) {
           window.location.hash = '#verify-email';
         }
       } else {
-        // Don't redirect away from #verify-email — the component handles its own
-        // flow (success countdown, error display, or redirect to #signin).
+        // Don't redirect away from #verify-email while the success screen is showing
+        // (the page auto-closes after its countdown; forcing #home here would skip it)
         if (!currentHash.startsWith('#verify-email') && !currentHash.startsWith('#home')) {
           window.location.hash = '#home';
         }
@@ -25,10 +25,11 @@ export default function PublicRoute({ children }) {
   }, [isAuthenticated, user]);
 
   if (isAuthenticated && user) {
+    const isVerified = !!user.email_confirmed_at;
     const currentHash = window.location.hash || '#';
 
-    // Always allow #verify-email to render — the component itself decides whether to
-    // show pending/success/error state or redirect to #signin.
+    // Allow VerifyEmail to render for unverified users, and also while a just-verified
+    // user is still on the success/countdown screen.
     if (currentHash.startsWith('#verify-email')) {
       return children;
     }

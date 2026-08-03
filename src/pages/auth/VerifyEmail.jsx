@@ -1,19 +1,17 @@
 import { useState, useEffect } from 'react';
 import { useThemeStore } from '../../store/useThemeStore';
 import { useAppStore } from '../../store/useAppStore';
-import { useAuthStore } from '../../store/useAuthStore';
 import Button from '../../components/ui/Button';
 import MaterialIcon from '../../components/ui/MaterialIcon';
 import { authService } from '../../services/authService';
 import { getFriendlyErrorMessage } from '../../utils/errorMessages';
 
 export default function VerifyEmail() {
+  const theme = useThemeStore((state) => state.theme);
   const [timeLeft, setTimeLeft] = useState(42);
   const [particles, setParticles] = useState([]);
   const [email, setEmail] = useState('user@rxeaseai.com');
   const showToast = useAppStore((state) => state.showToast);
-  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
-  const user = useAuthStore((state) => state.user);
 
   const [status, setStatus] = useState('pending'); // pending, success, error
   const [errorMessage, setErrorMessage] = useState('');
@@ -60,15 +58,6 @@ export default function VerifyEmail() {
       return;
     }
   }, []);
-
-  // If the user is already verified and this is the plain pending screen (no error/token
-  // params in the URL), redirect them to sign-in so they know they're already verified.
-  useEffect(() => {
-    if (status !== 'pending') return; // error or success states handle their own flow
-    if (isAuthenticated && user && !!user.email_confirmed_at) {
-      window.location.hash = '#signin';
-    }
-  }, [isAuthenticated, user, status]);
 
   // Auto-close window after success or error
   useEffect(() => {
