@@ -70,18 +70,11 @@ function MainRouter() {
         }
         
         if (pathname === '/verify-email') {
-            const params = new URLSearchParams(window.location.hash.substring(1));
-            const accessToken = params.get('access_token');
-            const refreshToken = params.get('refresh_token');
-            if (accessToken) {
-                localStorage.setItem('rxease_token', accessToken);
-                if (refreshToken) {
-                    localStorage.setItem('rxease_refresh_token', refreshToken);
-                }
-                window.location.href = `${window.location.origin}/#home`;
-            } else {
-                window.location.href = `${window.location.origin}/#verify-email`;
-            }
+            // Preserve the hash so VerifyEmail.jsx can detect the access_token / error_code
+            // and show the success / error state with the auto-close countdown.
+            // Do NOT redirect to #home here – that bypasses the confirmation screen.
+            const hash = window.location.hash || '';
+            window.location.href = `${window.location.origin}/#verify-email${hash}`;
         } else if (pathname.startsWith('/auth/oauth/success')) {
             const hashParams = new URLSearchParams(window.location.hash.substring(1));
             const searchParams = new URLSearchParams(window.location.search);
