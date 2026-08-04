@@ -73,8 +73,8 @@ export default function SettingsPage() {
   const [backupCodes, setBackupCodes] = useState([]);
   const [isDeactivating, setIsDeactivating] = useState(false);
 
-  const fetchProfileInfo = async () => {
-    setIsLoading(true);
+  const fetchProfileInfo = async (showLoading = true) => {
+    if (showLoading) setIsLoading(true);
     try {
       const response = await profileService.getProfile();
       const profile = response?.data?.profile || {};
@@ -107,7 +107,7 @@ export default function SettingsPage() {
       console.error(error);
       showToast('Failed to retrieve profile data from servers.', 'error');
     } finally {
-      setIsLoading(false);
+      if (showLoading) setIsLoading(false);
     }
   };
 
@@ -336,7 +336,7 @@ export default function SettingsPage() {
                   profileData={profileData}
                   avatar={avatar}
                   setAvatar={setAvatar}
-                  onSaveSuccess={fetchProfileInfo}
+                  onSaveSuccess={() => fetchProfileInfo(false)}
                 />
 
                 {/* Security settings card */}
@@ -584,19 +584,19 @@ export default function SettingsPage() {
                 {/* Medical Information card */}
                 <MedicalInfoSection
                   profileData={profileData}
-                  onSaveSuccess={fetchProfileInfo}
+                  onSaveSuccess={() => fetchProfileInfo(false)}
                 />
 
                 {/* Allergies Registry card */}
                 <AllergySection
                   allergies={allergies}
-                  onSaveSuccess={fetchProfileInfo}
+                  onSaveSuccess={() => fetchProfileInfo(false)}
                 />
 
                 {/* Emergency Contacts card */}
                 <EmergencyContactSection
                   emergencyContacts={emergencyContacts}
-                  onSaveSuccess={fetchProfileInfo}
+                  onSaveSuccess={() => fetchProfileInfo(false)}
                 />
 
                 {/* Feedback form */}
