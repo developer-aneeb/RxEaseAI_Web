@@ -264,7 +264,7 @@ export default function ProfileSection({ profileData, avatar, setAvatar, onSaveS
           <Input label="Height (cm)" placeholder="e.g. 175" type="number" step="0.1" error={errors.height?.message} {...register('height')} />
           <Input label="Weight (kg)" placeholder="e.g. 70" type="number" step="0.1" error={errors.weight?.message} {...register('weight')} />
 
-          <div className="relative">
+          {/* <div className="relative">
             <Input
               label="Assigned Role (Locked)"
               placeholder="General User"
@@ -274,7 +274,7 @@ export default function ProfileSection({ profileData, avatar, setAvatar, onSaveS
               {...register('specialty')}
             />
             <Shield className="w-4 h-4 text-slate-400 absolute right-3 top-[34px]" />
-          </div>
+          </div> */}
         </div>
 
         <Input label="Residential Address" placeholder="e.g. 123 Main Street" error={errors.address?.message} {...register('address')} />
