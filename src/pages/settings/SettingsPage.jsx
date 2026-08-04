@@ -354,7 +354,7 @@ export default function SettingsPage() {
                     <h4 className="text-xs font-bold text-slate-800 dark:text-white uppercase tracking-wider">Change Email Address</h4>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <Input label="New Email Address" type="email" placeholder="user@rxeaseai.com" error={securityErrors.newEmail?.message} {...registerSecurity('newEmail', { required: 'New email is required' })} />
-                      {/* <Input label="Current Password" type="password" placeholder="Confirm your password" error={securityErrors.currentPassword?.message} {...registerSecurity('currentPassword', { required: 'Password validation required' })} /> */}
+                      <Input label="Current Password" type="password" placeholder="Confirm your password" error={securityErrors.currentPassword?.message} {...registerSecurity('currentPassword', { required: 'Password validation required' })} />
                     </div>
                     <div className="pt-2 flex justify-end">
                       <Button type="submit" disabled={isUpdatingEmail} variant="primary" className="bg-primary text-white font-bold px-6 py-2.5 rounded-xl cursor-pointer">
