@@ -1,4 +1,4 @@
-import { AlertTriangle, Bell, CheckCircle2, KeyRound, RefreshCw, ShieldCheck, Smartphone } from 'lucide-react';
+import { AlertTriangle, Bell, CheckCircle2, KeyRound, RefreshCw, ShieldCheck, Smartphone, ArrowLeft } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import Navbar from '../../components/layout/Navbar';
@@ -20,6 +20,7 @@ import FeedbackSection from './FeedbackSection';
 import MedicalInfoSection from './MedicalInfo';
 import ProfileSection from './ProfileSection';
 import SideNavbar from './SideNavbar';
+import HealthProfileDashboard from './HealthProfileDashboard';
 
 export default function SettingsPage() {
   const logout = useAuthStore((state) => state.logout);
@@ -47,6 +48,9 @@ export default function SettingsPage() {
 
   // React Hook Form for Email / Password Security
   const [isUpdatingEmail, setIsUpdatingEmail] = useState(false);
+  
+  // Health Profile State
+  const [healthSubView, setHealthSubView] = useState('dashboard'); // 'dashboard' | 'medical' | 'allergies' | 'emergency'
   const {
     register: registerSecurity,
     handleSubmit: handleSecuritySubmit,
@@ -581,23 +585,54 @@ export default function SettingsPage() {
                   </div>
                 </Card>
 
-                {/* Medical Information card */}
-                <MedicalInfoSection
-                  profileData={profileData}
-                  onSaveSuccess={() => fetchProfileInfo(false)}
-                />
-
-                {/* Allergies Registry card */}
-                <AllergySection
-                  allergies={allergies}
-                  onSaveSuccess={() => fetchProfileInfo(false)}
-                />
-
-                {/* Emergency Contacts card */}
-                <EmergencyContactSection
-                  emergencyContacts={emergencyContacts}
-                  onSaveSuccess={() => fetchProfileInfo(false)}
-                />
+                {/* Health Profile Section */}
+                <div id="health_profile-card" className="scroll-mt-24 space-y-8">
+                  {healthSubView === 'dashboard' && (
+                    <HealthProfileDashboard
+                      profileData={profileData}
+                      allergies={allergies}
+                      emergencyContacts={emergencyContacts}
+                      onCategoryClick={(category) => {
+                        setHealthSubView(category);
+                        const el = document.getElementById('health_profile-card');
+                        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                      }}
+                    />
+                  )}
+                  {healthSubView === 'medical' && (
+                    <div className="space-y-4 animate-fade-in">
+                      <Button variant="ghost" onClick={() => setHealthSubView('dashboard')} className="flex items-center gap-2 mb-2 text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white border-none shadow-none cursor-pointer">
+                        <ArrowLeft className="w-4 h-4" /> Back to Health Profile
+                      </Button>
+                      <MedicalInfoSection
+                        profileData={profileData}
+                        onSaveSuccess={() => fetchProfileInfo(false)}
+                      />
+                    </div>
+                  )}
+                  {healthSubView === 'allergies' && (
+                    <div className="space-y-4 animate-fade-in">
+                      <Button variant="ghost" onClick={() => setHealthSubView('dashboard')} className="flex items-center gap-2 mb-2 text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white border-none shadow-none cursor-pointer">
+                        <ArrowLeft className="w-4 h-4" /> Back to Health Profile
+                      </Button>
+                      <AllergySection
+                        allergies={allergies}
+                        onSaveSuccess={() => fetchProfileInfo(false)}
+                      />
+                    </div>
+                  )}
+                  {healthSubView === 'emergency' && (
+                    <div className="space-y-4 animate-fade-in">
+                      <Button variant="ghost" onClick={() => setHealthSubView('dashboard')} className="flex items-center gap-2 mb-2 text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white border-none shadow-none cursor-pointer">
+                        <ArrowLeft className="w-4 h-4" /> Back to Health Profile
+                      </Button>
+                      <EmergencyContactSection
+                        emergencyContacts={emergencyContacts}
+                        onSaveSuccess={() => fetchProfileInfo(false)}
+                      />
+                    </div>
+                  )}
+                </div>
 
                 {/* Feedback form */}
                 <FeedbackSection />

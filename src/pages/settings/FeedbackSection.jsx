@@ -43,7 +43,7 @@ export default function FeedbackSection() {
     setSubmittingFeedback(true);
     try {
       await feedbackService.submit(data.feedbackText, data.rating, category);
-      showToast('Feedback submitted to the AI refinements registry. Thank you!', 'success');
+      showToast('Feedback submitted successfully. Thank you!', 'success');
       reset();
       setCategory('general');
     } catch (error) {

@@ -6,9 +6,7 @@ export default function SideNavbar({ activeTab, onTabClick, onLogout }) {
     { id: 'profile', label: 'Profile Settings', icon: User },
     { id: 'security', label: 'Security & Email', icon: KeyRound },
     { id: 'notifications', label: 'Notifications', icon: Bell },
-    { id: 'medical', label: 'Medical Information', icon: HeartPulse },
-    { id: 'allergies', label: 'Allergies Registry', icon: ShieldAlert },
-    { id: 'emergency', label: 'Emergency Contacts', icon: Users },
+    { id: 'health_profile', label: 'Health Profile', icon: HeartPulse },
     { id: 'feedback', label: 'Feedback Form', icon: MessageSquare },
     { id: 'faqs', label: 'FAQs Accordion', icon: HelpCircle },
   ];
