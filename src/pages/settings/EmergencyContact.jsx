@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Users, Edit, Trash2 } from 'lucide-react';
 import { profileService } from '../../services/profileService';
 import { useAppStore } from '../../store/useAppStore';
+import { getFriendlyErrorMessage } from '../../utils/errorMessages';
 import Card from '../../components/ui/Card';
 import Button from '../../components/ui/Button';
 
@@ -51,7 +52,8 @@ export default function EmergencyContactSection({ emergencyContacts, onSaveSucce
       onSaveSuccess();
     } catch (error) {
       console.error(error);
-      showToast('Failed to save contact details.', 'error');
+      const friendlyMsg = getFriendlyErrorMessage(error, 'Failed to save contact details.');
+      showToast(friendlyMsg, 'error');
     } finally {
       setIsSavingContact(false);
     }
@@ -73,14 +75,7 @@ export default function EmergencyContactSection({ emergencyContacts, onSaveSucce
     }
     setDeletingId(contact.id);
     try {
-      await profileService.updateEmergencyContact(contact.id, {
-        contact_name: contact.contact_name,
-        relationship: contact.relationship,
-        phone: contact.phone,
-        address: contact.address,
-        is_deleted: true,
-        deleted_at: new Date().toISOString()
-      });
+      await profileService.deleteEmergencyContact(contact.id);
       showToast('Emergency contact removed.', 'success');
       if (editingContactId === contact.id) {
         setEditingContactId(null);
@@ -92,7 +87,8 @@ export default function EmergencyContactSection({ emergencyContacts, onSaveSucce
       onSaveSuccess();
     } catch (error) {
       console.error(error);
-      showToast('Failed to remove emergency contact.', 'error');
+      const friendlyMsg = getFriendlyErrorMessage(error, 'Failed to remove emergency contact.');
+      showToast(friendlyMsg, 'error');
     } finally {
       setDeletingId(null);
     }

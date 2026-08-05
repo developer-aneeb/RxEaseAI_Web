@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { ShieldAlert, Edit, Trash2 } from 'lucide-react';
 import { profileService } from '../../services/profileService';
 import { useAppStore } from '../../store/useAppStore';
+import { getFriendlyErrorMessage } from '../../utils/errorMessages';
 import Card from '../../components/ui/Card';
 import Button from '../../components/ui/Button';
 
@@ -46,7 +47,8 @@ export default function AllergySection({ allergies, onSaveSuccess }) {
       onSaveSuccess();
     } catch (error) {
       console.error(error);
-      showToast('Failed to save allergy details.', 'error');
+      const friendlyMsg = getFriendlyErrorMessage(error, 'Failed to save allergy details.');
+      showToast(friendlyMsg, 'error');
     } finally {
       setIsSavingAllergy(false);
     }
@@ -67,13 +69,7 @@ export default function AllergySection({ allergies, onSaveSuccess }) {
     }
     setDeletingId(allergy.id);
     try {
-      await profileService.updateAllergy(allergy.id, {
-        allergy_type: allergy.allergy_type,
-        allergen: allergy.allergen,
-        reaction: allergy.reaction,
-        is_deleted: true,
-        deleted_at: new Date().toISOString()
-      });
+      await profileService.deleteAllergy(allergy.id);
       showToast('Allergy removed from active registry.', 'success');
       if (editingAllergyId === allergy.id) {
         setEditingAllergyId(null);
@@ -83,7 +79,8 @@ export default function AllergySection({ allergies, onSaveSuccess }) {
       onSaveSuccess();
     } catch (error) {
       console.error(error);
-      showToast('Failed to remove allergy.', 'error');
+      const friendlyMsg = getFriendlyErrorMessage(error, 'Failed to remove allergy.');
+      showToast(friendlyMsg, 'error');
     } finally {
       setDeletingId(null);
     }
