@@ -113,6 +113,12 @@ export const profileService = {
     return response.data;
   },
 
+  /** DELETE /profile/allergies/:id */
+  async deleteAllergy(id) {
+    const response = await apiClient.delete(`/profile/allergies/${id}`);
+    return response.data;
+  },
+
   // ── Emergency Contacts ──
 
   /** GET /profile/emergency-contacts */
@@ -136,6 +142,12 @@ export const profileService = {
    */
   async updateEmergencyContact(id, data) {
     const response = await apiClient.put(`/profile/emergency-contacts/${id}`, { ...data, id });
+    return response.data;
+  },
+
+  /** DELETE /profile/emergency-contacts/:id */
+  async deleteEmergencyContact(id) {
+    const response = await apiClient.delete(`/profile/emergency-contacts/${id}`);
     return response.data;
   },
 };
