@@ -19,7 +19,7 @@ import FaqSection from './FaqSection';
 import FeedbackSection from './FeedbackSection';
 import MedicalInfoSection from './MedicalInfo';
 import ProfileSection from './ProfileSection';
-import SideNavbar from './SideNavbar';
+import SideNavbar from './HorizontalTabNavigation';
 
 export default function SettingsPage() {
   const logout = useAuthStore((state) => state.logout);
