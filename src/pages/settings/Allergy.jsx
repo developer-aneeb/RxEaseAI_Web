@@ -16,6 +16,7 @@ export default function AllergySection({ allergies, onSaveSuccess }) {
   const [editingAllergyId, setEditingAllergyId] = useState(null);
   const [isSavingAllergy, setIsSavingAllergy] = useState(false);
   const [deletingId, setDeletingId] = useState(null);
+  const [confirmDeleteId, setConfirmDeleteId] = useState(null);
 
   const activeAllergies = (allergies || []).filter((a) => !a.is_deleted);
 
@@ -64,9 +65,6 @@ export default function AllergySection({ allergies, onSaveSuccess }) {
   };
 
   const handleDeleteAllergy = async (allergy) => {
-    if (!window.confirm(`Are you sure you want to remove "${allergy.allergen}" from your allergies registry?`)) {
-      return;
-    }
     setDeletingId(allergy.id);
     try {
       await profileService.deleteAllergy(allergy.id);
@@ -76,6 +74,7 @@ export default function AllergySection({ allergies, onSaveSuccess }) {
         setAllergenInput('');
         setReactionInput('');
       }
+      setConfirmDeleteId(null);
       onSaveSuccess();
     } catch (error) {
       console.error(error);
@@ -114,25 +113,44 @@ export default function AllergySection({ allergies, onSaveSuccess }) {
                     <p className="text-[10px] text-slate-400 italic mt-1">No specific reaction noted</p>
                   )}
                 </div>
-                <div className="flex items-center gap-1 shrink-0">
-                  <button
-                    type="button"
-                    onClick={() => handleEditAllergy(allergy)}
-                    className="text-slate-400 hover:text-primary bg-transparent border-0 cursor-pointer p-1.5 rounded-lg hover:bg-primary/10 transition-colors"
-                    title="Edit Allergy"
-                  >
-                    <Edit className="w-4 h-4" />
-                  </button>
-                  <button
-                    type="button"
-                    disabled={deletingId === allergy.id}
-                    onClick={() => handleDeleteAllergy(allergy)}
-                    className="text-slate-400 hover:text-rose-500 bg-transparent border-0 cursor-pointer p-1.5 rounded-lg hover:bg-rose-500/10 transition-colors"
-                    title="Delete Allergy"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </button>
-                </div>
+                {confirmDeleteId === allergy.id ? (
+                  <div className="flex items-center gap-1 bg-rose-500/10 dark:bg-rose-500/20 p-1 rounded-xl border border-rose-500/30 animate-fade-in shrink-0">
+                    <button
+                      type="button"
+                      disabled={deletingId === allergy.id}
+                      onClick={() => handleDeleteAllergy(allergy)}
+                      className="bg-rose-500 text-white text-[10px] font-bold px-2 py-1 rounded-lg hover:bg-rose-600 border-0 cursor-pointer transition-colors"
+                    >
+                      {deletingId === allergy.id ? 'Deleting...' : 'Delete'}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setConfirmDeleteId(null)}
+                      className="bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-[10px] font-bold px-2 py-1 rounded-lg hover:bg-slate-300 border-0 cursor-pointer transition-colors"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-1 shrink-0">
+                    <button
+                      type="button"
+                      onClick={() => handleEditAllergy(allergy)}
+                      className="text-slate-400 hover:text-primary bg-transparent border-0 cursor-pointer p-1.5 rounded-lg hover:bg-primary/10 transition-colors"
+                      title="Edit Allergy"
+                    >
+                      <Edit className="w-4 h-4" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setConfirmDeleteId(allergy.id)}
+                      className="text-slate-400 hover:text-rose-500 bg-transparent border-0 cursor-pointer p-1.5 rounded-lg hover:bg-rose-500/10 transition-colors"
+                      title="Delete Allergy"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
+                )}
               </div>
             ))}
           </div>
