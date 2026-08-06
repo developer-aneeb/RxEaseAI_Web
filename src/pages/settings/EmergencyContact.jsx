@@ -17,6 +17,7 @@ export default function EmergencyContactSection({ emergencyContacts, onSaveSucce
   const [editingContactId, setEditingContactId] = useState(null);
   const [isSavingContact, setIsSavingContact] = useState(false);
   const [deletingId, setDeletingId] = useState(null);
+  const [confirmDeleteId, setConfirmDeleteId] = useState(null);
 
   const activeContacts = (emergencyContacts || []).filter((c) => !c.is_deleted);
 
@@ -70,9 +71,6 @@ export default function EmergencyContactSection({ emergencyContacts, onSaveSucce
   };
 
   const handleDeleteContact = async (contact) => {
-    if (!window.confirm(`Are you sure you want to remove "${contact.contact_name}" from your emergency contacts?`)) {
-      return;
-    }
     setDeletingId(contact.id);
     try {
       await profileService.deleteEmergencyContact(contact.id);
@@ -84,6 +82,7 @@ export default function EmergencyContactSection({ emergencyContacts, onSaveSucce
         setContactPhoneInput('');
         setContactAddressInput('');
       }
+      setConfirmDeleteId(null);
       onSaveSuccess();
     } catch (error) {
       console.error(error);
@@ -119,25 +118,44 @@ export default function EmergencyContactSection({ emergencyContacts, onSaveSucce
                   <p className="text-[11px] text-slate-600 dark:text-slate-400 font-semibold mt-1">Phone: {contact.phone}</p>
                   {contact.address && <p className="text-[10px] text-slate-500 dark:text-slate-400 mt-1 truncate">Address: {contact.address}</p>}
                 </div>
-                <div className="flex items-center gap-1 shrink-0">
-                  <button
-                    type="button"
-                    onClick={() => handleEditContact(contact)}
-                    className="text-slate-400 hover:text-primary bg-transparent border-0 cursor-pointer p-1.5 rounded-lg hover:bg-primary/10 transition-colors"
-                    title="Edit Contact"
-                  >
-                    <Edit className="w-4 h-4" />
-                  </button>
-                  <button
-                    type="button"
-                    disabled={deletingId === contact.id}
-                    onClick={() => handleDeleteContact(contact)}
-                    className="text-slate-400 hover:text-rose-500 bg-transparent border-0 cursor-pointer p-1.5 rounded-lg hover:bg-rose-500/10 transition-colors"
-                    title="Delete Contact"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </button>
-                </div>
+                {confirmDeleteId === contact.id ? (
+                  <div className="flex items-center gap-1 bg-rose-500/10 dark:bg-rose-500/20 p-1 rounded-xl border border-rose-500/30 animate-fade-in shrink-0">
+                    <button
+                      type="button"
+                      disabled={deletingId === contact.id}
+                      onClick={() => handleDeleteContact(contact)}
+                      className="bg-rose-500 text-white text-[10px] font-bold px-2 py-1 rounded-lg hover:bg-rose-600 border-0 cursor-pointer transition-colors"
+                    >
+                      {deletingId === contact.id ? 'Deleting...' : 'Delete'}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setConfirmDeleteId(null)}
+                      className="bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-[10px] font-bold px-2 py-1 rounded-lg hover:bg-slate-300 border-0 cursor-pointer transition-colors"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-1 shrink-0">
+                    <button
+                      type="button"
+                      onClick={() => handleEditContact(contact)}
+                      className="text-slate-400 hover:text-primary bg-transparent border-0 cursor-pointer p-1.5 rounded-lg hover:bg-primary/10 transition-colors"
+                      title="Edit Contact"
+                    >
+                      <Edit className="w-4 h-4" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setConfirmDeleteId(contact.id)}
+                      className="text-slate-400 hover:text-rose-500 bg-transparent border-0 cursor-pointer p-1.5 rounded-lg hover:bg-rose-500/10 transition-colors"
+                      title="Delete Contact"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
+                )}
               </div>
             ))}
           </div>
