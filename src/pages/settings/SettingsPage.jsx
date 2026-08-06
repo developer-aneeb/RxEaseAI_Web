@@ -280,12 +280,8 @@ export default function SettingsPage() {
     }
   };
 
-  const handleTabClick = (tabId, elementId) => {
+  const handleTabClick = (tabId) => {
     setActiveTab(tabId);
-    const element = document.getElementById(elementId);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }
   };
 
   const navLinks = [
@@ -306,41 +302,37 @@ export default function SettingsPage() {
       <div className="fixed top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-primary/10 blur-[100px] pointer-events-none z-0"></div>
       <div className="fixed bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-emerald-500/5 blur-[100px] pointer-events-none z-0"></div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full font-geist">
-        <div className="flex flex-col lg:flex-row gap-8 items-start">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full font-geist space-y-6">
+        <div className="text-left space-y-3">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-200/50 dark:bg-slate-900 border border-slate-250 dark:border-slate-800 text-xs font-semibold">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-emerald-500 animate-pulse"></span>
+            <span>Customization, Feedback & Support Hub</span>
+          </div>
+          <h1 className="text-3xl md:text-5xl font-black tracking-tight text-slate-900 dark:text-white">
+            Personalize Your <span className="bg-gradient-to-r from-primary to-indigo-500 bg-clip-text text-transparent">RxEaseAI Experience</span>
+          </h1>
+        </div>
 
-          {/* Settings Sub-Sidebar Menu - Desktop */}
-          <SideNavbar activeTab={activeTab} onTabClick={handleTabClick} onLogout={logout} />
+        {/* Horizontal Navigation Bar under heading title */}
+        <SideNavbar activeTab={activeTab} onTabClick={handleTabClick} onLogout={logout} />
 
-          {/* Main Workspace Column */}
-          <div className="flex-1 w-full space-y-8 animate-fade-up">
-            <div className="text-left">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-200/50 dark:bg-slate-900 border border-slate-250 dark:border-slate-800 text-xs font-semibold mb-3">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-emerald-500 animate-pulse"></span>
-                <span>Customization, Feedback & Support Hub</span>
-              </div>
-              <h1 className="text-3xl md:text-5xl font-black tracking-tight text-slate-900 dark:text-white">
-                Personalize Your <span className="bg-gradient-to-r from-primary to-indigo-500 bg-clip-text text-transparent">RxEaseAI Experience</span>
-              </h1>
-            </div>
+        {isLoading ? (
+          <div className="py-24 flex items-center justify-center">
+            <Spinner />
+          </div>
+        ) : (
+          <div className="w-full transition-all duration-300">
+            {activeTab === 'profile' && (
+              <ProfileSection
+                profileData={profileData}
+                avatar={avatar}
+                setAvatar={setAvatar}
+                onSaveSuccess={() => fetchProfileInfo(false)}
+              />
+            )}
 
-            {isLoading ? (
-              <div className="py-24 flex items-center justify-center">
-                <Spinner />
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 gap-8">
-
-                {/* Profile settings card */}
-                <ProfileSection
-                  profileData={profileData}
-                  avatar={avatar}
-                  setAvatar={setAvatar}
-                  onSaveSuccess={() => fetchProfileInfo(false)}
-                />
-
-                {/* Security settings card */}
-                <Card id="security-card" variant="glass" className="p-6 bg-white/70 dark:bg-slate-900/80 text-left border border-slate-200 dark:border-slate-800 shadow-md">
+            {activeTab === 'security' && (
+              <Card id="security-card" variant="glass" className="p-6 bg-white/70 dark:bg-slate-900/80 text-left border border-slate-200 dark:border-slate-800 shadow-md">
                   <div className="flex items-center gap-2 mb-6 border-b border-slate-100 dark:border-slate-800 pb-3">
                     <KeyRound className="w-5 h-5 text-primary" />
                     <div>
@@ -539,9 +531,10 @@ export default function SettingsPage() {
                     </div>
                   </div>
                 </Card>
+            )}
 
-                {/* Notification preferences card */}
-                <Card id="notifications-card" variant="glass" className="p-6 bg-white/70 dark:bg-slate-900/80 text-left border border-slate-200 dark:border-slate-800 shadow-md">
+            {activeTab === 'notifications' && (
+              <Card id="notifications-card" variant="glass" className="p-6 bg-white/70 dark:bg-slate-900/80 text-left border border-slate-200 dark:border-slate-800 shadow-md">
                   <div className="flex items-center gap-2 mb-6 border-b border-slate-100 dark:border-slate-800 pb-3">
                     <Bell className="w-5 h-5 text-primary" />
                     <div>
@@ -580,35 +573,34 @@ export default function SettingsPage() {
                     </div>
                   </div>
                 </Card>
-
-                {/* Medical Information card */}
-                <MedicalInfoSection
-                  profileData={profileData}
-                  onSaveSuccess={() => fetchProfileInfo(false)}
-                />
-
-                {/* Allergies Registry card */}
-                <AllergySection
-                  allergies={allergies}
-                  onSaveSuccess={() => fetchProfileInfo(false)}
-                />
-
-                {/* Emergency Contacts card */}
-                <EmergencyContactSection
-                  emergencyContacts={emergencyContacts}
-                  onSaveSuccess={() => fetchProfileInfo(false)}
-                />
-
-                {/* Feedback form */}
-                <FeedbackSection />
-
-                {/* FAQs accordion */}
-                <FaqSection />
-
-              </div>
             )}
+
+            {activeTab === 'medical' && (
+              <MedicalInfoSection
+                profileData={profileData}
+                onSaveSuccess={() => fetchProfileInfo(false)}
+              />
+            )}
+
+            {activeTab === 'allergies' && (
+              <AllergySection
+                allergies={allergies}
+                onSaveSuccess={() => fetchProfileInfo(false)}
+              />
+            )}
+
+            {activeTab === 'emergency' && (
+              <EmergencyContactSection
+                emergencyContacts={emergencyContacts}
+                onSaveSuccess={() => fetchProfileInfo(false)}
+              />
+            )}
+
+            {activeTab === 'feedback' && <FeedbackSection />}
+
+            {activeTab === 'faqs' && <FaqSection />}
           </div>
-        </div>
+        )}
       </div>
     </div>
   );
