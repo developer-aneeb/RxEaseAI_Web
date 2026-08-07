@@ -144,7 +144,7 @@ export default function Navbar({ links }) {
                                         {/* <div className="text-[10px] text-slate-500">Clinical Admin</div> */}
                                     </div>
                                     {user?.avatar ? (
-                                        <img src={user.avatar} alt="Profile" className="w-8 h-8 rounded-full object-cover border border-primary/20" />
+                                        <img src={user.avatar} alt="Profile" className="w-8 h-8 rounded-full object-cover object-top border border-primary/20 aspect-square" />
                                     ) : (
                                         <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-xs">
                                             {getInitials(user?.fullName || user?.name || user?.email)}
@@ -236,7 +236,7 @@ export default function Navbar({ links }) {
                                         className="flex items-center gap-3 px-3 py-2 cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-900 rounded-xl transition-all"
                                     >
                                         {user?.avatar ? (
-                                            <img src={user.avatar} alt="Profile" className="w-10 h-10 rounded-full object-cover border border-primary/20" />
+                                            <img src={user.avatar} alt="Profile" className="w-10 h-10 rounded-full object-cover object-top border border-primary/20 aspect-square" />
                                         ) : (
                                             <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-sm">
                                                 {getInitials(user?.fullName || user?.name || user?.email)}
