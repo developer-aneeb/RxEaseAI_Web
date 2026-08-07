@@ -157,10 +157,10 @@ export default function ProfileSection({ profileData, avatar, setAvatar, onSaveS
 
       <div className="flex flex-col sm:flex-row items-center gap-6 mb-8 bg-slate-50 dark:bg-slate-950/40 p-4 rounded-2xl border border-slate-200/50 dark:border-slate-800">
         <div className="relative group shrink-0">
-          <img src={avatar} className="w-16 h-16 rounded-full object-cover border-2 border-primary shadow-md" alt="User Avatar" />
+          <img src={avatar} className="w-20 h-20 rounded-full object-cover border-2 border-primary shadow-md" alt="User Avatar" />
           <label className="absolute inset-0 rounded-full bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
             <Camera className="w-5 h-5 text-white" />
-            <input type="file" onChange={handleAvatarUpdate} accept="image/jpeg,image/png,image/jpg,image/gif" className="hidden" />
+            <input type="file" onChange={handleAvatarUpdate} accept="image/jpeg,image/png,image/jpg" className="hidden" />
           </label>
         </div>
         <div className="text-center sm:text-left min-w-0 flex-1">
