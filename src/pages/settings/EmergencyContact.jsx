@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Users, Edit, Trash2 } from 'lucide-react';
+import { Users, Edit, Trash2, Plus } from 'lucide-react';
 import { profileService } from '../../services/profileService';
 import { useAppStore } from '../../store/useAppStore';
 import { getFriendlyErrorMessage } from '../../utils/errorMessages';
@@ -18,6 +18,7 @@ export default function EmergencyContactSection({ emergencyContacts, onSaveSucce
   const [isSavingContact, setIsSavingContact] = useState(false);
   const [deletingId, setDeletingId] = useState(null);
   const [confirmDeleteId, setConfirmDeleteId] = useState(null);
+  const [showAddForm, setShowAddForm] = useState(false);
 
   const activeContacts = (emergencyContacts || []).filter((c) => !c.is_deleted);
 
