@@ -22,6 +22,27 @@ export default function EmergencyContactSection({ emergencyContacts, onSaveSucce
 
   const activeContacts = (emergencyContacts || []).filter((c) => !c.is_deleted);
 
+  // Reset form when showing add form
+  const handleShowAddForm = () => {
+    setContactNameInput('');
+    setRelationshipInput('');
+    setContactPhoneInput('');
+    setContactAddressInput('');
+    setEditingContactId(null);
+    setShowAddForm(true);
+    const formElement = document.getElementById('contact-form-anchor');
+    if (formElement) formElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  };
+
+  const handleCancelAdd = () => {
+    setContactNameInput('');
+    setRelationshipInput('');
+    setContactPhoneInput('');
+    setContactAddressInput('');
+    setEditingContactId(null);
+    setShowAddForm(false);
+  };
+
   const handleSaveContact = async () => {
     if (!contactNameInput.trim() || !contactPhoneInput.trim()) {
       showToast('Name and Phone are required for emergency contact.', 'warning');
