@@ -1,6 +1,6 @@
 import { User, Bell, MessageSquare, HelpCircle, LogOut, HeartPulse, ShieldAlert, Users, KeyRound } from 'lucide-react';
 
-export default function SideNavbar({ activeTab, onTabClick, onLogout }) {
+export default function HorizontalTabNavigation({ activeTab, onTabClick, onLogout }) {
   const tabs = [
     { id: 'profile', label: 'Profile', icon: User },
     { id: 'security', label: 'Security & Email', icon: KeyRound },
@@ -36,7 +36,7 @@ export default function SideNavbar({ activeTab, onTabClick, onLogout }) {
             );
           })}
         </nav>
-        {onLogout && (
+        {/* {onLogout && (
           <button
             type="button"
             onClick={onLogout}
@@ -46,7 +46,7 @@ export default function SideNavbar({ activeTab, onTabClick, onLogout }) {
             <LogOut className="w-4 h-4" />
             <span className="hidden sm:inline">Log Out</span>
           </button>
-        )}
+        )} */}
       </div>
     </div>
   );
