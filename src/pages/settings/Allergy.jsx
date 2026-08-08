@@ -1,10 +1,34 @@
 import { useState } from 'react';
-import { ShieldAlert, Edit, Trash2 } from 'lucide-react';
+import { ShieldAlert, Edit, Trash2, Plus } from 'lucide-react';
 import { profileService } from '../../services/profileService';
 import { useAppStore } from '../../store/useAppStore';
 import { getFriendlyErrorMessage } from '../../utils/errorMessages';
 import Card from '../../components/ui/Card';
 import Button from '../../components/ui/Button';
+
+// Comprehensive list of common allergies
+const COMMON_ALLERGIES = {
+  Drug: [
+    'Penicillin', 'Amoxicillin', 'Aspirin', 'Ibuprofen', 'Sulfa drugs', 
+    'Codeine', 'Morphine', 'NSAIDs', 'ACE inhibitors', 'Statins',
+    '化疗药物', '疫苗', 'Contrast dye', 'Local anesthetics', 'Antibiotics'
+  ],
+  Food: [
+    'Peanuts', 'Tree nuts (almonds, walnuts, cashews)', 'Milk', 'Eggs', 'Wheat',
+    'Soy', 'Fish (salmon, tuna, cod)', 'Shellfish (shrimp, crab, lobster)', 'Sesame',
+    'Corn', 'Chicken', 'Beef', 'Pork', 'Fruits (banana, avocado, kiwi)',
+    'Chocolate', 'MSG', 'Food dyes', 'Preservatives'
+  ],
+  Environmental: [
+    'Pollen (tree, grass, ragweed)', 'Dust mites', 'Mold', 'Pet dander (cats, dogs)',
+    'Cockroach droppings', 'Insect stings (bees, wasps, hornets)', 'Latex',
+    'Feathers', 'Cedar wood', 'Nickel', 'Hair dyes', 'Cosmetics'
+  ],
+  Other: [
+    'Latex', 'Iron', 'Anesthetic agents', 'Insulin', 'Heparin',
+    'Vaccines', 'Contrast dye', 'Preservatives', 'Food additives', 'Tick bites'
+  ]
+};
 
 export default function AllergySection({ allergies, onSaveSuccess }) {
   const showToast = useAppStore((state) => state.showToast);
@@ -17,8 +41,37 @@ export default function AllergySection({ allergies, onSaveSuccess }) {
   const [isSavingAllergy, setIsSavingAllergy] = useState(false);
   const [deletingId, setDeletingId] = useState(null);
   const [confirmDeleteId, setConfirmDeleteId] = useState(null);
+  const [showAddForm, setShowAddForm] = useState(false);
+  const [showCommonOptions, setShowCommonOptions] = useState(false);
 
   const activeAllergies = (allergies || []).filter((a) => !a.is_deleted);
+
+  // Get common allergies for current type
+  const commonAllergiesForType = COMMON_ALLERGIES[allergyTypeInput] || [];
+
+  // Reset form when showing add form
+  const handleShowAddForm = () => {
+    setAllergenInput('');
+    setReactionInput('');
+    setEditingAllergyId(null);
+    setAllergyTypeInput('Drug');
+    setShowAddForm(true);
+    const formElement = document.getElementById('allergy-form-anchor');
+    if (formElement) formElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  };
+
+  const handleCancelAdd = () => {
+    setAllergenInput('');
+    setReactionInput('');
+    setEditingAllergyId(null);
+    setShowAddForm(false);
+    setShowCommonOptions(false);
+  };
+
+  const handleSelectCommonAllergen = (allergen) => {
+    setAllergenInput(allergen);
+    setShowCommonOptions(false);
+  };
 
   const handleSaveAllergy = async () => {
     if (!allergenInput.trim()) {
