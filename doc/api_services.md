@@ -33,6 +33,14 @@ RxEaseAI encapsulates all HTTP communications within specialized domain services
 - **`profileService.js`**:
   - `getProfile()`: Retrieves user profile details (`/users/profile`).
   - `updateProfile(profileData)`: Updates account preferences and clinical profile attributes.
+  - **Emergency Contacts**:
+    - `addEmergencyContact(data)`: Creates new emergency contact (`/users/emergency-contacts`)
+    - `updateEmergencyContact(id, data)`: Updates existing contact (`/users/emergency-contacts/:id`)
+    - `deleteEmergencyContact(id)`: Soft-deletes contact (`/users/emergency-contacts/:id`)
+  - **Allergies**:
+    - `addAllergy(data)`: Creates new allergy record (`/users/allergies`)
+    - `updateAllergy(id, data)`: Updates existing allergy (`/users/allergies/:id`)
+    - `deleteAllergy(id)`: Soft-deletes allergy (`/users/allergies/:id`)
 
 ### Prescription Ingestion, History & Export (`prescriptionService.js`)
 - `uploadAndAnalyze(file, options)`: Sends multipart image payload to `/ai/analyze` for full vision OCR analysis.
