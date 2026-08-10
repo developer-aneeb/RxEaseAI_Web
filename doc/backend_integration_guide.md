@@ -101,6 +101,36 @@ Below are the primary REST endpoints consumed by the frontend service layer (`sr
 
 ---
 
+### Emergency Contacts (`profileService.js`)
+
+#### **POST `/users/emergency-contacts`**
+- **Body**: `{ "contact_name": "John Doe", "relationship": "Spouse", "phone": "+923001234567", "address": "Lahore, Pakistan" }`
+- **Response (`201 Created`)**: `{ "success": true, "contact": { "id": "uuid", "contact_name": "John Doe", ... } }`
+
+#### **PUT `/users/emergency-contacts/:id`**
+- **Body**: `{ "contact_name": "Jane Doe", "relationship": "Wife", "phone": "+923007654321", "address": "Islamabad, Pakistan" }`
+- **Response (`200 OK`)**: `{ "success": true, "contact": { ... } }`
+
+#### **DELETE `/users/emergency-contacts/:id`**
+- **Response (`200 OK`)**: `{ "success": true, "message": "Emergency contact removed" }`
+
+---
+
+### Allergies (`profileService.js`)
+
+#### **POST `/users/allergies`**
+- **Body**: `{ "allergy_type": "Drug", "allergen": "Penicillin", "reaction": "Anaphylaxis" }`
+- **Response (`201 Created`)**: `{ "success": true, "allergy": { "id": "uuid", "allergen": "Penicillin", ... } }`
+
+#### **PUT `/users/allergies/:id`**
+- **Body**: `{ "allergy_type": "Food", "allergen": "Peanuts", "reaction": "Hives" }`
+- **Response (`200 OK`)**: `{ "success": true, "allergy": { ... } }`
+
+#### **DELETE `/users/allergies/:id`**
+- **Response (`200 OK`)**: `{ "success": true, "message": "Allergy removed" }`
+
+---
+
 ### AI Prescription Processing (`prescriptionService.js`)
 
 #### **POST `/ai/analyze?persist=true`**
