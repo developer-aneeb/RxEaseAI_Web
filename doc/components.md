@@ -70,3 +70,83 @@ Accessible dialog overlay utilizing Framer Motion for backdrop fading and panel 
 - `onClose` (function): Callback triggered on close button (`X`) or backdrop click.
 - `title` (string | React Node): Modal header title.
 - `children` (React Node): Dialog content body.
+
+---
+
+## Settings Page Components
+
+RxEaseAI includes specialized settings components for managing user profiles, emergency contacts, and allergies.
+
+### Emergency Contact Section (`src/pages/settings/EmergencyContact.jsx`)
+
+Manages emergency contact records with add, edit, and delete functionality.
+
+**Key Features:**
+- **Floating Add Button**: Prominent "Add Contact" button in header shows/hides the form
+- **Auto-Hiding Form**: Contact form only appears when user initiates add/edit action
+- **Empty State**: Shows "Add Your First Emergency Contact" CTA when no contacts exist
+- **Responsive Grid**: Displays contacts in 1 column on mobile, 2+ columns on larger screens
+- **Edit/Delete Actions**: Inline edit and delete operations with confirmation flow
+
+**Props:**
+- `emergencyContacts` (array): Array of contact objects with `id`, `contact_name`, `relationship`, `phone`, `address`, `is_deleted`
+- `onSaveSuccess` (function): Callback triggered after successful save operation
+
+**State Management:**
+- `showAddForm`: Toggles the form visibility
+- `editingContactId`: Tracks which contact is being edited (null for new contacts)
+- `contactNameInput`, `relationshipInput`, `contactPhoneInput`, `contactAddressInput`: Form input states
+
+**API Integration:**
+- `profileService.addEmergencyContact(data)`: Creates new contact
+- `profileService.updateEmergencyContact(id, data)`: Updates existing contact
+- `profileService.deleteEmergencyContact(id)`: Soft-deletes contact (sets `is_deleted = true`)
+
+---
+
+### Allergy Section (`src/pages/settings/Allergy.jsx`)
+
+Manages allergy records with comprehensive allergen database and manual entry support.
+
+**Key Features:**
+- **Floating Add Button**: Prominent "Add Allergy" button in header shows/hides the form
+- **Common Allergen Database**: Pre-populated lists for Drug, Food, Environmental, and Other categories
+- **Smart Selection**: Users can click "View Options" to browse common allergens or type manually
+- **Category-Specific Options**: Allergen list filters based on selected category type
+- **Auto-Hiding Form**: Allergy form only appears when user initiates add/edit action
+- **Empty State**: Shows "Add Your First Allergy" CTA when no allergies exist
+- **Responsive Grid**: Displays allergies in 1 column on mobile, 2+ columns on larger screens
+- **Edit/Delete Actions**: Inline edit and delete operations with confirmation flow
+
+**Props:**
+- `allergies` (array): Array of allergy objects with `id`, `allergen`, `allergy_type`, `reaction`, `is_deleted`
+- `onSaveSuccess` (function): Callback triggered after successful save operation
+
+**State Management:**
+- `showAddForm`: Toggles the form visibility
+- `editingAllergyId`: Tracks which allergy is being edited (null for new allergies)
+- `allergenInput`, `allergyTypeInput`, `reactionInput`: Form input states
+- `showCommonOptions`: Toggles display of common allergen options
+
+**Common Allergen Database:**
+- **Drug**: Penicillin, Amoxicillin, Aspirin, Ibuprofen, Sulfa drugs, Codeine, Morphine, NSAIDs, ACE inhibitors, Statins, Chemotherapy drugs, Vaccines, Contrast dye, Local anesthetics
+- **Food**: Peanuts, Tree nuts, Milk, Eggs, Wheat, Soy, Fish, Shellfish, Sesame, Corn, Chicken, Beef, Pork, Fruits, Chocolate, MSG, Food dyes, Preservatives
+- **Environmental**: Pollen, Dust mites, Mold, Pet dander, Insect stings, Latex, Feathers, Nickel, Hair dyes, Cosmetics
+- **Other**: Iron, Anesthetic agents, Insulin, Heparin, Food additives, Tick bites
+
+**API Integration:**
+- `profileService.addAllergy(data)`: Creates new allergy record
+- `profileService.updateAllergy(id, data)`: Updates existing allergy record
+- `profileService.deleteAllergy(id)`: Soft-deletes allergy (sets `is_deleted = true`)
+
+---
+
+## Best Practices
+
+When building new settings components:
+
+1. **Use Floating Action Buttons**: Keep the UI clean by hiding forms until user action
+2. **Provide Pre-populated Options**: Use common value lists to improve UX while allowing manual entry
+3. **Implement Soft Deletes**: Use `is_deleted` flag instead of permanent deletion for audit trails
+4. **Maintain Consistent Styling**: Use the same `glass` variant for all cards in settings
+5. **Add Empty State CTAs**: Guide users when no data exists yet
