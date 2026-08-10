@@ -31,6 +31,7 @@ src/
 ├── contexts/          # Context providers (ToastContext)
 ├── store/             # Zustand global state stores (useAuthStore, useThemeStore, usePrescriptionStore, useAppStore)
 ├── pages/             # Top-level route components (LandingPage, auth/, prescription/, etc.)
+│   └── settings/      # Settings pages (EmergencyContact, Allergy, ProfileSection, etc.)
 ├── services/          # API Service layer (apiClient.js, authService.js, prescriptionService.js, etc.)
 ├── styles/            # Shared style utilities or specific complex CSS modules
 ├── utils/             # Helpers (errorMessages.js, zodSchemas.js, authValidation.js)
@@ -75,6 +76,94 @@ if (currentHash === '#home') {
 - `#notifications`: `NotificationsPage` (System & Clinical Alert Center)
 - `#billing`: `BillingPage` (Localized Subscriptions & Payment OS)
 - `#settings`: `SettingsPage` (Profile, Preferences & Support)
+
+---
+
+## Settings Page Architecture
+
+RxEaseAI includes specialized settings pages for user profile management, emergency contacts, and allergies registry. These components follow a consistent pattern with floating action buttons and clean form toggling.
+
+### Settings Pages (`src/pages/settings/`)
+
+| Component | File | Purpose |
+| :--- | :--- | :--- |
+| **SettingsPage** | `SettingsPage.jsx` | Main settings container with horizontal tab navigation |
+| **HorizontalTabNavigation** | `HorizontalTabNavigation.jsx` | Reusable tab navigation component |
+| **EmergencyContactSection** | `EmergencyContact.jsx` | Emergency contact management with floating add button |
+| **AllergySection** | `Allergy.jsx` | Allergy tracking with common allergen database |
+| **ProfileSection** | `ProfileSection.jsx` | User profile editing interface |
+| **MedicalInfo** | `MedicalInfo.jsx` | Medical information and health records |
+| **FeedbackSection** | `FeedbackSection.jsx` | User feedback submission |
+| **FaqSection** | `FaqSection.jsx` | Frequently asked questions display |
+
+### Settings Page Pattern
+
+All settings components follow a consistent architecture pattern:
+
+1. **Floating Action Button**: Add button in header toggles form visibility
+2. **Conditional Rendering**: Form only appears when user initiates action
+3. **Empty State CTA**: Shows prominent "Add First" button when no data exists
+4. **Responsive Grid**: Displays items in 1 column mobile, 2+ columns on larger screens
+5. **Soft Deletes**: Uses `is_deleted` flag instead of permanent deletion
+
+```javascript
+export default function SectionComponent({ data, onSaveSuccess }) {
+  const [showAddForm, setShowAddForm] = useState(false);
+  const [editingId, setEditingId] = useState(null);
+  
+  const activeItems = (data || []).filter(item => !item.is_deleted);
+  
+  const handleShowAddForm = () => {
+    setShowAddForm(true);
+    // Reset form fields
+  };
+  
+  return (
+    <Card>
+      <div className="flex items-center gap-2 mb-6">
+        <HeaderIcon />
+        <div>
+          <h3>Title</h3>
+          <p>Description</p>
+        </div>
+        {!showAddForm && (
+          <Button onClick={handleShowAddForm} variant="primary">
+            Add Item
+          </Button>
+        )}
+      </div>
+      
+      {!showAddForm && (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {activeItems.map(item => <ItemCard key={item.id} item={item} />)}
+        </div>
+      )}
+      
+      {showAddForm && <form>...</form>}
+    </Card>
+  );
+}
+```
+
+### Emergency Contact Features
+
+- **Floating Add Button**: Shows "Add Contact" in header
+- **Empty State CTA**: "Add Your First Emergency Contact" when no contacts
+- **Form Toggle**: Form only appears when user clicks add button
+- **Contact Details**: Name, relationship, phone, address
+- **Edit/Delete**: Inline operations with confirmation flow
+- **Responsive Grid**: 1 column mobile, 2+ columns desktop
+
+### Allergy Features
+
+- **Floating Add Button**: Shows "Add Allergy" in header
+- **Empty State CTA**: "Add Your First Allergy" when no allergies
+- **Common Allergen Database**: Pre-populated lists for Drug, Food, Environmental, Other
+- **Smart Selection**: Click "View Options" to browse common allergens or type manually
+- **Category-Specific Options**: Allergen list filters based on selected category
+- **Form Toggle**: Form only appears when user clicks add button
+- **Edit/Delete**: Inline operations with confirmation flow
+- **Responsive Grid**: 1 column mobile, 2+ columns desktop
 
 ---
 
