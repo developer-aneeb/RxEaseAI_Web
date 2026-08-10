@@ -80,3 +80,138 @@ Register the hash route and wrap it in `<ProtectedRoute>` or `<PublicRoute>`:
   </ProtectedRoute>
 )}
 ```
+
+---
+
+## Settings Component Pattern
+
+When building new settings page components (like EmergencyContact, Allergy, ProfileSection), follow this pattern:
+
+### 1. Create the Settings Component File
+
+**Location**: `frontend/src/pages/settings/YourComponentName.jsx`
+
+```javascript
+import { useState } from 'react';
+import { IconName } from 'lucide-react';
+import { profileService } from '../../services/profileService';
+import { useAppStore } from '../../store/useAppStore';
+import { getFriendlyErrorMessage } from '../../utils/errorMessages';
+import Card from '../../components/ui/Card';
+import Button from '../../components/ui/Button';
+
+export default function YourComponent({ data, onSaveSuccess }) {
+  const showToast = useAppStore((state) => state.showToast);
+  
+  // Form states
+  const [showAddForm, setShowAddForm] = useState(false);
+  const [editingId, setEditingId] = useState(null);
+  const [input1, setInput1] = useState('');
+  const [input2, setInput2] = useState('');
+  
+  const activeItems = (data || []).filter(item => !item.is_deleted);
+  
+  // Show form handler
+  const handleShowAddForm = () => {
+    setInput1('');
+    setInput2('');
+    setEditingId(null);
+    setShowAddForm(true);
+  };
+  
+  // Save handler
+  const handleSave = async () => {
+    if (!input1.trim()) {
+      showToast('Field is required', 'warning');
+      return;
+    }
+    
+    try {
+      if (editingId) {
+        await profileService.updateYourItem(editingId, {
+          field1: input1,
+          field2: input2
+        });
+        showToast('Updated successfully', 'success');
+      } else {
+        await profileService.addYourItem({
+          field1: input1,
+          field2: input2
+        });
+        showToast('Added successfully', 'success');
+      }
+      
+      setShowAddForm(false);
+      setInput1('');
+      setInput2('');
+      setEditingId(null);
+      onSaveSuccess();
+    } catch (error) {
+      showToast(getFriendlyErrorMessage(error, 'Failed to save'), 'error');
+    }
+  };
+  
+  return (
+    <Card>
+      <div className="flex items-center gap-2 mb-6 border-b">
+        <IconName className="w-5 h-5 text-primary" />
+        <div>
+          <h3 className="text-sm font-bold">Title</h3>
+          <p className="text-[11px] text-slate-400">Description</p>
+        </div>
+        {!showAddForm && (
+          <Button 
+            onClick={handleShowAddForm} 
+            variant="primary"
+            className="ml-auto"
+          >
+            Add Item
+          </Button>
+        )}
+      </div>
+      
+      {!showAddForm && (
+        <div className="space-y-4 mb-6">
+          {activeItems.length === 0 ? (
+            <p className="text-xs text-slate-500 italic py-4 text-center border border-dashed rounded-2xl">
+              No active items registered.
+            </p>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {activeItems.map(item => (
+                <div key={item.id}>
+                  {/* Item display */}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+      
+      {showAddForm && (
+        <div className="border-t pt-5 space-y-4 mb-6">
+          {/* Form fields */}
+          <Button onClick={handleSave}>Save</Button>
+        </div>
+      )}
+      
+      {!showAddForm && activeItems.length === 0 && (
+        <div className="flex justify-center pt-4">
+          <Button onClick={handleShowAddForm} variant="primary">
+            Add Your First Item
+          </Button>
+        </div>
+      )}
+    </Card>
+  );
+}
+```
+
+### 2. Common Patterns
+
+- **Floating Add Button**: Always show "Add" in header, hide when form is visible
+- **Empty State CTA**: Show "Add Your First X" when no items exist
+- **Form Toggle**: Use `showAddForm` state to toggle visibility
+- **Soft Deletes**: Use `is_deleted` flag instead of permanent deletion
+- **Responsive Grid**: Use `grid-cols-1 md:grid-cols-2` for item display
+- **Scroll on Show**: Scroll to form anchor when showing form
