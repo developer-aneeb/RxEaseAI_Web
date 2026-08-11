@@ -34,7 +34,7 @@ frontend/
 │   │   ├── search/             # Interaction Search (SearchPage)
 │   │   ├── notifications/      # Alert Center (NotificationsPage)
 │   │   ├── billing/            # Subscriptions OS (BillingPage)
-│   │   └── settings/           # Profile & Preferences (SettingsPage)
+│   │   └── settings/           # Profile, Emergency Contacts, Allergies & Preferences (SettingsPage, EmergencyContact, Allergy)
 │   ├── services/               # API Networking Layer
 │   │   ├── apiClient.js        # Configured Axios instance with JWT interceptors
 │   │   ├── authService.js      # Auth REST endpoints
